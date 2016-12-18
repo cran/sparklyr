@@ -12,12 +12,13 @@ expect_centers_equal <- function(lhs, rhs, ...) {
 
 test_that("'ml_kmeans' and 'kmeans' produce similar fits", {
   skip_on_cran()
-  skip_if_not_installed("dplyr")
+  if (spark_version(sc) < "2.0.0")
+    skip("requires Spark 2.0.0")
 
   library(dplyr)
   data(iris)
 
-  iris_tbl <- dplyr::copy_to(sc, iris, "iris", overwrite = TRUE)
+  iris_tbl <- testthat_tbl("iris")
 
   set.seed(123)
   iris <- iris %>%

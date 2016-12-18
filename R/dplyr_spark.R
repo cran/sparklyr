@@ -55,76 +55,41 @@ db_data_type.src_spark <- function(...) {
 }
 
 
-#' Copy a local R data frame to Spark
+#' Copy an R Data Frame to Spark
 #'
-#' @param dest A Spark connection
-#' @param df Local data frame to copy
-#' @param name Name of the destination table
-#' @param memory Cache table into memory
-#' @param repartition Partitions used to distribute table or 0 (default) to avoid partitioning
-#' @param overwrite When TRUE, overwrites table with existing name
-#' @param ... Unused
+#' Copy an R \code{data.frame} to Spark, and return a reference to the
+#' generated Spark DataFrame as a \code{tbl_spark}. The returned object will
+#' act as a \code{dplyr}-compatible interface to the underlying Spark table.
 #'
-#' @return dplyr compatible reference to table
+#' @param dest A \code{spark_connection}.
+#' @param df An \R \code{data.frame}.
+#' @param name The name to assign to the copied table in Spark.
+#' @param memory Boolean; should the table be cached into memory?
+#' @param repartition The number of partitions to use when distributing the
+#'   table across the Spark cluster. The default (0) can be used to avoid
+#'   partitioning.
+#' @param overwrite Boolean; overwrite a pre-existing table with the name \code{name}
+#'   if one already exists?
+#' @param ... Optional arguments; currently unused.
 #'
-#' @name copy_to
-#'
-#' @family dplyr
+#' @return A \code{tbl_spark}, representing a \code{dplyr}-compatible interface
+#'   to a Spark DataFrame.
 #'
 #' @export
-copy_to.spark_connection <- function(dest, df, name = deparse(substitute(df)),
-                                     memory = TRUE, repartition = 0, overwrite = FALSE, ...) {
-  sc <- dest
-  dest <- src_sql("spark", sc)
-  args <- list(...)
-
-  if (overwrite)
-    spark_remove_table_if_exists(sc, name)
-
-  if (name %in% src_tbls(sc))
-    stop("table ", name, " already exists (pass overwrite = TRUE to overwrite)")
-
-  dbWriteTable(sc, name, df, TRUE, repartition, args$serializer)
-
-  if (memory) {
-    tbl_cache(sc, name)
-  }
-
-  on_connection_updated(sc, name)
-
-  tbl(dest, name)
+copy_to.spark_connection <- function(dest,
+                                     df,
+                                     name = deparse(substitute(df)),
+                                     memory = TRUE,
+                                     repartition = 0L,
+                                     overwrite = FALSE,
+                                     ...)
+{
+  sdf_copy_to(dest, df, name, memory, repartition, overwrite, ...)
 }
 
-#' Load a table into memory
-#'
-#' @param sc Spark connection
-#' @param name Name of the destination table
-#' @param force Forces data to be loaded in memory by executing a count(*) over the table
-#'
-#' @family dplyr
-#'
 #' @export
-tbl_cache <- function(sc, name, force = TRUE) {
-  dbGetQuery(sc, paste("CACHE TABLE", dplyr::escape(ident(name), con = sc)))
-
-  if (force) {
-    dbGetQuery(sc, paste("SELECT count(*) FROM", dplyr::escape(ident(name), con = sc)))
-  }
-
-  invisible(NULL)
-}
-
-#' Unload table from memory
-#'
-#' @param sc Spark connection
-#' @param name Name of the destination table
-#'
-#' @family dplyr
-#'
-#' @export
-tbl_uncache <- function(sc, name) {
-  dbGetQuery(sc, paste("UNCACHE TABLE", dplyr::escape(ident(name), con = sc)))
-  invisible(NULL)
+copy_to.src_spark <- function(dest, df, name, ...) {
+  copy_to(spark_connection(dest), df, name, ...)
 }
 
 #' @export
@@ -136,7 +101,7 @@ print.src_spark <- function(x, ...) {
 }
 
 #' @export
-db_save_query.spark_connection <- function (con, sql, name, temporary = TRUE, ...)
+db_save_query.spark_connection <- function(con, sql, name, temporary = TRUE, ...)
 {
   df <- spark_dataframe(con, sql)
   invoke(df, "registerTempTable", name)

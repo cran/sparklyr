@@ -11,15 +11,19 @@ object Logging {
     return logFormat.format(now)
   }
 
+  def log(message: String) = {
+    System.out.println(getDate() + " INFO sparklyr: " + message)
+  }
+
   def logError(message: String) = {
-    System.err.println(getDate() + " ERROR " + message)
+    System.err.println(getDate() + " ERROR sparklyr: " + message)
   }
 
   def logError(message: String, e: Exception) = {
-    System.err.println(getDate() + " ERROR " + message, e.toString)
+    System.err.println(getDate() + " ERROR sparklyr: " + message, e.toString)
   }
 
   def logWarning(message: String) = {
-    System.err.println(getDate() + " WARN " + message)
+    System.err.println(getDate() + " WARN sparklyr: " + message)
   }
 }

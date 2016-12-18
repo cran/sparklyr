@@ -1,4 +1,4 @@
-#' Compile Scala sources into a Java Archive (jar)
+#' Compile Scala sources into a Java Archive
 #'
 #' Given a set of \code{scala} source files, compile them
 #' into a Java Archive (\code{jar}).
@@ -213,6 +213,11 @@ spark_compilation_spec <- function(spark_version = NULL,
 #' @export
 spark_default_compilation_spec <- function(pkg = infer_active_package_name()) {
   list(
+    spark_compilation_spec(
+      spark_version = "1.5.2",
+      scalac_path = find_scalac("2.10"),
+      jar_name = sprintf("%s-1.5-2.10.jar", pkg)
+    ),
     spark_compilation_spec(
       spark_version = "1.6.1",
       scalac_path = find_scalac("2.10"),

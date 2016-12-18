@@ -1,6 +1,6 @@
 #' Save / Load a Spark DataFrame
 #'
-#' Save / load a Spark DataFrame.
+#' Routines for saving and loading Spark DataFrames.
 #'
 #' @param sc A \code{spark_connection} object.
 #' @template roxlate-ml-x
@@ -16,25 +16,47 @@ NULL
 #' @rdname sdf-saveload
 #' @export
 sdf_save_table <- function(x, name, overwrite = FALSE, append = FALSE) {
+  warning("sdf_save_table is deprecated, use spark_write_table instead.")
+
   sdf <- spark_dataframe(x)
   name <- ensure_scalar_character(name)
 
-  write <- invoke(sdf, "write")
-  if (overwrite) write <- invoke(write, "mode", "overwrite")
-  if (append)    write <- invoke(write, "mode", "append")
+  writer <- invoke(sdf, "write")
+  if (overwrite) writer <- invoke(writer, "mode", "overwrite")
+  if (append)    writer <- invoke(writer, "mode", "append")
 
-  invoke(write, "saveAsTable", name)
+  # Spark < 2.0.0 doesn't respect the metastore directory when
+  # using the 'saveAsTable' API, so we directly call 'save'.
+  sc <- spark_connection(sdf)
+  if (spark_version(sc) < "2.0.0") {
+    hc <- hive_context(sc)
+    metastore <- invoke(hc, "getConf", "hive.metastore.warehouse.dir")
+    path <- path.expand(file.path(metastore, name))
+    invoke(writer, "save", path)
+  } else {
+    invoke(writer, "saveAsTable", name)
+  }
 }
 
 #' @rdname sdf-saveload
 #' @export
 sdf_load_table <- function(sc, name) {
+  warning("sdf_load_table is deprecated, use spark_read_table instead.")
+
   session <- spark_session(sc)
   name <- ensure_scalar_character(name)
 
-  sdf <- session %>%
-    invoke("read") %>%
-    invoke("table", name)
+  # NOTE: need to explicitly provide path to metastore for
+  # Spark < 2.0.0
+  reader <- invoke(session, "read")
+  sdf <- if (spark_version(sc) < "2.0.0") {
+    hc <- hive_context(sc)
+    metastore <- invoke(hc, "getConf", "hive.metastore.warehouse.dir")
+    path <- file.path(metastore, name)
+    invoke(reader, "load", path)
+  } else {
+    invoke(reader, "table", name)
+  }
 
   sdf_register(sdf)
 }
@@ -42,6 +64,8 @@ sdf_load_table <- function(sc, name) {
 #' @rdname sdf-saveload
 #' @export
 sdf_save_parquet <- function(x, path, overwrite = FALSE, append = FALSE) {
+  warning("sdf_save_parquet is deprecated, use spark_write_parquet instead.")
+
   sdf <- spark_dataframe(x)
   path <- ensure_scalar_character(path)
 
@@ -55,6 +79,8 @@ sdf_save_parquet <- function(x, path, overwrite = FALSE, append = FALSE) {
 #' @rdname sdf-saveload
 #' @export
 sdf_load_parquet <- function(sc, path) {
+  warning("sdf_load_parquet is deprecated, use spark_read_parquet instead.")
+
   session <- spark_session(sc)
   path <- as.character(path)
 

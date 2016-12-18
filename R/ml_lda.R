@@ -34,17 +34,24 @@ ml_lda <- function(x,
                    ml.options = ml_options(),
                    ...)
 {
-  stopifnot(alpha > 1)
+  ml_backwards_compatibility_api()
 
   df <- spark_dataframe(x)
   sc <- spark_connection(df)
 
-  ml_prepare_features(df, features)
+  df <- ml_prepare_features(
+    x = df,
+    features = features,
+    envir = environment(),
+    ml.options = ml.options
+  )
 
   alpha      <- ensure_scalar_double(alpha)
   beta       <- ensure_scalar_double(beta)
   k          <- ensure_scalar_integer(k)
   only.model <- ensure_scalar_boolean(ml.options$only.model)
+
+  stopifnot(alpha > 1)
 
   envir <- new.env(parent = emptyenv())
 

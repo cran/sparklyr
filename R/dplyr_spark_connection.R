@@ -65,6 +65,7 @@ sql_translate_env.spark_connection <- function(con) {
     aggregate = dplyr::sql_translator(
       .parent = dplyr::base_agg,
       n = function() dplyr::sql("count(*)"),
+      n_distinct = function(...) dplyr::build_sql("count(DISTINCT", list(...), ")"),
       count = function() dplyr::sql("count(*)"),
       cor = sql_prefix("corr"),
       cov = sql_prefix("covar_samp"),
@@ -73,7 +74,15 @@ sql_translate_env.spark_connection <- function(con) {
     ),
 
     window = dplyr::sql_translator(
-      .parent = dplyr::base_win
+      .parent = dplyr::base_win,
+      lag = function(x, n = 1L, default = NA, order = NULL) {
+        dplyr::base_win$lag(
+          x = x,
+          n = as.integer(n),
+          default = default,
+          order = order
+        )
+      }
     )
 
   )
