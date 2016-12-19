@@ -1,6 +1,6 @@
-4f967f81ea8e6d6c01453527f15df829 *DESCRIPTION
+07509dcfbf117686a3901bc0e8e4b6ea *DESCRIPTION
 e3fc50a88d0a364313df4b21ef20c29e *LICENSE
-1dcfb9503bbd3d2b889eed1e5f14fe24 *NAMESPACE
+15afdd65e34e738a0de16f1cf85c26eb *NAMESPACE
 ca864b9723f89553194e555ac8b45123 *NEWS.md
 6127d5c80f838377bba814c7eb722155 *R/config_spark.R
 9af77baec1725e72c20387e674f8f6d3 *R/connection_instances.R
@@ -77,7 +77,7 @@ e8c78e6f58f742b523d39642824af1c1 *R/spark_shell.R
 03feaafcd28be3cb7ba24a0b2e395d00 *R/spark_version.R
 f8e9a6d3642e339b26e3c41acfe00df9 *R/tables_spark.R
 d30469f61428bf49729058ac5f8c6802 *R/tbl_spark.R
-2812af5dcd384da7021366f3a53cd350 *R/test_connection.R
+7ec609b021e434a539740cbd5a70bed7 *R/test_connection.R
 535b636b8c1a32c408e5d07fa00ea021 *R/utils.R
 ff503b25d2f0a25b246fba7eec43aaf2 *R/zzz.R
 3c49f25b8dfa9358599bb2eae3b0c093 *README.md
