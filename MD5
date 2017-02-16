@@ -1,4 +1,4 @@
-07509dcfbf117686a3901bc0e8e4b6ea *DESCRIPTION
+6be83dbb228b3a796aff651126b9850d *DESCRIPTION
 e3fc50a88d0a364313df4b21ef20c29e *LICENSE
 15afdd65e34e738a0de16f1cf85c26eb *NAMESPACE
 ca864b9723f89553194e555ac8b45123 *NEWS.md
@@ -25,7 +25,7 @@ e2076dd4f345fe46c77c3447501caf11 *R/dbi_spark_result.R
 7ce3c06bdbc62bbf0e769f4a3f9397e7 *R/imports.R
 d8ae02daa9b4550e57010f22a5dfd638 *R/install_spark.R
 a8b5f13352ba1c94cf7b77852772d7d5 *R/install_spark_versions.R
-a7bf5bbccde09809c524c798088583a3 *R/livy_connection.R
+28779a37f509bc3714cdbb2c8de8cf26 *R/livy_connection.R
 ae507f1b0c5fd36a09c1c1f8d9addea8 *R/livy_install.R
 1b0b5efb81a44dc6a83ccbc53964da75 *R/livy_invoke.R
 4b8b9578e706604621fca61dabc647eb *R/livy_service.R
@@ -73,14 +73,14 @@ c03bf000c09233ceff138f59282ddbf0 *R/spark_invoke.R
 d7bcd2e48f511e3c917f02f8186309b4 *R/spark_jobj.R
 91c06982ea06067130a22e7fbecc46f9 *R/spark_magrittr.R
 6359c15d3aa20ab5b68b333f3668bb95 *R/spark_serialize.R
-e8c78e6f58f742b523d39642824af1c1 *R/spark_shell.R
+24cfbe08fd2b0d53a5b50efb55fc4031 *R/spark_shell.R
 03feaafcd28be3cb7ba24a0b2e395d00 *R/spark_version.R
 f8e9a6d3642e339b26e3c41acfe00df9 *R/tables_spark.R
 d30469f61428bf49729058ac5f8c6802 *R/tbl_spark.R
 7ec609b021e434a539740cbd5a70bed7 *R/test_connection.R
 535b636b8c1a32c408e5d07fa00ea021 *R/utils.R
 ff503b25d2f0a25b246fba7eec43aaf2 *R/zzz.R
-3c49f25b8dfa9358599bb2eae3b0c093 *README.md
+3a82e4e284ab4cefcf23c17cb39d85b6 *README.md
 a19b7f02209f6cfca60c204bd6ba6068 *inst/conf/config-template.yml
 38068ad8b0ab24de389038c2de8e5441 *inst/extdata/install_spark.csv
 fe44c93fe2fa4b04ec110ca22874fd03 *inst/java/commons-csv-1.1.jar
