@@ -1,4 +1,4 @@
-6be83dbb228b3a796aff651126b9850d *DESCRIPTION
+cdf5f75b9c1a231141302e5341085f52 *DESCRIPTION
 e3fc50a88d0a364313df4b21ef20c29e *LICENSE
 15afdd65e34e738a0de16f1cf85c26eb *NAMESPACE
 ca864b9723f89553194e555ac8b45123 *NEWS.md
@@ -10,10 +10,10 @@ c706ae1ae9438b9c15ae2551ad6cdbde *R/connection_windows.R
 01fe50a3c13bd42c4b8dc177cffc84c7 *R/data_copy.R
 a1edc8958fec116b320bc4f2fdd5aad7 *R/data_csv.R
 00d8a0670947d0691c8ed22ede1d1435 *R/data_interface.R
-d74cd8d0f78491a08f96681ee7449829 *R/dbi_spark_connection.R
+353331d8c173c974366f6914b1570176 *R/dbi_spark_connection.R
 c65df07febef6165d4a85d1108d8393b *R/dbi_spark_query.R
 e2076dd4f345fe46c77c3447501caf11 *R/dbi_spark_result.R
-8b0529b8f924eb5b4fdf3b1f8405af14 *R/dbi_spark_table.R
+6ccd8b05c38d76f17cf7ed50ba0eddb0 *R/dbi_spark_table.R
 86b8649208fff5c345e98174ddfd5e81 *R/dbi_spark_transactions.R
 6075d2d4039b0d98ae1e75f4d1a2d0f3 *R/dplyr_do.R
 455f5bf29bb138aea58d3673e840d17e *R/dplyr_spark.R

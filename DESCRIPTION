@@ -1,7 +1,7 @@
 Package: sparklyr
 Type: Package
 Title: R Interface to Apache Spark
-Version: 0.5.2
+Version: 0.5.3
 Authors@R: c(
     person("Javier", "Luraschi", email = "javier@rstudio.com", role = c("aut", "cre")),
     person("Kevin", "Ushey", role = "aut", email = "kevin@rstudio.com"),
@@ -20,16 +20,16 @@ BugReports: https://github.com/rstudio/sparklyr/issues
 LazyData: TRUE
 RoxygenNote: 5.0.1
 Depends: R (>= 3.1.2)
-Imports: methods, lazyeval (>= 0.2.0), dplyr (>= 0.5.0), DBI (>=
-        0.4.1), readr (>= 0.2.0), digest, config, rappdirs, assertthat,
+Imports: methods, lazyeval (>= 0.2.0), dplyr (>= 0.5.0), DBI (>= 0.6),
+        readr (>= 0.2.0), digest, config, rappdirs, assertthat,
         rprojroot, withr, httr, jsonlite, base64enc
 Suggests: testthat, RCurl, janeaustenr
 NeedsCompilation: no
-Packaged: 2017-02-15 09:25:06 UTC; javierluraschi
+Packaged: 2017-03-08 15:23:59 UTC; javierluraschi
 Author: Javier Luraschi [aut, cre],
   Kevin Ushey [aut],
   JJ Allaire [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2017-02-16 22:40:14
+Date/Publication: 2017-03-09 18:09:02
