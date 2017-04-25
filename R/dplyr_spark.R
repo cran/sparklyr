@@ -10,7 +10,7 @@ spark_connection.src_spark <- function(x, ...) {
   x$con
 }
 
-#' @export
+# dplyr_s3 @export
 src_desc.src_spark <- function(x) {
   sc <- spark_connection(x)
   paste("spark connection",
@@ -79,9 +79,9 @@ db_data_type.src_spark <- function(...) {
 copy_to.spark_connection <- function(dest,
                                      df,
                                      name = deparse(substitute(df)),
+                                     overwrite = FALSE,
                                      memory = TRUE,
                                      repartition = 0L,
-                                     overwrite = FALSE,
                                      ...)
 {
   sdf_copy_to(dest, df, name, memory, repartition, overwrite, ...)
@@ -94,9 +94,8 @@ copy_to.src_spark <- function(dest, df, name, ...) {
 
 #' @export
 print.src_spark <- function(x, ...) {
-  cat(src_desc(x))
+  cat(src_desc.src_spark(x))
   cat("\n\n")
-
   spark_log(spark_connection(x))
 }
 

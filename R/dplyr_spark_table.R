@@ -40,11 +40,10 @@ collect.spark_jobj <- function(x, ...) {
   sdf_collect(x)
 }
 
-#' @export
+# dplyr_s3 @export
 sql_build.tbl_spark <- function(op, con, ...) {
   sql_build(op$ops, con, ...)
 }
-
 
 #' @export
 sample_n.tbl_spark <- function(tbl,
@@ -52,7 +51,7 @@ sample_n.tbl_spark <- function(tbl,
                                replace = FALSE,
                                weight = NULL,
                                .env = parent.frame()) {
-  dplyr::add_op_single("sample_n", .data = tbl, args = list(
+  add_op_single("sample_n", .data = tbl, args = list(
     size = size,
     replace = replace,
     weight = weight,
@@ -66,7 +65,7 @@ sample_frac.tbl_spark <- function(tbl,
                                   replace = FALSE,
                                   weight = NULL,
                                   .env = parent.frame()) {
-  dplyr::add_op_single("sample_frac", .data = tbl, args = list(
+  add_op_single("sample_frac", .data = tbl, args = list(
     size = size,
     replace = replace,
     weight = weight,
