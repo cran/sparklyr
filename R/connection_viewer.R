@@ -1,7 +1,86 @@
+# connection-specific actions possible with Spark connections
+spark_actions <- function(scon) {
+  icons <- system.file(file.path("icons"), package = "sparklyr")
+  list(
+    SparkUI = list(
+        icon = file.path(icons, "spark-ui.png"),
+        callback = function() {
+          utils::browseURL(spark_web(scon))
+        }
+    ),
+    Log = list(
+        icon = file.path(icons, "spark-log.png"),
+        callback = function() {
+          file.edit(spark_log_file(scon))
+        }
+    ),
+    Help = list(
+        icon = file.path(icons, "help.png"),
+        callback = function() {
+          utils::browseURL("http://spark.rstudio.com")
+        }
+    )
+  )
+}
 
+on_connection_opened <- function(scon, env, connectCall) {
 
-on_connection_opened <- function(scon, connectCall) {
+  # RStudio v1.1 generic connection interface --------------------------------
+  observer <- getOption("connectionObserver")
+  if (!is.null(observer)) {
+    tryCatch({
+      host <- to_host(scon)
+      observer$connectionOpened(
+        # connection type
+        type = "Spark",
 
+        # name displayed in connection pane
+        displayName = to_host_display(scon),
+
+        # host key
+        host = host,
+
+        # icon for connection
+        icon = system.file(file.path("icons", "spark.png"), package = "sparklyr"),
+
+        # connection code
+        connectCode = connectCall,
+
+        # disconnection code
+        disconnect = function() {
+          spark_disconnect(scon)
+        },
+
+        listObjectTypes = function () {
+          return(list(
+            table = list(contains = "data")))
+        },
+
+        # table enumeration code
+        listObjects = function(type = "table") {
+          connection_list_tables(scon, includeType = TRUE)
+        },
+
+        # column enumeration code
+        listColumns = function(table) {
+          connection_list_columns(scon, table)
+        },
+
+        # table preview code
+        previewObject = function(rowLimit, table) {
+          connection_preview_table(scon, table, rowLimit)
+        },
+
+        # other actions that can be executed on this connection
+        actions = spark_actions(scon),
+
+        # raw connection object
+        connectionObject = scon
+      )
+    }, error = function(e) NULL)
+  }
+
+  # RStudio v1.0 Spark-style connection interface ----------------------------
   viewer <- getOption("connectionViewer")
   if (!is.null(viewer)) {
 
@@ -36,7 +115,7 @@ on_connection_opened <- function(scon, connectCall) {
       disconnectCode = "spark_disconnect(%s)",
 
       # table enumeration code
-      listTablesCode =  "sparklyr:::connection_list_tables(%s)",
+      listTablesCode =  "sparklyr:::connection_list_tables(%s, includeType = FALSE)",
 
       # column enumeration code
       listColumnsCode = "sparklyr:::connection_list_columns(%s, '%s')",
@@ -47,31 +126,50 @@ on_connection_opened <- function(scon, connectCall) {
   }
 }
 
+# return the external connection viewer (or NULL if none active)
+external_viewer <- function() {
+  viewer <- getOption("connectionObserver")
+  if (is.null(viewer))
+    getOption("connectionViewer")
+  else
+    viewer
+}
+
 on_connection_closed <- function(scon) {
-  viewer <- getOption("connectionViewer")
+  viewer <- external_viewer()
   if (!is.null(viewer))
     viewer$connectionClosed(type = "Spark", host = to_host(scon))
 }
 
 on_connection_updated <- function(scon, hint) {
-  viewer <- getOption("connectionViewer")
+  viewer <- external_viewer()
   if (!is.null(viewer))
     viewer$connectionUpdated(type = "Spark", host = to_host(scon), hint = hint)
 }
 
-connection_list_tables <- function(sc) {
-  dbi <- sc
-  if (!is.null(dbi))
-    sort(dbListTables(dbi))
+connection_list_tables <- function(sc, includeType = FALSE) {
+  # extract a list of Spark tables
+  tables <- if (!is.null(sc) && connection_is_open(sc))
+    sort(dbListTables(sc))
   else
     character()
+
+  # return the raw list of tables, or a data frame with object names and types
+  if (includeType) {
+    data.frame(
+      name = tables,
+      type = rep_len("table", length(tables)),
+      stringsAsFactors = FALSE
+    )
+  } else {
+    tables
+  }
 }
 
 connection_list_columns <- function(sc, table) {
-  dbi <- sc
-  if (!is.null(dbi)) {
+  if (!is.null(sc) && connection_is_open(sc)) {
     sql <- paste("SELECT * FROM", table, "LIMIT 5")
-    df <- dbGetQuery(dbi, sql)
+    df <- dbGetQuery(sc, sql)
     data.frame(
       name = names(df),
       type = as.character(lapply(names(df), function(f) {
@@ -88,20 +186,20 @@ connection_list_columns <- function(sc, table) {
 }
 
 connection_preview_table <- function(sc, table, limit) {
-  dbi <- sc
-  if (!is.null(dbi)) {
+  if (!is.null(sc) && connection_is_open(sc)) {
     sql <- paste("SELECT * FROM", table, "LIMIT", limit)
-    dbGetQuery(dbi, sql)
+    dbGetQuery(sc, sql)
   } else {
     NULL
   }
 }
-# function to convert master to host
-to_host <- function(sc) {
-  paste0(gsub("local\\[(\\d+|\\*)\\]", "local", sc$master),
-         " - ",
-         sc$app_name)
+
+# function to generate host display name
+to_host_display <- function(sc) {
+  gsub("local\\[(\\d+|\\*)\\]", "local", sc$master)
 }
 
-
-
+# function to convert master to host
+to_host <- function(sc) {
+  paste0(to_host_display(sc), " - ", sc$app_name)
+}

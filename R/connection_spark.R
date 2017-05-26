@@ -54,9 +54,9 @@ NULL
 #' spark_disconnect(sc)
 #'
 #' @export
-spark_connect <- function(master,
+spark_connect <- function(master = "local",
                           spark_home = Sys.getenv("SPARK_HOME"),
-                          method = c("shell", "livy", "test"),
+                          method = c("shell", "livy", "databricks", "test"),
                           app_name = "sparklyr",
                           version = NULL,
                           hadoop_version = NULL,
@@ -67,7 +67,7 @@ spark_connect <- function(master,
   method <- match.arg(method)
 
   # master can be missing if it's specified in the config file
-  if (missing(master)) {
+  if (missing(master) && method != "databricks") {
     master <- config$spark.master
     if (is.null(master))
       stop("You must either pass a value for master or include a spark.master ",
@@ -129,6 +129,9 @@ spark_connect <- function(master,
                             version,
                             hadoop_version ,
                             extensions)
+  } else if (method == "databricks") {
+    scon <- databricks_connection(config = config,
+                                  extensions)
   } else if (method == "test") {
     scon <- test_connection(master = master,
                             config = config,
@@ -164,7 +167,10 @@ spark_connect <- function(master,
   connectCall <- paste(libs,
                        paste("sc <-", deparse(parentCall, width.cutoff = 500), collapse = " "),
                        sep = "\n")
-  on_connection_opened(scon, connectCall)
+
+  # let viewer know that we've opened a connection; guess that the result will
+  # be assigned into the global environment
+  on_connection_opened(scon, globalenv(), connectCall)
 
   # Register a finalizer to sleep on R exit to support older versions of the RStudio IDE
   reg.finalizer(asNamespace("sparklyr"), function(x) {
