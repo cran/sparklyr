@@ -1,6 +1,6 @@
-6327442ab23cfa2dc3a563216f8ba28c *DESCRIPTION
+ac99660631454b8e62f86784c78ae8fa *DESCRIPTION
 e3fc50a88d0a364313df4b21ef20c29e *LICENSE
-f455f6418fe5332caad2c4e49d6995f5 *NAMESPACE
+56a859cdc6a5b4bc2269ed0ec50369f2 *NAMESPACE
 ca864b9723f89553194e555ac8b45123 *NEWS.md
 6127d5c80f838377bba814c7eb722155 *R/config_spark.R
 9af77baec1725e72c20387e674f8f6d3 *R/connection_instances.R
@@ -20,10 +20,11 @@ db76e49fe80003af12bb189fdb403564 *R/dbi_spark_table.R
 6075d2d4039b0d98ae1e75f4d1a2d0f3 *R/dplyr_do.R
 2f49dc36fcacf9524a94c0e8c2bcae5a *R/dplyr_s3.R
 cce8e25b824face927475f2ebf5b607e *R/dplyr_spark.R
-cfddd9cdee8fd29e480d0c9dbe7408b3 *R/dplyr_spark_connection.R
+7fcc43b5ffa2cb45a15b387c0e7c325a *R/dplyr_spark_connection.R
 d2481bf05d33b85bd04b96a86d8a9979 *R/dplyr_spark_data.R
 e007f111438bd9f367ecc167184450a1 *R/dplyr_spark_table.R
 e911b137e0188b7fe0f7c2420f8e4e21 *R/dplyr_sql.R
+6d696f439b3208fe398684a3273b402a *R/dplyr_top_n.R
 5e98841172eaf733b0d1ebdc90afe773 *R/formulas.R
 7ce3c06bdbc62bbf0e769f4a3f9397e7 *R/imports.R
 d8ae02daa9b4550e57010f22a5dfd638 *R/install_spark.R
@@ -82,7 +83,7 @@ f8e9a6d3642e339b26e3c41acfe00df9 *R/tables_spark.R
 d30469f61428bf49729058ac5f8c6802 *R/tbl_spark.R
 7ec609b021e434a539740cbd5a70bed7 *R/test_connection.R
 535b636b8c1a32c408e5d07fa00ea021 *R/utils.R
-cfa58b3ff4ea3ac47fc0a35bc5fc81d7 *R/zzz.R
+53942488995bf44fca9a501a7f067ec0 *R/zzz.R
 957a1d125d3d9ad2a17cd4d7fb89bd7a *README.md
 a19b7f02209f6cfca60c204bd6ba6068 *inst/conf/config-template.yml
 38068ad8b0ab24de389038c2de8e5441 *inst/extdata/install_spark.csv
@@ -210,8 +211,11 @@ dc16b61367d9cdd95546362b4f10254f *man/spark_write_json.Rd
 8da1f3830fe89240a4177a34b4e76722 *man/spark_write_parquet.Rd
 43123bf6e184cafbd3516d590967eb3e *man/tbl_cache.Rd
 c2edb9a79aa6c0e9070fbc862ad62fed *man/tbl_uncache.Rd
-a4fffeea9077441638135e879d74361c *tests/testthat/helper-initialize.R
-f7c1c1fad82b7f076fde9ae1e8ee10a4 *tests/testthat/test-dplyr-do.R
+7200a0ada2670e3e7da03df303b27bdb *man/top_n.Rd
+cb478778cebac8833eaa6b7f20bfc5ef *tests/testthat/helper-initialize.R
+9ba305355c58bcd85680583a3b1699f2 *tests/testthat/test-dplyr-do.R
+4427f1e8930859abde30d3e39f144d75 *tests/testthat/test-dplyr-join.R
+6a5b9df03d0592e04c3d755f6637a9b5 *tests/testthat/test-dplyr-top-n.R
 a721045dfb6494d7c15f15676eb3a4ad *tests/testthat/test-feature-transformers.R
 389cfe1a57e54ca1498b5bd5d54ab7d2 *tests/testthat/test-install-spark.R
 92f107854b280e766ddcfe52332e594c *tests/testthat/test-ml-generalized-linear-regression.R
