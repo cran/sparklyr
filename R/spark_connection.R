@@ -56,13 +56,19 @@ java_context <- function(sc) {
 #' @name spark-api
 #' @export
 hive_context <- function(sc) {
-  sc$hive_context
+  if (!is.null(sc$hive_context))
+    sc$hive_context
+  else
+    create_hive_context(sc)
 }
 
 #' @name spark-api
 #' @export
 spark_session <- function(sc) {
-  sc$hive_context
+  if (!is.null(sc$hive_context))
+    sc$hive_context
+  else
+    create_hive_context(sc)
 }
 
 #' Retrieve the Spark Connection Associated with an R Object
@@ -79,7 +85,8 @@ spark_connection <- function(x, ...) {
 
 #' @export
 spark_connection.default <- function(x, ...) {
-  stop("Unable to retreive a spark_connection from object of class ",
+
+  stop("Unable to retrieve a spark_connection from object of class ",
        paste(class(x), collapse = " "), call. = FALSE)
 }
 
@@ -91,17 +98,6 @@ spark_connection.spark_connection <- function(x, ...) {
 #' @export
 spark_connection.spark_jobj <- function(x, ...) {
   x$connection
-}
-
-#' Check whether the connection is open
-#'
-#' @param sc \code{spark_connection}
-#'
-#' @keywords internal
-#'
-#' @export
-connection_is_open <- function(sc) {
-  UseMethod("connection_is_open")
 }
 
 #' Read configuration values for a connection
@@ -131,7 +127,7 @@ connection_config <- function(sc, prefix, not_prefix = list()) {
     if (grepl("\\.remote$", e) && isLocal)
       found <- FALSE
 
-    if (nchar(config[[e]]) == 0)
+    if (all(nchar(config[[e]]) == 0))
       found <- FALSE
 
     found
@@ -157,11 +153,6 @@ connection_config <- function(sc, prefix, not_prefix = list()) {
   names(params) <- paramsNames
   params
 }
-
-spark_master_is_local <- function(master) {
-  grepl("^local(\\[[0-9\\*]*\\])?$", master, perl = TRUE)
-}
-
 
 #' View Entries in the Spark Log
 #'

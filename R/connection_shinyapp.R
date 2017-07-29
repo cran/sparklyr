@@ -73,7 +73,7 @@ spark_ui_spark_choices <- function() {
 spark_ui_hadoop_choices <- function(sparkVersion) {
   availableVersions <- spark_ui_avaliable_versions()
 
-  selected <- spark_install_find(sparkVersion = sparkVersion, installedOnly = FALSE)$hadoopVersion
+  selected <- spark_install_find(version = sparkVersion, installed_only = FALSE)$hadoopVersion
 
   choiceValues <- unique(availableVersions[availableVersions$spark == sparkVersion,][["hadoop"]])
   choiceNames <- choiceValues
@@ -103,84 +103,84 @@ connection_spark_ui <- function() {
     tags$head(
       tags$style(
         HTML(paste("
-                   body {
-                   background: none;
+          body {
+            background: none;
 
-                   font-family : \"Lucida Sans\", \"DejaVu Sans\", \"Lucida Grande\", \"Segoe UI\", Verdana, Helvetica, sans-serif;
-                   font-size : 12px;
-                   -ms-user-select : none;
-                   -moz-user-select : none;
-                   -webkit-user-select : none;
-                   user-select : none;
+            font-family : \"Lucida Sans\", \"DejaVu Sans\", \"Lucida Grande\", \"Segoe UI\", Verdana, Helvetica, sans-serif;
+            font-size : 12px;
+            -ms-user-select : none;
+            -moz-user-select : none;
+            -webkit-user-select : none;
+            user-select : none;
 
-                   margin: 0;
-                   margin-top: 7px;
-                   }
+            margin: 0;
+            margin-top: 7px;
+          }
 
-                   .shiny-input-container {
-                   min-width: 100%;
-                   margin-bottom: ", elementSpacing, "px;
-                   }
+          .shiny-input-container {
+            min-width: 100%;
+            margin-bottom: ", elementSpacing, "px;
+          }
 
-                   .shiny-input-container > .control-label {
-                   display: table-cell;
-                   width: 195px;
-                   }
+          .shiny-input-container > .control-label {
+            display: table-cell;
+            width: 195px;
+          }
 
-                   .shiny-input-container > div {
-                   display: table-cell;
-                   width: 300px;
-                   }
+          .shiny-input-container > div {
+            display: table-cell;
+            width: 300px;
+          }
 
-                   #shiny-disconnected-overlay {
-                   display: none;
-}
-", sep = ""))
-        )
-        ),
+          #shiny-disconnected-overlay {
+            display: none;
+          }
+        ", sep = ""))
+      )
+    ),
     div(style = "table-row",
-        selectInput(
-          "master",
-          "Master:",
-          choices = c(
-            list("local" = "local"),
-            spark_ui_default_connections(),
-            list("Cluster..." = "cluster")
-          ),
-          selectize = FALSE
+      selectInput(
+        "master",
+        "Master:",
+        choices = c(
+          list("local" = "local"),
+          spark_ui_default_connections(),
+          list("Cluster..." = "cluster")
         ),
-        selectInput(
-          "dbinterface",
-          "DB Interface:",
-          choices = c(
-            "dplyr" = "dplyr",
-            "(None)" = "none"
-          ),
-          selectize = FALSE,
-          selected = rsApiReadPreference("sparklyr_dbinterface", "dplyr")
-        )
+        selectize = FALSE
+      ),
+      selectInput(
+        "dbinterface",
+        "DB Interface:",
+        choices = c(
+          "dplyr" = "dplyr",
+          "(None)" = "none"
+        ),
+        selectize = FALSE,
+        selected = rsApiReadPreference("sparklyr_dbinterface", "dplyr")
+      )
     ),
     div(
       style = paste("display: table-row; height: 10px")
     ),
     div(style = "table-row",
-        selectInput(
-          "sparkversion",
-          "Spark version:",
-          choices = spark_ui_spark_choices(),
-          selected = spark_default_version()$spark,
-          selectize = FALSE
-        ),
-        selectInput(
-          "hadoopversion",
-          "Hadoop version:",
-          choices = spark_ui_hadoop_choices(spark_default_version()$spark),
-          selected = spark_default_version()$hadoop,
-          selectize = FALSE
-        )
+      selectInput(
+        "sparkversion",
+        "Spark version:",
+        choices = spark_ui_spark_choices(),
+        selected = spark_default_version()$spark,
+        selectize = FALSE
+      ),
+      selectInput(
+        "hadoopversion",
+        "Hadoop version:",
+        choices = spark_ui_hadoop_choices(spark_default_version()$spark),
+        selected = spark_default_version()$hadoop,
+        selectize = FALSE
+      )
     )
-        )
-  }
+  )
+}
 
 connection_spark_server <- function(input, output, session) {
   hasDefaultSparkVersion <- reactive({
@@ -236,14 +236,6 @@ connection_spark_server <- function(input, output, session) {
     }
   }
 
-  installSparkReactive <- reactive({
-    sparkSelection <- input$sparkversion
-    hadoopSelection <- input$hadoopversion
-    master <- input$master
-
-    checkUserInstallPreference(master, sparkSelection, hadoopSelection, FALSE)
-  })
-
   generateCode <- function(master, dbInterface, sparkVersion, hadoopVersion, installSpark) {
     paste(
       "library(sparklyr)\n",
@@ -291,10 +283,29 @@ connection_spark_server <- function(input, output, session) {
     dbInterface <- input$dbinterface
     sparkVersion <- input$sparkversion
     hadoopVersion <- input$hadoopversion
-    installSpark <- installSparkReactive()
     codeInvalidated <- stateValuesReactive$codeInvalidated
 
+    installSpark <- checkUserInstallPreference(master, sparkVersion, hadoopVersion, FALSE)
+
     generateCode(master, dbInterface, sparkVersion, hadoopVersion, installSpark)
+  })
+
+  installLater <- reactive({
+    master <- input$master
+    sparkVersion <- input$sparkversion
+    hadoopVersion <- input$hadoopversion
+  }) %>% debounce(200)
+
+  observe({
+    installLater()
+
+    isolate({
+      master <- input$master
+      sparkVersion <- input$sparkversion
+      hadoopVersion <- input$hadoopversion
+
+      checkUserInstallPreference(master, sparkVersion, hadoopVersion, TRUE)
+    })
   })
 
   observe({
@@ -375,7 +386,8 @@ connection_spark_server <- function(input, output, session) {
       message <- paste(
         "In order to connect to Spark ",
         "your system needs to have Java installed (",
-        "no version of Java was detected).",
+        "no version of Java was detected or installation ",
+        "is invalid).",
         sep = ""
       )
 
@@ -391,7 +403,7 @@ connection_spark_server <- function(input, output, session) {
         message <- paste(
           message,
           "<p>Please contact your server administrator to request the ",
-          "installation of Java on this system.</p>",
+            "installation of Java on this system.</p>",
           sep = "")
       }
 
@@ -414,7 +426,7 @@ connection_spark_server <- function(input, output, session) {
     if (!identical(currentSparkSelection, NULL)) {
       currentSparkSelection <<- sparkVersion
 
-      hadoopDefault <- spark_install_find(sparkVersion = currentSparkSelection, installedOnly = FALSE)$hadoopVersion
+      hadoopDefault <- spark_install_find(version = currentSparkSelection, installed_only = FALSE)$hadoopVersion
 
       updateSelectInput(
         session,
@@ -422,25 +434,6 @@ connection_spark_server <- function(input, output, session) {
         choices = spark_ui_hadoop_choices(currentSparkSelection),
         selected = hadoopDefault
       )
-
-      stateValuesReactive$codeInvalidated <<- isolate({
-        stateValuesReactive$codeInvalidated + 1
-      })
-
-      checkUserInstallPreference(master, currentSparkSelection, spark_default_version()$hadoop, TRUE)
-    }
-  })
-
-  observe({
-    # Scope this reactive to only changes to hadoop version, by using a ref
-    # to currentSparkSelection we force this code to be always executed
-    # after the spark version changes.
-    hadoopVersion <- input$hadoopversion
-    master <- input$master
-
-    # Don't change anything while initializing
-    if (!identical(currentSparkSelection, NULL)) {
-      checkUserInstallPreference(master, currentSparkSelection, hadoopVersion, TRUE)
 
       stateValuesReactive$codeInvalidated <<- isolate({
         stateValuesReactive$codeInvalidated + 1

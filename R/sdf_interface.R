@@ -43,7 +43,7 @@ sdf_copy_to <- function(sc,
 #' @export
 sdf_copy_to.default <- function(sc,
                                 x,
-                                name = deparse(substitute(x)),
+                                name = spark_table_name(substitute(x)),
                                 memory = TRUE,
                                 repartition = 0L,
                                 overwrite = FALSE,
@@ -65,6 +65,7 @@ sdf_import <- function(x,
 }
 
 #' @export
+#' @importFrom dplyr tbl
 sdf_import.default <- function(x,
                                sc,
                                name = random_string("sparklyr_tmp_"),
@@ -131,6 +132,7 @@ sdf_register.list <- function(x, name = NULL) {
 }
 
 #' @export
+#' @importFrom dplyr tbl
 sdf_register.spark_jobj <- function(x, name = NULL) {
   name <- name %||% random_string("sparklyr_tmp_")
   invoke(x, "registerTempTable", name)
@@ -293,14 +295,16 @@ sdf_sort <- function(x, columns) {
 #' # note that we have two separate tbls registered
 #' dplyr::src_tbls(sc)
 #' }
+#' @importFrom lazyeval lazy_dots
 sdf_mutate <- function(.data, ...) {
-  sdf_mutate_(.data, .dots = lazyeval::lazy_dots(...))
+  sdf_mutate_(.data, .dots = lazy_dots(...))
 }
 
 #' @name sdf_mutate
 #' @export
+#' @importFrom lazyeval all_dots
 sdf_mutate_ <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
+  dots <- all_dots(.dots, ..., all_named = TRUE)
   data <- .data
 
   for (i in seq_along(dots)) {
@@ -530,6 +534,63 @@ sdf_with_unique_id <- function(x, id = "id") {
   sdf_register(transformed)
 }
 
+#' Add a Sequential ID Column to a Spark DataFrame
+#'
+#' Add a sequential ID column to a Spark DataFrame. The Spark
+#' \code{zipWithIndex} function is used to produce these. This differs from
+#' \code{sdf_with_unique_id} in that the IDs generated are independent of
+#' partitioning.
+#'
+#' @template roxlate-ml-x
+#' @param id The name of the column to host the generated IDs.
+#' @param from The starting value of the id column
+#'
+#' @export
+sdf_with_sequential_id <- function(x, id = "id", from = 1L) {
+
+  sdf <- spark_dataframe(x)
+  sc <- spark_connection(sdf)
+  ensure_scalar_character(id)
+  ensure_scalar_integer(from)
+
+  transformed <- invoke_static(sc,
+                               "sparklyr.Utils",
+                               "addSequentialIndex",
+                               spark_context(sc),
+                               sdf,
+                               from,
+                               id)
+
+  sdf_register(transformed)
+}
+
+#' Returns the last index of a Spark DataFrame
+#'
+#' Returns the last index of a Spark DataFrame. The Spark
+#' \code{mapPartitionsWithIndex} function is used to iterate
+#' through the last nonempty partition of the RDD to find the last record.
+#'
+#' @template roxlate-ml-x
+#' @param id The name of the index column.
+#'
+#' @export
+#' @importFrom rlang sym
+#' @importFrom rlang :=
+sdf_last_index <- function(x, id = "id") {
+
+  sdf <- x %>%
+    dplyr::transmute(!!! sym(id) := as.numeric(!!! sym(id))) %>%
+    spark_dataframe()
+  sc <- spark_connection(sdf)
+  ensure_scalar_character(id)
+
+  invoke_static(sc,
+                "sparklyr.Utils",
+                "getLastIndex",
+                sdf,
+                id)
+}
+
 #' Compute (Approximate) Quantiles with a Spark DataFrame
 #'
 #' Given a numeric column within a Spark DataFrame, compute
@@ -600,5 +661,98 @@ sdf_persist <- function(x, storage.level = "MEMORY_AND_DISK") {
 
   sdf %>%
     invoke("persist", sl) %>%
+    sdf_register()
+}
+
+#' Checkpoint a Spark DataFrame
+#'
+#' @param x an object coercible to a Spark DataFrame
+#' @param eager whether to truncate the lineage of the DataFrame
+#' @export
+sdf_checkpoint <- function(x, eager = TRUE) {
+  ensure_scalar_boolean(eager)
+
+  x %>%
+    spark_dataframe() %>%
+    invoke("checkpoint", eager) %>%
+    sdf_register()
+}
+
+#' Broadcast hint
+#'
+#' Used to force broadcast hash joins.
+#'
+#' @template roxlate-ml-x
+#'
+#' @export
+sdf_broadcast <- function(x) {
+  sdf <- spark_dataframe(x)
+  sc <- spark_connection(sdf)
+
+  invoke_static(sc,
+                "org.apache.spark.sql.functions",
+                "broadcast", sdf) %>%
+    sdf_register()
+}
+
+#' Repartition a Spark DataFrame
+#'
+#' @template roxlate-ml-x
+#'
+#' @param partitions number of partitions
+#' @param partition_by vector of column names used for partitioning, only supported for Spark 2.0+
+#'
+#' @export
+sdf_repartition <- function(x, partitions = NULL, partition_by = NULL) {
+  sdf <- spark_dataframe(x)
+  sc <- spark_connection(sdf)
+
+  partitions <- partitions %||% 0L %>%
+    ensure_scalar_integer()
+
+  if (spark_version(sc) >= "2.0.0") {
+    partition_by <- as.list(partition_by) %>%
+      lapply(ensure_scalar_character)
+
+    return(
+      invoke_static(sc, "sparklyr.Repartition", "repartition", sdf, partitions, partition_by) %>%
+        sdf_register()
+    )
+  } else {
+    if (!is.null(partition_by))
+      stop("partitioning by columns only supported for Spark 2.0.0 and later")
+
+    invoke(sdf, "repartition", partitions) %>%
+      sdf_register()
+  }
+}
+
+#' Gets number of partitions of a Spark DataFrame
+#'
+#' @template roxlate-ml-x
+#' @export
+sdf_num_partitions <- function(x) {
+  x %>%
+    spark_dataframe() %>%
+    invoke("rdd") %>%
+    invoke("getNumPartitions")
+}
+
+#' Coalesces a Spark DataFrame
+#'
+#' @template roxlate-ml-x
+#' @param partitions number of partitions
+#' @export
+sdf_coalesce <- function(x, partitions) {
+  sdf <- spark_dataframe(x)
+  sc <- spark_connection(sdf)
+
+  partitions <- ensure_scalar_integer(partitions)
+
+  if (partitions < 1)
+    stop("number of partitions must be positive")
+
+  sdf %>%
+    invoke("coalesce", partitions) %>%
     sdf_register()
 }

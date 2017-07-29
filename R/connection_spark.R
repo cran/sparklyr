@@ -61,7 +61,8 @@ spark_connect <- function(master = "local",
                           version = NULL,
                           hadoop_version = NULL,
                           config = spark_config(),
-                          extensions = sparklyr::registered_extensions())
+                          extensions = sparklyr::registered_extensions(),
+                          ...)
 {
   # validate method
   method <- match.arg(method)
@@ -105,11 +106,18 @@ spark_connect <- function(master = "local",
     })
   }))
 
+  # clean spark_apply per-connection cache
+  if (file.exists(core_spark_apply_bundle_path()))
+    unlink(core_spark_apply_bundle_path())
+
   # connect using the specified method
 
   # if master is an example code, run in test mode
   if (master == "spark://HOST:PORT")
     method <- "test"
+
+  if (spark_master_is_gateway(master))
+    method <- "gateway"
 
   # spark-shell (local install of spark)
   if (method == "shell") {
@@ -120,7 +128,16 @@ spark_connect <- function(master = "local",
                              hadoop_version = hadoop_version,
                              shell_args = shell_args,
                              config = config,
-                             service = FALSE,
+                             service = spark_config_value(
+                               config,
+                               "sparklyr.gateway.service",
+                               FALSE),
+                             remote = spark_config_value(
+                               config,
+                               "sparklyr.gateway.remote",
+                               # running in yarn-cluster mode requires the
+                               # driver to take external connections
+                               TRUE),
                              extensions = extensions)
   } else if (method == "livy") {
     scon <- livy_connection(master = master,
@@ -129,6 +146,8 @@ spark_connect <- function(master = "local",
                             version,
                             hadoop_version ,
                             extensions)
+  } else if (method == "gateway") {
+    scon <- gateway_connection(master = master, config = config)
   } else if (method == "databricks") {
     scon <- databricks_connection(config = config,
                                   extensions)
@@ -152,7 +171,6 @@ spark_connect <- function(master = "local",
 
   # update spark_context and hive_context connections with DBIConnection
   scon$spark_context$connection <- scon
-  scon$hive_context$connection <- scon
 
   # notify connection viewer of connection
   libs <- c("sparklyr", extensions)
@@ -284,6 +302,22 @@ spark_connection_is_local <- function(sc) {
 
 spark_master_is_local <- function(master) {
   grepl("^local(\\[[0-9\\*]*\\])?$", master, perl = TRUE)
+}
+
+spark_connection_is_yarn_client <- function(sc) {
+  spark_master_is_yarn_client(sc$master)
+}
+
+spark_master_is_yarn_client <- function(master) {
+  grepl("^yarn-client$", master, ignore.case = TRUE, perl = TRUE)
+}
+
+spark_master_is_yarn_cluster <- function(master) {
+  grepl("^yarn-cluster$", master, ignore.case = TRUE, perl = TRUE)
+}
+
+spark_master_is_gateway <- function(master) {
+  grepl("sparklyr://.*", master)
 }
 
 # Number of cores available in the local install

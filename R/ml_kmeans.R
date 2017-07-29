@@ -21,10 +21,11 @@
 #' @return \link{ml_model} object of class \code{kmeans} with overloaded \code{print}, \code{fitted} and \code{predict} functions.
 #'
 #' @export
+#' @importFrom dplyr tbl_vars
 ml_kmeans <- function(x,
                       centers,
                       iter.max = 100,
-                      features = dplyr::tbl_vars(x),
+                      features = tbl_vars(x),
                       compute.cost = TRUE,
                       tolerance = 0.0001,
                       ml.options = ml_options(),
@@ -78,8 +79,12 @@ ml_kmeans <- function(x,
   kmmCenters <- invoke(fit, "clusterCenters")
 
   # compute cost for k-means
-  if (compute.cost)
-    kmmCost <- invoke(fit, "computeCost", tdf)
+  if (compute.cost) {
+    kmmCost <- tryCatch(
+      invoke(fit, "computeCost", tdf),
+      error = function(e) NULL
+    )
+  }
 
   centersList <- transpose_list(lapply(kmmCenters, function(center) {
     as.numeric(invoke(center, "toArray"))

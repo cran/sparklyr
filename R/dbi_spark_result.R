@@ -54,15 +54,13 @@ setMethod("dbSendQuery", c("spark_connection", "character"), function(conn, stat
 })
 
 setMethod("dbGetQuery", c("spark_connection", "character"), function(conn, statement, ...) {
-  # TODO: Use default dbGetQuery method defined in DBIConnection
   rs <- dbSendQuery(conn, statement, ...)
   on.exit(dbClearResult(rs))
 
   df <- tryCatch(
     dbFetch(rs, n = -1, ...),
     error = function(e) {
-      warning(conditionMessage(e), call. = conditionCall(e))
-      NULL
+      stop("Failed to fetch data: ", e$message)
     }
   )
 
@@ -109,4 +107,14 @@ setMethod("dbHasCompleted", "DBISparkResult", function(res, ...) {
 
 setMethod("dbClearResult", "DBISparkResult", function(res, ...) {
   TRUE
+})
+
+setMethod("dbSendStatement", "spark_connection", function(conn, statement, ...) {
+  dbSendQuery(conn, statement, ...)
+})
+
+setMethod("dbExecute", "spark_connection", function(conn, statement, ...) {
+  rs <- dbSendStatement(conn, statement, ...)
+  on.exit(dbClearResult(rs))
+  dbGetRowsAffected(rs)
 })

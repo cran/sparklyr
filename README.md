@@ -1,12 +1,12 @@
 sparklyr: R interface for Apache Spark
 ================
 
-[![Build Status](https://travis-ci.org/rstudio/sparklyr.svg?branch=master)](https://travis-ci.org/rstudio/sparklyr) [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/sparklyr)](https://cran.r-project.org/package=sparklyr)
+[![Build Status](https://travis-ci.org/rstudio/sparklyr.svg?branch=master)](https://travis-ci.org/rstudio/sparklyr) [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/sparklyr)](https://cran.r-project.org/package=sparklyr) [![Join the chat at https://gitter.im/rstudio/sparklyr](https://badges.gitter.im/rstudio/sparklyr.svg)](https://gitter.im/rstudio/sparklyr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 <img src="tools/readme/sparklyr-illustration.png" width=364 height=197 align="right"/>
 
 -   Connect to [Spark](http://spark.apache.org/) from R. The sparklyr package provides a <br/> complete [dplyr](https://github.com/hadley/dplyr) backend.
--   Filter and aggregate Spark datasets then bring them into R for analysis and visualization.
+-   Filter and aggregate Spark datasets then bring them into R for <br/> analysis and visualization.
 -   Use Spark's distributed [machine learning](http://spark.apache.org/docs/latest/mllib-guide.html) library from R.
 -   Create [extensions](http://spark.rstudio.com/extensions.html) that call the full Spark API and provide <br/> interfaces to Spark packages.
 
@@ -23,7 +23,7 @@ You should also install a local version of Spark for development purposes:
 
 ``` r
 library(sparklyr)
-spark_install(version = "1.6.2")
+spark_install(version = "2.1.0")
 ```
 
 To upgrade to the latest version of sparklyr, run the following command and restart your r session:
@@ -51,7 +51,7 @@ For more information on connecting to remote Spark clusters see the [Deployment]
 Using dplyr
 -----------
 
-We can new use all of the available dplyr verbs against the tables within the cluster.
+We can now use all of the available dplyr verbs against the tables within the cluster.
 
 We'll start by copying some datasets from R into the Spark cluster (note that you may need to install the nycflights13 and Lahman packages in order to execute this code):
 
@@ -76,20 +76,19 @@ To start with here's a simple filtering example:
 flights_tbl %>% filter(dep_delay == 2)
 ```
 
-    ## Source:     lazy query [?? x 19]
-    ## Database:   spark_connection
-    ## 
+    ## # Source:   lazy query [?? x 19]
+    ## # Database: spark_connection
     ##     year month   day dep_time sched_dep_time dep_delay arr_time
     ##    <int> <int> <int>    <int>          <int>     <dbl>    <int>
-    ## 1   2013     1     1      517            515         2      830
-    ## 2   2013     1     1      542            540         2      923
-    ## 3   2013     1     1      702            700         2     1058
-    ## 4   2013     1     1      715            713         2      911
-    ## 5   2013     1     1      752            750         2     1025
-    ## 6   2013     1     1      917            915         2     1206
-    ## 7   2013     1     1      932            930         2     1219
-    ## 8   2013     1     1     1028           1026         2     1350
-    ## 9   2013     1     1     1042           1040         2     1325
+    ##  1  2013     1     1      517            515         2      830
+    ##  2  2013     1     1      542            540         2      923
+    ##  3  2013     1     1      702            700         2     1058
+    ##  4  2013     1     1      715            713         2      911
+    ##  5  2013     1     1      752            750         2     1025
+    ##  6  2013     1     1      917            915         2     1206
+    ##  7  2013     1     1      932            930         2     1219
+    ##  8  2013     1     1     1028           1026         2     1350
+    ##  9  2013     1     1     1042           1040         2     1325
     ## 10  2013     1     1     1231           1229         2     1523
     ## # ... with 6,223 more rows, and 12 more variables: sched_arr_time <int>,
     ## #   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
@@ -129,23 +128,22 @@ batting_tbl %>%
   filter(min_rank(desc(H)) <= 2 & H > 0)
 ```
 
-    ## Source:     lazy query [?? x 7]
-    ## Database:   spark_connection
-    ## Grouped by: playerID
-    ## Ordered by: playerID, yearID, teamID
-    ## 
+    ## # Source:     lazy query [?? x 7]
+    ## # Database:   spark_connection
+    ## # Groups:     playerID
+    ## # Ordered by: playerID, yearID, teamID
     ##     playerID yearID teamID     G    AB     R     H
     ##        <chr>  <int>  <chr> <int> <int> <int> <int>
-    ## 1  abbotpa01   2000    SEA    35     5     1     2
-    ## 2  abbotpa01   2004    PHI    10    11     1     2
-    ## 3  abnersh01   1992    CHA    97   208    21    58
-    ## 4  abnersh01   1990    SDN    91   184    17    45
-    ## 5  abreujo02   2015    CHA   154   613    88   178
-    ## 6  abreujo02   2014    CHA   145   556    80   176
-    ## 7  acevejo01   2001    CIN    18    34     1     4
-    ## 8  acevejo01   2004    CIN    39    43     0     2
-    ## 9  adamsbe01   1919    PHI    78   232    14    54
-    ## 10 adamsbe01   1918    PHI    84   227    10    40
+    ##  1 aaronha01   1959    ML1   154   629   116   223
+    ##  2 aaronha01   1963    ML1   161   631   121   201
+    ##  3 abbotji01   1999    MIL    20    21     0     2
+    ##  4 abnersh01   1992    CHA    97   208    21    58
+    ##  5 abnersh01   1990    SDN    91   184    17    45
+    ##  6 acklefr01   1963    CHA     2     5     0     1
+    ##  7 acklefr01   1964    CHA     3     1     0     1
+    ##  8 adamecr01   2015    COL    26    53     4    13
+    ##  9 adamecr01   2014    COL     7    15     1     1
+    ## 10 adamsac01   1943    NY1    70    32     3     4
     ## # ... with 2.561e+04 more rows
 
 For additional documentation on using dplyr with Spark see the [dplyr](http://spark.rstudio.com/dplyr.html) section of the sparklyr website.
@@ -205,7 +203,7 @@ fit
     ## 
     ## Coefficients:
     ## (Intercept)          wt         cyl 
-    ##   37.066699   -2.309504   -1.639546
+    ##   33.499452   -2.818463   -0.923187
 
 For linear regression models produced by Spark, we can use `summary()` to learn a bit more about the quality of our fit, and the statistical significance of each of our predictors.
 
@@ -216,26 +214,26 @@ summary(fit)
     ## Call: ml_linear_regression(., response = "mpg", features = c("wt", "cyl"))
     ## 
     ## Deviance Residuals::
-    ##     Min      1Q  Median      3Q     Max 
-    ## -2.6881 -1.0507 -0.4420  0.4757  3.3858 
+    ##    Min     1Q Median     3Q    Max 
+    ## -1.752 -1.134 -0.499  1.296  2.282 
     ## 
     ## Coefficients:
     ##             Estimate Std. Error t value  Pr(>|t|)    
-    ## (Intercept) 37.06670    2.76494 13.4059 2.981e-07 ***
-    ## wt          -2.30950    0.84748 -2.7252   0.02341 *  
-    ## cyl         -1.63955    0.58635 -2.7962   0.02084 *  
+    ## (Intercept) 33.49945    3.62256  9.2475 0.0002485 ***
+    ## wt          -2.81846    0.96619 -2.9171 0.0331257 *  
+    ## cyl         -0.92319    0.54639 -1.6896 0.1518998    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## R-Squared: 0.8665
-    ## Root Mean Squared Error: 1.799
+    ## R-Squared: 0.8274
+    ## Root Mean Squared Error: 1.422
 
 Spark machine learning supports a wide array of algorithms and feature transformations and as illustrated above it's easy to chain these functions together with dplyr pipelines. To learn more see the [machine learning](mllib.html) section.
 
 Reading and Writing Data
 ------------------------
 
-You can read and write data in CSV, JSON, and Parquet formats. Data can be stored in HDFS, S3, or on the lcoal filesystem of cluster nodes.
+You can read and write data in CSV, JSON, and Parquet formats. Data can be stored in HDFS, S3, or on the local filesystem of cluster nodes.
 
 ``` r
 temp_csv <- tempfile(fileext = ".csv")
@@ -256,6 +254,55 @@ src_tbls(sc)
 
     ## [1] "batting"      "flights"      "iris"         "iris_csv"    
     ## [5] "iris_json"    "iris_parquet" "mtcars"
+
+Distributed R
+-------------
+
+You can execute arbitrary r code across your cluster using `spark_apply`. For example, we can apply `rgamma` over `iris` as follows:
+
+``` r
+spark_apply(iris_tbl, function(data) {
+  data[1:4] + rgamma(1,2)
+})
+```
+
+    ## # Source:   table<sparklyr_tmp_16c9a2c40da6d> [?? x 4]
+    ## # Database: spark_connection
+    ##    Sepal_Length Sepal_Width Petal_Length Petal_Width
+    ##           <dbl>       <dbl>        <dbl>       <dbl>
+    ##  1     7.988345    6.388345     4.288345    3.088345
+    ##  2     7.788345    5.888345     4.288345    3.088345
+    ##  3     7.588345    6.088345     4.188345    3.088345
+    ##  4     7.488345    5.988345     4.388345    3.088345
+    ##  5     7.888345    6.488345     4.288345    3.088345
+    ##  6     8.288345    6.788345     4.588345    3.288345
+    ##  7     7.488345    6.288345     4.288345    3.188345
+    ##  8     7.888345    6.288345     4.388345    3.088345
+    ##  9     7.288345    5.788345     4.288345    3.088345
+    ## 10     7.788345    5.988345     4.388345    2.988345
+    ## # ... with 140 more rows
+
+You can also group by columns to perform an operation over each group of rows and make use of any package within the closure:
+
+``` r
+spark_apply(
+  iris_tbl,
+  function(e) broom::tidy(lm(Petal_Width ~ Petal_Length, e)),
+  names = c("term", "estimate", "std.error", "statistic", "p.value"),
+  group_by = "Species"
+)
+```
+
+    ## # Source:   table<sparklyr_tmp_16c9a477a7eb8> [?? x 6]
+    ## # Database: spark_connection
+    ##      Species         term    estimate  std.error  statistic      p.value
+    ##        <chr>        <chr>       <dbl>      <dbl>      <dbl>        <dbl>
+    ## 1 versicolor  (Intercept) -0.08428835 0.16070140 -0.5245029 6.023428e-01
+    ## 2 versicolor Petal_Length  0.33105360 0.03750041  8.8279995 1.271916e-11
+    ## 3  virginica  (Intercept)  1.13603130 0.37936622  2.9945505 4.336312e-03
+    ## 4  virginica Petal_Length  0.16029696 0.06800119  2.3572668 2.253577e-02
+    ## 5     setosa  (Intercept) -0.04822033 0.12164115 -0.3964146 6.935561e-01
+    ## 6     setosa Petal_Length  0.20124509 0.08263253  2.4354220 1.863892e-02
 
 Extensions
 ----------
@@ -314,16 +361,16 @@ You can show the log using the `spark_log` function:
 spark_log(sc, n = 10)
 ```
 
-    ## 17/04/24 23:36:31 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 84 (/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T//RtmpafGqjy/file81c4784fd7bf.csv MapPartitionsRDD[334] at textFile at NativeMethodAccessorImpl.java:-2)
-    ## 17/04/24 23:36:31 INFO TaskSchedulerImpl: Adding task set 84.0 with 1 tasks
-    ## 17/04/24 23:36:31 INFO TaskSetManager: Starting task 0.0 in stage 84.0 (TID 153, localhost, partition 0,PROCESS_LOCAL, 2430 bytes)
-    ## 17/04/24 23:36:31 INFO Executor: Running task 0.0 in stage 84.0 (TID 153)
-    ## 17/04/24 23:36:31 INFO HadoopRDD: Input split: file:/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/RtmpafGqjy/file81c4784fd7bf.csv:0+33313106
-    ## 17/04/24 23:36:31 INFO Executor: Finished task 0.0 in stage 84.0 (TID 153). 2082 bytes result sent to driver
-    ## 17/04/24 23:36:31 INFO TaskSetManager: Finished task 0.0 in stage 84.0 (TID 153) in 123 ms on localhost (1/1)
-    ## 17/04/24 23:36:31 INFO TaskSchedulerImpl: Removed TaskSet 84.0, whose tasks have all completed, from pool 
-    ## 17/04/24 23:36:31 INFO DAGScheduler: ResultStage 84 (count at NativeMethodAccessorImpl.java:-2) finished in 0.123 s
-    ## 17/04/24 23:36:31 INFO DAGScheduler: Job 58 finished: count at NativeMethodAccessorImpl.java:-2, took 0.126273 s
+    ## 17/07/27 23:10:34 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 87 (/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T//RtmpJO9ujN/file16c9a23decc5.csv MapPartitionsRDD[340] at textFile at NativeMethodAccessorImpl.java:0)
+    ## 17/07/27 23:10:34 INFO TaskSchedulerImpl: Adding task set 87.0 with 1 tasks
+    ## 17/07/27 23:10:34 INFO TaskSetManager: Starting task 0.0 in stage 87.0 (TID 148, localhost, executor driver, partition 0, PROCESS_LOCAL, 6009 bytes)
+    ## 17/07/27 23:10:34 INFO Executor: Running task 0.0 in stage 87.0 (TID 148)
+    ## 17/07/27 23:10:34 INFO HadoopRDD: Input split: file:/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/RtmpJO9ujN/file16c9a23decc5.csv:0+33313106
+    ## 17/07/27 23:10:34 INFO Executor: Finished task 0.0 in stage 87.0 (TID 148). 1123 bytes result sent to driver
+    ## 17/07/27 23:10:34 INFO TaskSetManager: Finished task 0.0 in stage 87.0 (TID 148) in 129 ms on localhost (executor driver) (1/1)
+    ## 17/07/27 23:10:34 INFO TaskSchedulerImpl: Removed TaskSet 87.0, whose tasks have all completed, from pool 
+    ## 17/07/27 23:10:34 INFO DAGScheduler: ResultStage 87 (count at NativeMethodAccessorImpl.java:0) finished in 0.130 s
+    ## 17/07/27 23:10:34 INFO DAGScheduler: Job 55 finished: count at NativeMethodAccessorImpl.java:0, took 0.132388 s
 
 Finally, we disconnect from Spark:
 
@@ -342,17 +389,85 @@ The latest RStudio [Preview Release](https://www.rstudio.com/products/rstudio/do
 
 Once you've installed the sparklyr package, you should find a new **Spark** pane within the IDE. This pane includes a **New Connection** dialog which can be used to make connections to local or remote Spark instances:
 
-<img src="tools/readme/spark-connect.png" class="screenshot" width=639 height=447/>
+<img src="tools/readme/spark-connect.png" class="screenshot" width=389/>
 
-Once you've connected to Spark you'll be able to browse the tables contained within the Spark cluster:
+Once you've connected to Spark you'll be able to browse the tables contained within the Spark cluster and preview Spark DataFrames using the standard RStudio data viewer:
 
-<img src="tools/readme/spark-tab.png" class="screenshot" width=639 height=393/>
+<img src="tools/readme/spark-dataview.png" class="screenshot" width=639/>
 
-The Spark DataFrame preview uses the standard RStudio data viewer:
+You can also connect to Spark through [Livy](http://livy.io) through a new connection dialog:
 
-<img src="tools/readme/spark-dataview.png" class="screenshot" width=639 height=446/>
+<img src="tools/readme/spark-connect-livy.png" class="screenshot" width=389/>
 
 The RStudio IDE features for sparklyr are available now as part of the [RStudio Preview Release](https://www.rstudio.com/products/rstudio/download/preview/).
+
+Using H2O
+---------
+
+[rsparkling](https://cran.r-project.org/package=rsparkling) is a CRAN package from [H2O](http://h2o.ai) that extends [sparklyr](http://spark.rstudio.com) to provide an interface into [Sparkling Water](https://github.com/h2oai/sparkling-water). For instance, the following example installs, configures and runs [h2o.glm](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/glm.html):
+
+``` r
+options(rsparkling.sparklingwater.version = "2.1.0")
+
+library(rsparkling)
+library(sparklyr)
+library(dplyr)
+library(h2o)
+
+sc <- spark_connect(master = "local", version = "2.1.0")
+mtcars_tbl <- copy_to(sc, mtcars, "mtcars")
+
+mtcars_h2o <- as_h2o_frame(sc, mtcars_tbl, strict_version_check = FALSE)
+
+mtcars_glm <- h2o.glm(x = c("wt", "cyl"), 
+                      y = "mpg",
+                      training_frame = mtcars_h2o,
+                      lambda_search = TRUE)
+```
+
+``` r
+mtcars_glm
+```
+
+    ## Model Details:
+    ## ==============
+    ## 
+    ## H2ORegressionModel: glm
+    ## Model ID:  GLM_model_R_1501222258016_1 
+    ## GLM Model: summary
+    ##     family     link                              regularization
+    ## 1 gaussian identity Elastic Net (alpha = 0.5, lambda = 0.1013 )
+    ##                                                                lambda_search
+    ## 1 nlambda = 100, lambda.max = 10.132, lambda.min = 0.1013, lambda.1se = -1.0
+    ##   number_of_predictors_total number_of_active_predictors
+    ## 1                          2                           2
+    ##   number_of_iterations                                training_frame
+    ## 1                    0 frame_rdd_29_94c9913e0af6e119b3b413e51dad46b6
+    ## 
+    ## Coefficients: glm coefficients
+    ##       names coefficients standardized_coefficients
+    ## 1 Intercept    38.941654                 20.090625
+    ## 2       cyl    -1.468783                 -2.623132
+    ## 3        wt    -3.034558                 -2.969186
+    ## 
+    ## H2ORegressionMetrics: glm
+    ## ** Reported on training data. **
+    ## 
+    ## MSE:  6.017684
+    ## RMSE:  2.453097
+    ## MAE:  1.940985
+    ## RMSLE:  0.1114801
+    ## Mean Residual Deviance :  6.017684
+    ## R^2 :  0.8289895
+    ## Null Deviance :1126.047
+    ## Null D.o.F. :31
+    ## Residual Deviance :192.5659
+    ## Residual D.o.F. :29
+    ## AIC :156.2425
+
+``` r
+spark_disconnect(sc)
+```
 
 Connecting through Livy
 -----------------------
@@ -376,20 +491,19 @@ sc <- spark_connect(master = "http://localhost:8998", method = "livy")
 copy_to(sc, iris)
 ```
 
-    ## Source:     table<iris> [?? x 5]
-    ## Database:   spark_connection
-    ## 
+    ## # Source:   table<iris> [?? x 5]
+    ## # Database: spark_connection
     ##    Sepal_Length Sepal_Width Petal_Length Petal_Width Species
     ##           <dbl>       <dbl>        <dbl>       <dbl>   <chr>
-    ## 1           5.1         3.5          1.4         0.2  setosa
-    ## 2           4.9         3.0          1.4         0.2  setosa
-    ## 3           4.7         3.2          1.3         0.2  setosa
-    ## 4           4.6         3.1          1.5         0.2  setosa
-    ## 5           5.0         3.6          1.4         0.2  setosa
-    ## 6           5.4         3.9          1.7         0.4  setosa
-    ## 7           4.6         3.4          1.4         0.3  setosa
-    ## 8           5.0         3.4          1.5         0.2  setosa
-    ## 9           4.4         2.9          1.4         0.2  setosa
+    ##  1          5.1         3.5          1.4         0.2  setosa
+    ##  2          4.9         3.0          1.4         0.2  setosa
+    ##  3          4.7         3.2          1.3         0.2  setosa
+    ##  4          4.6         3.1          1.5         0.2  setosa
+    ##  5          5.0         3.6          1.4         0.2  setosa
+    ##  6          5.4         3.9          1.7         0.4  setosa
+    ##  7          4.6         3.4          1.4         0.3  setosa
+    ##  8          5.0         3.4          1.5         0.2  setosa
+    ##  9          4.4         2.9          1.4         0.2  setosa
     ## 10          4.9         3.1          1.5         0.1  setosa
     ## # ... with 140 more rows
 

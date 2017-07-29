@@ -49,19 +49,3 @@ setMethod("dbRemoveTable", c("spark_connection", "character"),
   }
 )
 
-#' @export
-mutate_.tbl_spark <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
-
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    partial_eval_ref <- get("partial_eval", envir = asNamespace("dbplyr"))
-    dots <- partial_eval_ref(dots, op_vars(.data))
-  }
-
-  data <- .data
-  lapply(seq_along(dots), function(i) {
-    data <<- add_op_single("mutate", data, dots = dots[i])
-  })
-
-  data
-}

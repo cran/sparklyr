@@ -1,4 +1,4 @@
-invoke_simple_transformer <- function(x, class, arguments) {
+invoke_simple_transformer <- function(x, class, arguments, only.model = FALSE) {
   sdf <- spark_dataframe(x)
   sc <- spark_connection(sdf)
 
@@ -9,9 +9,11 @@ invoke_simple_transformer <- function(x, class, arguments) {
   enumerate(arguments, function(key, val) {
     if (is.function(val))
       transformer <<- val(transformer, sdf)
-    else
+    else if (!identical(val, NULL))
       transformer <<- invoke(transformer, key, val)
   })
+
+  if (only.model) return(transformer)
 
   # invoke transformer
   transformed <- invoke(transformer, "transform", sdf)

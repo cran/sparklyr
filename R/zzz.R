@@ -7,14 +7,7 @@ set_option_default <- function(...) {
 }
 
 .onLoad <- function(...) {
-  register_dplyr_all()
-
   set_option_default(
     sparklyr.na.action.verbose = TRUE
   )
-
-  overwrite_dplyr_top_n()
-  setHook(packageEvent("dplyr", "attach"), function(...) {
-    overwrite_dplyr_top_n()
-  })
 }

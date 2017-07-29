@@ -4,8 +4,8 @@
 \alias{ml_lda}
 \title{Spark ML -- Latent Dirichlet Allocation}
 \usage{
-ml_lda(x, features = dplyr::tbl_vars(x), k = length(features),
-  alpha = (50/k) + 1, beta = 0.1 + 1, ml.options = ml_options(), ...)
+ml_lda(x, features = tbl_vars(x), k = length(features), alpha = (50/k) +
+  1, beta = 0.1 + 1, ml.options = ml_options(), ...)
 }
 \arguments{
 \item{x}{An object coercable to a Spark DataFrame (typically, a
@@ -35,6 +35,24 @@ Fit a Latent Dirichlet Allocation (LDA) model to a Spark DataFrame.
 The topics' distributions over terms are called "beta" in the original LDA paper by Blei et al., but are called "phi" in many later papers such as Asuncion et al., 2009.
 
 For terminology used in LDA model see \href{https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.ml.clustering.LDA}{Spark LDA documentation}.
+}
+\examples{
+\dontrun{
+library(janeaustenr)
+library(sparklyr)
+library(dplyr)
+
+sc <- spark_connect(master = "local")
+
+austen_books <- austen_books()
+books_tbl <- sdf_copy_to(sc, austen_books, overwrite = TRUE)
+first_tbl <- books_tbl \%>\% filter(nchar(text) > 0) \%>\% head(100)
+
+first_tbl \%>\%
+  ft_tokenizer("text", "tokens") \%>\%
+  ft_count_vectorizer("tokens", "features") \%>\%
+  ml_lda("features", k = 4)
+}
 }
 \references{
 Original LDA paper (journal version): Blei, Ng, and Jordan. "Latent Dirichlet Allocation." JMLR, 2003.

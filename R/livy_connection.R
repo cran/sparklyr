@@ -1,15 +1,26 @@
+create_hive_context.livy_connection <- function(sc) {
+  if (spark_version(sc) >= "2.0.0")
+    create_hive_context_v2(sc)
+  else
+    invoke_new(
+      sc,
+      "org.apache.spark.sql.hive.HiveContext",
+      sc$spark_context
+    )
+}
+
 #' @import httr
 #' @importFrom httr http_error
 #' @importFrom httr http_status
 #' @importFrom httr text_content
 livy_validate_http_response <- function(message, req) {
   if (http_error(req)) {
-    if (identical(status_code(req), 401)) {
+    if (isTRUE(all.equal(status_code(req), 401))) {
       stop("Livy operation is unauthorized. Try spark_connect with config = livy_config()")
     }
     else {
       httpStatus <- http_status(req)
-      httpContent <- text_content(req)
+      httpContent <- content(req, as = 'text', encoding = "UTF-8")
       stop(message, " (", httpStatus$message, "): ", httpContent)
     }
   }
@@ -24,6 +35,7 @@ livy_validate_http_response <- function(message, req) {
 #' @param config Optional base configuration
 #' @param username The username to use in the Authorization header
 #' @param password The password to use in the Authorization header
+#' @param custom_headers List of custom headers to append to http requests. Defaults to \code{list("X-Requested-By" = "sparklyr")}.
 #'
 #' @details
 #'
@@ -31,19 +43,31 @@ livy_validate_http_response <- function(message, req) {
 #' for Livy. For instance, \code{"username"} and \code{"password"}
 #' define the basic authentication settings for a Livy session.
 #'
+#' The default value of \code{"custom_headers"} is set to \code{list("X-Requested-By" = "sparklyr")}
+#' in order to facilitate connection to Livy servers with CSRF protection enabled.
+#'
 #' @return Named list with configuration data
-livy_config <- function(config = spark_config(), username, password) {
-  secret <- base64_enc(paste(username, password, sep = ":"))
+livy_config <- function(config = spark_config(), username = NULL, password = NULL,
+                        custom_headers = list("X-Requested-By" = "sparklyr")) {
+  if (!is.null(username) || !is.null(password)) {
+    secret <- base64_enc(paste(username, password, sep = ":"))
 
-  config[["sparklyr.livy.headers"]] <- c(
-    config[["sparklyr.livy.headers"]], list(
-      Authorization = paste(
-        "Basic",
-        base64_enc(paste(username, password, sep = ":"))
+    config[["sparklyr.livy.headers"]] <- c(
+      config[["sparklyr.livy.headers"]], list(
+        Authorization = paste(
+          "Basic",
+          base64_enc(paste(username, password, sep = ":"))
+        )
       )
     )
-  )
+  }
 
+  if(!is.null(custom_headers)) {
+    for (l in names(custom_headers)) {
+      config[["sparklyr.livy.headers"]] <- c(
+        config[["sparklyr.livy.headers"]], custom_headers[l])
+    }
+  }
   config
 }
 
@@ -55,11 +79,12 @@ livy_get_httr_headers <- function(config, headers) {
     NULL
 }
 
+#' @importFrom httr GET
 livy_get_json <- function(url, config) {
   req <- GET(url,
-   livy_get_httr_headers(config, list(
-     "Content-Type" = "application/json"
-   ))
+             livy_get_httr_headers(config, list(
+               "Content-Type" = "application/json"
+             ))
   )
 
   livy_validate_http_response("Failed to retrieve livy session", req)
@@ -96,6 +121,7 @@ livy_config_get_prefix <- function(master, config, prefix, not_prefix) {
   }
 }
 
+#' @importFrom jsonlite toJSON
 livy_config_get <- function(master, config) {
   livyConfig <- livy_config_get_prefix(master, config, "livy.", NULL)
   sparkConfig <- livy_config_get_prefix(master, config, "spark.", c("spark.sql."))
@@ -112,12 +138,12 @@ livy_create_session <- function(master, config) {
   )
 
   req <- POST(paste(master, "sessions", sep = "/"),
-    livy_get_httr_headers(config, list(
-      "Content-Type" = "application/json"
-    )),
-    body = toJSON(
-      data
-    )
+              livy_get_httr_headers(config, list(
+                "Content-Type" = "application/json"
+              )),
+              body = toJSON(
+                data
+              )
   )
 
   livy_validate_http_response("Failed to create livy session", req)
@@ -133,10 +159,10 @@ livy_create_session <- function(master, config) {
 
 livy_destroy_session <- function(sc) {
   req <- DELETE(paste(sc$master, "sessions", sc$sessionId, sep = "/"),
-    livy_get_httr_headers(sc$config, list(
-      "Content-Type" = "application/json"
-    )),
-    body = NULL
+                livy_get_httr_headers(sc$config, list(
+                  "Content-Type" = "application/json"
+                )),
+                body = NULL
   )
 
   livy_validate_http_response("Failed to destroy livy statement", req)
@@ -267,7 +293,7 @@ livy_statement_compose_magic <- function(lobj, magic) {
 
 livy_statement_parse_response <- function(text, lobj) {
   nullResponses <- list(
-    "defined (module|object).*"
+    "defined (module|object|class).*"
   )
 
   if (regexec(paste(nullResponses, collapse = "|"), text)[[1]][[1]] > 0) {
@@ -376,14 +402,14 @@ livy_post_statement <- function(sc, code) {
   livy_log_operation(sc, code)
 
   req <- POST(paste(sc$master, "sessions", sc$sessionId, "statements", sep = "/"),
-    livy_get_httr_headers(sc$config, list(
-      "Content-Type" = "application/json"
-    )),
-    body = toJSON(
-      list(
-        code = unbox(code)
-      )
-    )
+              livy_get_httr_headers(sc$config, list(
+                "Content-Type" = "application/json"
+              )),
+              body = toJSON(
+                list(
+                  code = unbox(code)
+                )
+              )
   )
 
   livy_validate_http_response("Failed to invoke livy statement", req)
@@ -460,6 +486,12 @@ livy_invoke_statement <- function(sc, statement) {
 
 livy_invoke_statement_fetch <- function(sc, static, jobj, method, ...) {
   statement <- livy_statement_compose(sc, static, jobj, method, ...)
+
+  # Note: Spark 2.0 requires magic to be present in the statement with the definition.
+  statement$code <- paste(
+    statement$code,
+    livy_statement_compose_magic(statement$lobj, "json")$code,
+    sep = "\n")
 
   result <- livy_invoke_statement(sc, statement)
 
@@ -538,7 +570,7 @@ livy_connection <- function(master,
 
   session <- livy_create_session(master, config)
 
-  sc <- structure(class = c("spark_connection", "livy_connection"), list(
+  sc <- structure(class = c("spark_connection", "livy_connection", "DBIConnection"), list(
     master = master,
     sessionId = session$id,
     config = config,
@@ -632,6 +664,18 @@ livy_map_class <- function(class) {
 }
 
 #' @export
+print_jobj.livy_connection <- function(sc, jobj, ...) {
+  if (connection_is_open(sc)) {
+    info <- jobj_info(jobj)
+    fmt <- "<jobj[%s]>\n  %s\n  %s\n"
+    cat(sprintf(fmt, jobj$id, info$class, info$repr))
+  } else {
+    fmt <- "<jobj[%s]>\n  <detached>"
+    cat(sprintf(fmt, jobj$id))
+  }
+}
+
+#' @export
 invoke.livy_jobj <- function(jobj, method, ...) {
   livy_invoke_statement_fetch(spark_connection(jobj), FALSE, jobj, method, ...)
 }
@@ -658,7 +702,7 @@ livy_load_scala_sources <- function(sc) {
   livySources <- c(
     "utils.scala",
     "sqlutils.scala",
-    "logging.scala",
+    "logger.scala",
     "invoke.scala",
     "tracker.scala",
     "serializer.scala",
@@ -666,16 +710,23 @@ livy_load_scala_sources <- function(sc) {
     "livyutils.scala"
   )
 
-  lapply(livySources, function(sourceName) {
-    tryCatch({
-      sourcesFile <- system.file(file.path("livy", sourceName), package = "sparklyr")
-      sources <- paste(readLines(sourcesFile), collapse = "\n")
+  livySourcesFiles <- file.path(find.package("sparklyr"), "livy") %>%
+    list.files(pattern = "scala$", full.names = TRUE, recursive = TRUE)
 
-    statement <- livy_statement_new(sources, NULL)
-    livy_invoke_statement(sc, statement)
-  }, error = function(e) {
-    stop("Failed to load ", sourceName, ": ", e$message)
-  })
+  sourceOrder <- livySourcesFiles %>%
+    basename() %>%
+    match(livySources) %>%
+    order()
+
+  lapply(livySourcesFiles[sourceOrder], function(sourceFile) {
+    tryCatch({
+      sources <- paste(readLines(sourceFile), collapse = "\n")
+
+      statement <- livy_statement_new(sources, NULL)
+      livy_invoke_statement(sc, statement)
+    }, error = function(e) {
+      stop("Failed to load ", basename(sourceFile), ": ", e$message)
+    })
   })
 }
 
@@ -697,17 +748,9 @@ initialize_connection.livy_connection <- function(sc) {
       sc$spark_context
     )
 
-    if (spark_version(sc) >= "2.0.0") {
-      sc$hive_context <- create_hive_context_v2(sc)
-    }
-    else {
-      sc$hive_context <- invoke_new(
-        sc,
-        "org.apache.spark.sql.hive.HiveContext",
-        sc$spark_context
-      )
+    sc$hive_context <- create_hive_context(sc)
 
-      # apply configuration
+    if (spark_version(sc) < "2.0.0") {
       params <- connection_config(sc, "spark.sql.")
       apply_config(params, hive_context, "setConf", "spark.sql.")
     }

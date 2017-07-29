@@ -42,7 +42,7 @@ spark_csv_read <- function(sc,
 
   options <- spark_csv_format_if_needed(read, sc)
 
-  if (!identical(columns, NULL)) {
+  if (sparklyr_boolean_option("sparklyr.verbose") && !identical(columns, NULL)) {
     ncol_ds <- options %>%
       invoke(spark_csv_load_name(sc), path) %>%
       invoke("schema") %>%
@@ -71,7 +71,7 @@ spark_csv_read <- function(sc,
     path)
 }
 
-spark_csv_write <- function(df, path, csvOptions) {
+spark_csv_write <- function(df, path, csvOptions, mode, partition_by) {
   sc <- spark_connection(df)
 
   write <- invoke(df, "write")
@@ -80,6 +80,11 @@ spark_csv_write <- function(df, path, csvOptions) {
   lapply(names(csvOptions), function(csvOptionName) {
     options <<- invoke(options, "option", csvOptionName, csvOptions[[csvOptionName]])
   })
+
+  if (!is.null(partition_by))
+    options <- invoke(options, "partitionBy", as.list(partition_by))
+
+  options <- spark_data_apply_mode(options, mode)
 
   invoke(
     options,

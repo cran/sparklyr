@@ -12,6 +12,11 @@ livy_service_start <- function(version = NULL, spark_version = NULL) {
     "SPARK_HOME" = spark_home_dir(version = spark_version)
   ))
 
+  if (identical(version, NULL)) {
+    version <- livy_install_find() %>%
+      `[[`("livy")
+  }
+
   # warn if the user attempts to use livy 0.2.0 with Spark >= 2.0.0
   if (!identical(spark_version, NULL)) {
     spark_version <- ensure_scalar_character(spark_version)
@@ -22,10 +27,6 @@ livy_service_start <- function(version = NULL, spark_version = NULL) {
   }
 
   livyStart <- file.path(livy_home_dir(version = version), "bin/livy-server")
-
-  if (.Platform$OS.type == "unix") {
-    system2("chmod", c("744", livyStart))
-  }
 
   withr::with_envvar(env, {
     system2(

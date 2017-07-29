@@ -23,10 +23,17 @@ spark_config <- function(file = "config.yml", use_default = TRUE) {
   mergedConfig
 }
 
-spark_config_value <- function(config, name, default = NULL) {
-  if (is.null(config[[name]])) default else config[[name]]
+#' A helper function to check value exist under \code{spark_config()}
+#'
+#' @param config The configuration list from \code{spark_config()}
+#' @param name The name of the configuration entry
+#' @param default The default value to use when entry is not present
+#'
+#' @keywords internal
+#' @export
+spark_config_exists <- function(config, name, default = NULL) {
+  if (!name %in% names(config)) default else !identical(config[[name]], FALSE)
 }
-
 
 # recursively merge two lists -- extracted from code used by rmarkdown
 # package to merge _output.yml, _site.yml, front matter, etc.:

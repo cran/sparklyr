@@ -1,124 +1,5 @@
-wait_connect_gateway <- function(gatewayAddress, gatewayPort, config, isStarting) {
-  retries <- if (isStarting)
-    spark_config_value(config, "sparklyr.gateway.start.timeout", 60)
-  else
-    spark_config_value(config, "sparklyr.gateway.connect.timeout", 1)
-
-  gateway <- NULL
-  commandStart <- NULL
-
-  while (is.null(gateway) && retries >= 0) {
-    commandStart <- Sys.time()
-
-    tryCatch({
-      suppressWarnings({
-        timeout <- spark_config_value(config, "sparklyr.monitor.timeout", 1)
-        gateway <- socketConnection(host = gatewayAddress,
-                                    port = gatewayPort,
-                                    server = FALSE,
-                                    blocking = TRUE,
-                                    open = "rb",
-                                    timeout = timeout)
-      })
-    }, error = function(err) {
-    })
-
-    retries <- retries  - 1;
-
-    # wait for one second without depending on the behavior of socketConnection timeout
-    while (commandStart + 1 > Sys.time()) {
-      Sys.sleep(0.1)
-    }
-  }
-
-  gateway
-}
-
-spark_gateway_commands <- function() {
-  list(
-    "GetPorts" = 0,
-    "RegisterInstance" = 1
-  )
-}
-
-query_gateway_for_port <- function(gateway, sessionId, config, isStarting) {
-  waitSeconds <- if (isStarting)
-    spark_config_value(config, "sparklyr.gateway.start.timeout", 60)
-  else
-    spark_config_value(config, "sparklyr.gateway.connect.timeout", 1)
-
-  writeInt(gateway, spark_gateway_commands()[["GetPorts"]])
-  writeInt(gateway, sessionId)
-  writeInt(gateway, if (isStarting) waitSeconds else 0)
-
-  backendSessionId <- NULL
-  redirectGatewayPort <- NULL
-
-  commandStart <- Sys.time()
-  while(length(backendSessionId) == 0 && commandStart + waitSeconds > Sys.time()) {
-    backendSessionId <- readInt(gateway)
-    Sys.sleep(0.1)
-  }
-
-  redirectGatewayPort <- readInt(gateway)
-  backendPort <- readInt(gateway)
-
-  if (length(backendSessionId) == 0 || length(redirectGatewayPort) == 0 || length(backendPort) == 0) {
-    stop("Sparklyr gateway did not respond while retrieving ports information after ", waitSeconds, " seconds")
-  }
-
-  list(
-    gateway = gateway,
-    backendPort = backendPort,
-    redirectGatewayPort = redirectGatewayPort
-  )
-}
-
-spark_connect_gateway <- function(
-  gatewayAddress,
-  gatewayPort,
-  sessionId,
-  config,
-  isStarting = FALSE) {
-
-  # try connecting to existing gateway
-  gateway <- wait_connect_gateway(gatewayAddress, gatewayPort, config, isStarting)
-
-  if (is.null(gateway)) {
-    if (isStarting)
-      stop(
-        "Gateway in port (", gatewayPort, ") did not respond.")
-
-    NULL
-  }
-  else {
-    gatewayPortsQuery <- query_gateway_for_port(gateway, sessionId, config, isStarting)
-    redirectGatewayPort <- gatewayPortsQuery$redirectGatewayPort
-    backendPort <- gatewayPortsQuery$backendPort
-
-    if (redirectGatewayPort == 0) {
-      close(gateway)
-
-      if (isStarting)
-        stop("Gateway in port (", gatewayPort, ") does not have the requested session registered")
-
-      NULL
-    } else if(redirectGatewayPort != gatewayPort) {
-      close(gateway)
-
-      spark_connect_gateway(gatewayAddress, redirectGatewayPort, sessionId, config, isStarting)
-    }
-    else {
-      list(
-        gateway = gateway,
-        backendPort = backendPort
-      )
-    }
-  }
-}
-
 master_is_gateway <- function(master) {
-  length(grep("^(sparklyr://)?[^:]+:[0-9]+$", master)) > 0
+  length(grep("^(sparklyr://)?[^:]+:[0-9]+(/[0-9]+)?$", master)) > 0
 }
 
 gateway_connection <- function(master, config) {
@@ -129,8 +10,9 @@ gateway_connection <- function(master, config) {
   protocol <- strsplit(master, "//")[[1]]
   components <- strsplit(protocol[[2]], ":")[[1]]
   gatewayAddress <- components[[1]]
-  gatewayPort <- as.integer(components[[2]])
-  sessionId <- 0
+  portAndSesssion <- strsplit(components[[2]], "/")[[1]]
+  gatewayPort <- as.integer(portAndSesssion[[1]])
+  sessionId <- if (length(portAndSesssion) > 1) as.integer(portAndSesssion[[2]]) else 0
 
   gatewayInfo <- spark_connect_gateway(gatewayAddress = gatewayAddress,
                                        gatewayPort = gatewayPort,
@@ -153,7 +35,7 @@ gateway_connection <- function(master, config) {
 spark_gateway_connection <- function(master, config, gatewayInfo, gatewayAddress) {
   tryCatch({
     # set timeout for socket connection
-    timeout <- spark_config_value(config, "sparklyr.backend.timeout", 60)
+    timeout <- spark_config_value(config, "sparklyr.backend.timeout", 30 * 24 * 60 * 60)
     backend <- socketConnection(host = gatewayAddress,
                                 port = gatewayInfo$backendPort,
                                 server = FALSE,
@@ -166,11 +48,11 @@ spark_gateway_connection <- function(master, config, gatewayInfo, gatewayAddress
   })
 
   # create the shell connection
-  sc <- structure(class = c("spark_connection", "spark_gateway_connection"), list(
+  sc <- structure(class = c("spark_connection", "spark_gateway_connection", "spark_shell_connection"), list(
     # spark_connection
     master = master,
     method = "gateway",
-    app_name = "",
+    app_name = "sparklyr",
     config = config,
     # spark_gateway_connection : spark_shell_connection
     spark_home = NULL,
@@ -197,10 +79,7 @@ spark_gateway_connection <- function(master, config, gatewayInfo, gatewayAddress
 }
 
 #' @export
-connection_is_open.spark_gateway_connection <- function(sc) {
-  class(sc) <- "spark_shell_connection"
-  connection_is_open(sc)
-}
+connection_is_open.spark_gateway_connection <- connection_is_open.spark_shell_connection
 
 #' @export
 spark_log.spark_gateway_connection <- function(sc, n = 100, filter = NULL, ...) {
@@ -213,13 +92,8 @@ spark_web.spark_gateway_connection <- function(sc, ...) {
 }
 
 #' @export
-invoke_method.spark_gateway_connection <- function(sc, static, object, method, ...) {
-  class(sc) <- "spark_shell_connection"
-  invoke_method(sc, static, object, method, ...)
-}
+invoke_method.spark_gateway_connection <- invoke_method.spark_shell_connection
 
 #' @export
-print_jobj.spark_gateway_connection <- function(sc, jobj, ...) {
-  class(sc) <- "spark_shell_connection"
-  print_jobj(sc, jobj, ...)
-}
+print_jobj.spark_gateway_connection <- print_jobj.spark_shell_connection
+

@@ -3,7 +3,11 @@
 \docType{import}
 \name{reexports}
 \alias{reexports}
-\alias{copy_to}
+\alias{tidy}
+\alias{reexports}
+\alias{augment}
+\alias{reexports}
+\alias{glance}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -11,6 +15,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr]{copy_to}}}
+  \item{broom}{\code{\link[broom]{tidy}}, \code{\link[broom]{augment}}, \code{\link[broom]{glance}}}
 }}
 

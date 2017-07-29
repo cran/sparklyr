@@ -4,7 +4,8 @@
 \alias{spark_write_json}
 \title{Write a Spark DataFrame to a JSON file}
 \usage{
-spark_write_json(x, path, mode = NULL, options = list())
+spark_write_json(x, path, mode = NULL, options = list(),
+  partition_by = NULL, ...)
 }
 \arguments{
 \item{x}{A Spark DataFrame or dplyr operation}
@@ -15,6 +16,10 @@ Supports the \samp{"hdfs://"}, \samp{"s3n://"} and \samp{"file://"} protocols.}
 \item{mode}{Specifies the behavior when data or table already exists.}
 
 \item{options}{A list of strings with additional options.}
+
+\item{partition_by}{Partitions the output by the given columns on the file system.}
+
+\item{...}{Optional arguments; currently unused.}
 }
 \description{
 Serialize a Spark DataFrame to the \href{http://www.json.org/}{JavaScript
@@ -23,9 +28,15 @@ Object Notation} format.
 \seealso{
 Other Spark serialization routines: \code{\link{spark_load_table}},
   \code{\link{spark_read_csv}},
+  \code{\link{spark_read_jdbc}},
   \code{\link{spark_read_json}},
   \code{\link{spark_read_parquet}},
+  \code{\link{spark_read_source}},
+  \code{\link{spark_read_table}},
   \code{\link{spark_save_table}},
   \code{\link{spark_write_csv}},
-  \code{\link{spark_write_parquet}}
+  \code{\link{spark_write_jdbc}},
+  \code{\link{spark_write_parquet}},
+  \code{\link{spark_write_source}},
+  \code{\link{spark_write_table}}
 }

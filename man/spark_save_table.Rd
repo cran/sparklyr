@@ -4,7 +4,7 @@
 \alias{spark_save_table}
 \title{Saves a Spark DataFrame as a Spark table}
 \usage{
-spark_save_table(x, path, mode = NULL)
+spark_save_table(x, path, mode = NULL, options = list())
 }
 \arguments{
 \item{x}{A Spark DataFrame or dplyr operation}
@@ -13,6 +13,8 @@ spark_save_table(x, path, mode = NULL)
 Supports the \samp{"hdfs://"}, \samp{"s3n://"} and \samp{"file://"} protocols.}
 
 \item{mode}{Specifies the behavior when data or table already exists.}
+
+\item{options}{A list of strings with additional options.}
 }
 \description{
 Saves a Spark DataFrame and as a Spark table.
@@ -20,9 +22,15 @@ Saves a Spark DataFrame and as a Spark table.
 \seealso{
 Other Spark serialization routines: \code{\link{spark_load_table}},
   \code{\link{spark_read_csv}},
+  \code{\link{spark_read_jdbc}},
   \code{\link{spark_read_json}},
   \code{\link{spark_read_parquet}},
+  \code{\link{spark_read_source}},
+  \code{\link{spark_read_table}},
   \code{\link{spark_write_csv}},
+  \code{\link{spark_write_jdbc}},
   \code{\link{spark_write_json}},
-  \code{\link{spark_write_parquet}}
+  \code{\link{spark_write_parquet}},
+  \code{\link{spark_write_source}},
+  \code{\link{spark_write_table}}
 }

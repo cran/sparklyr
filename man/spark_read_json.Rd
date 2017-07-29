@@ -5,7 +5,7 @@
 \title{Read a JSON file into a Spark DataFrame}
 \usage{
 spark_read_json(sc, name, path, options = list(), repartition = 0,
-  memory = TRUE, overwrite = TRUE)
+  memory = TRUE, overwrite = TRUE, columns = NULL, ...)
 }
 \arguments{
 \item{sc}{A \code{spark_connection}.}
@@ -25,6 +25,10 @@ is, should the table be cached?)}
 
 \item{overwrite}{Boolean; overwrite the table with the given name if it
 already exists?}
+
+\item{columns}{A vector of column names or a named vector of column types.}
+
+\item{...}{Optional arguments; currently unused.}
 }
 \description{
 Read a table serialized in the \href{http://www.json.org/}{JavaScript
@@ -40,9 +44,15 @@ If you are reading from a secure S3 bucket be sure that the \code{AWS_ACCESS_KEY
 \seealso{
 Other Spark serialization routines: \code{\link{spark_load_table}},
   \code{\link{spark_read_csv}},
+  \code{\link{spark_read_jdbc}},
   \code{\link{spark_read_parquet}},
+  \code{\link{spark_read_source}},
+  \code{\link{spark_read_table}},
   \code{\link{spark_save_table}},
   \code{\link{spark_write_csv}},
+  \code{\link{spark_write_jdbc}},
   \code{\link{spark_write_json}},
-  \code{\link{spark_write_parquet}}
+  \code{\link{spark_write_parquet}},
+  \code{\link{spark_write_source}},
+  \code{\link{spark_write_table}}
 }

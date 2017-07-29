@@ -13,6 +13,7 @@
 #'   compilation of \code{scala} files.
 #' @param jar The path to the \code{jar} program to be used, for
 #'   generating of the resulting \code{jar}.
+#' @param jar_dep An optional list of additional \code{jar} dependencies.
 #'
 #' @import rprojroot
 #' @import digest
@@ -23,7 +24,8 @@ spark_compile <- function(jar_name,
                           spark_home = NULL,
                           filter = NULL,
                           scalac = NULL,
-                          jar = NULL)
+                          jar = NULL,
+                          jar_dep = NULL)
 {
   default_install <- spark_install_find()
   spark_home <- if (is.null(spark_home) && !is.null(default_install))
@@ -43,7 +45,9 @@ spark_compile <- function(jar_name,
   jar_path <- file.path(java_path, jar_name)
 
   scala_path <- file.path(root, "java")
-  scala_files <- list.files(scala_path, pattern = "scala$", full.names = TRUE)
+  scala_files <- list.files(scala_path, pattern = "scala$",
+                            full.names = TRUE,
+                            recursive = TRUE)
 
   # apply user filter to scala files
   if (is.function(filter))
@@ -79,6 +83,8 @@ spark_compile <- function(jar_name,
       break
   }
 
+  jars <- c(jars, jar_dep)
+
   if (!length(jars))
     stop("failed to discover Spark jars")
 
@@ -94,7 +100,7 @@ spark_compile <- function(jar_name,
   Sys.setenv(CLASSPATH = CLASSPATH)
   on.exit(Sys.setenv(CLASSPATH = classpath), add = TRUE)
   scala_files_quoted <- paste(shQuote(scala_files), collapse = " ")
-  status <- execute(shQuote(scalac), "-optimise", scala_files_quoted)
+  status <- execute(shQuote(scalac), "-optimise", "-deprecation", scala_files_quoted)
   if (status)
     stop("==> failed to compile Scala source files")
 
@@ -143,6 +149,8 @@ compile_package_jars <- function(..., spec = NULL) {
     jar_name      <- el$jar_name
     scalac_path   <- el$scalac_path
     filter        <- el$scala_filter
+    jar_path      <- el$jar_path
+    jar_dep       <- el$jar_dep
 
     # try to automatically download + install Spark
     if (is.null(spark_home) && !is.null(spark_version)) {
@@ -154,8 +162,10 @@ compile_package_jars <- function(..., spec = NULL) {
     spark_compile(
       jar_name = jar_name,
       spark_home = spark_home,
+      filter = filter,
       scalac = scalac_path,
-      filter = filter
+      jar = jar_path,
+      jar_dep = jar_dep
     )
 
   }
@@ -186,13 +196,18 @@ compile_package_jars <- function(..., spec = NULL) {
 #'   useful if you have auxiliary files that should only be included with
 #'   certain versions of Spark.
 #' @param jar_name The name to be assigned to the generated \code{jar}.
+#' @param jar_path The path to the \code{jar} tool to be used
+#'   during compilation of your Spark extension.
+#' @param jar_dep An optional list of additional \code{jar} dependencies.
 #'
 #' @export
 spark_compilation_spec <- function(spark_version = NULL,
                                    spark_home = NULL,
                                    scalac_path = NULL,
                                    scala_filter = NULL,
-                                   jar_name = NULL)
+                                   jar_name = NULL,
+                                   jar_path = NULL,
+                                   jar_dep = NULL)
 {
   spark_home    <- spark_home %||% spark_home_dir(spark_version)
   spark_version <- spark_version %||% spark_version_from_home(spark_home)
@@ -201,7 +216,16 @@ spark_compilation_spec <- function(spark_version = NULL,
        spark_home = spark_home,
        scalac_path = scalac_path,
        scala_filter = scala_filter,
-       jar_name = jar_name)
+       jar_name = jar_name,
+       jar_path = jar_path,
+       jar_dep = jar_dep)
+}
+
+find_jar <- function() {
+  if (nchar(Sys.getenv("JAVA_HOME")) > 0)
+    normalizePath(file.path(Sys.getenv("JAVA_HOME"), "bin", "jar"), mustWork = FALSE)
+  else
+    NULL
 }
 
 #' Default Compilation Specification for Spark Extensions
@@ -210,30 +234,84 @@ spark_compilation_spec <- function(spark_version = NULL,
 #' Spark extensions, when used with \code{\link{compile_package_jars}}.
 #'
 #' @param pkg The package containing Spark extensions to be compiled.
+#'
 #' @export
 spark_default_compilation_spec <- function(pkg = infer_active_package_name()) {
   list(
     spark_compilation_spec(
       spark_version = "1.5.2",
       scalac_path = find_scalac("2.10"),
-      jar_name = sprintf("%s-1.5-2.10.jar", pkg)
+      jar_name = sprintf("%s-1.5-2.10.jar", pkg),
+      jar_path = find_jar(),
+      scala_filter = make_version_filter("1.5.2")
     ),
     spark_compilation_spec(
       spark_version = "1.6.1",
       scalac_path = find_scalac("2.10"),
-      jar_name = sprintf("%s-1.6-2.10.jar", pkg)
+      jar_name = sprintf("%s-1.6-2.10.jar", pkg),
+      jar_path = find_jar(),
+      scala_filter = make_version_filter("1.6.1")
     ),
     spark_compilation_spec(
       spark_version = "2.0.0",
       scalac_path = find_scalac("2.11"),
-      jar_name = sprintf("%s-2.0-2.11.jar", pkg)
+      jar_name = sprintf("%s-2.0-2.11.jar", pkg),
+      jar_path = find_jar(),
+      scala_filter = make_version_filter("2.0.0")
     ),
     spark_compilation_spec(
       spark_version = "2.1.0",
       scalac_path = find_scalac("2.11"),
-      jar_name = sprintf("%s-2.1-2.11.jar", pkg)
+      jar_name = sprintf("%s-2.1-2.11.jar", pkg),
+      jar_path = find_jar(),
+      scala_filter = make_version_filter("2.1.0")
+    ),
+    spark_compilation_spec(
+      spark_version = "2.2.0",
+      scalac_path = find_scalac("2.11"),
+      jar_name = sprintf("%s-2.2-2.11.jar", pkg),
+      jar_path = find_jar(),
+      scala_filter = make_version_filter("2.2.0")
     )
   )
+}
+
+#' Downloads default Scala Compilers
+#'
+#' \code{compile_package_jars} requires several versions of the
+#' scala compiler to work, this is to match Spark scala versions.
+#' To help setup your environment, this function will download the
+#' required compilers under the default search path.
+#'
+#' See \code{find_scalac} for a list of paths searched and used by
+#' this function to install the required compilers.
+#'
+#' @export
+download_scalac <- function() {
+  dest_path <- scalac_default_locations()[[1]]
+
+  if (!dir.exists(dest_path)) {
+    dir.create(dest_path, recursive = TRUE)
+  }
+
+  ext <- if (.Platform$OS.type == "windows") "zip" else "tgz"
+
+  download_urls <- c(
+    paste0("http://downloads.lightbend.com/scala/2.11.8/scala-2.11.8.", ext),
+    paste0("http://downloads.lightbend.com/scala/2.10.6/scala-2.10.6.", ext)
+  )
+
+  lapply(download_urls, function(download_url) {
+    dest_file <- file.path(dest_path, basename(download_url))
+
+    dir.create(dirname(dest_file), recursive = TRUE)
+    download.file(download_url, destfile = dest_file)
+
+    if (ext == "zip")
+      unzip(dest_file, exdir = dest_path)
+    else
+      untar(dest_file, exdir = dest_path)
+  })
 }
 
 #' Discover the Scala Compiler
@@ -255,10 +333,11 @@ spark_default_compilation_spec <- function(pkg = infer_active_package_name()) {
 find_scalac <- function(version, locations = NULL) {
 
   locations <- locations %||% scalac_default_locations()
-  re_version <- paste("^", version, sep = "")
+  re_version <- paste("^", version, "(\\.[0-9]+)?$", sep = "")
 
   for (location in locations) {
     installs <- sort(list.files(location))
+
     versions <- sub("^scala-?", "", installs)
     matches  <- grep(re_version, versions)
     if (!any(matches))
@@ -286,8 +365,8 @@ scalac_default_locations <- function() {
     )
   } else {
     c(
-      "/opt/local/scala",
       "/usr/local/scala",
+      "/opt/local/scala",
       "/opt/scala"
     )
   }
@@ -301,4 +380,25 @@ get_scalac_version <- function(scalac = Sys.which("scalac")) {
     system(cmd, intern = TRUE)
   splat <- strsplit(version_string, "\\s+", perl = TRUE)[[1]]
   splat[[4]]
+}
+
+make_version_filter <- function(version_upper) {
+  force(version_upper)
+
+  function(files) {
+    Filter(function(file) {
+      maybe_version <- file %>%
+        dirname() %>%
+        basename() %>%
+        strsplit("-") %>%
+        unlist() %>%
+        dplyr::last()
+
+      if (grepl("([0-9]+\\.){2}[0-9]+", maybe_version)) {
+        numeric_version(maybe_version) <= numeric_version(version_upper)
+      } else {
+        TRUE
+      }
+    }, files)
+  }
 }

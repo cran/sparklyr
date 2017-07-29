@@ -90,11 +90,23 @@ ml_prepare_dataframe <- function(x,
   spark_dataframe(transformed)
 }
 
+#' Extracts data associated with a Spark ML model
+#'
+#' @param object a Spark ML model
+#' @return A tbl_spark
+#' @export
+ml_model_data <- function(object) {
+  sdf_register(object$data)
+}
+
+
 try_null <- function(expr) {
   tryCatch(expr, error = function(e) NULL)
 }
 
 #' @export
+#' @importFrom dplyr arrange
+#' @importFrom lazyeval interp
 predict.ml_model <- function(object,
                              newdata = object$data,
                              ...)
@@ -111,7 +123,7 @@ predict.ml_model <- function(object,
   predicted <- sdf_predict(object, sdf, ...)
 
   # re-order based on id column
-  arranged <- arrange_(predicted, .dots = as.list(id))
+  arranged <- arrange(predicted, id)
 
   # read column
   column <- sdf_read_column(arranged, "prediction")
@@ -138,11 +150,26 @@ fitted.ml_model <- function(object, ...) {
 
 #' @export
 residuals.ml_model <- function(object, ...) {
-  object$.model %>%
-    invoke("summary") %>%
-    invoke("residuals") %>%
-    sdf_read_column("residuals")
+  stop(paste0("'residuals()' not yet supported for ",
+              setdiff(class(object), "ml_model"))
+       )
 }
+
+#' Model Residuals
+#'
+#' This generic method returns a Spark DataFrame with model
+#' residuals added as a column to the model training data.
+#'
+#' @param object Spark ML model object.
+#' @param ... additional arguments
+#'
+#' @rdname sdf_residuals
+#'
+#' @export
+sdf_residuals <- function(object, ...) {
+  UseMethod("sdf_residuals")
+}
+
 
 reorder_first <- function(vector, name) {
   if (is.null(vector))
