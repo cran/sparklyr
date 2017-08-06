@@ -957,7 +957,7 @@ object Sources {
     "  length <- worker_invoke(context, \"getSourceArrayLength\")\n" +
     "  worker_log(\"found \", length, \" rows\")\n" +
     "\n" +
-    "  groups <- worker_invoke(context, \"getSourceArraySeq\")\n" +
+    "  groups <- worker_invoke(context, if (grouped) \"getSourceArrayGroupedSeq\" else \"getSourceArraySeq\")\n" +
     "  worker_log(\"retrieved \", length(groups), \" rows\")\n" +
     "\n" +
     "  closureRaw <- worker_invoke(context, \"getClosure\")\n" +
@@ -984,26 +984,35 @@ object Sources {
     "    data <- group_entry[[1]]\n" +
     "\n" +
     "    df <- do.call(rbind.data.frame, data)\n" +
-    "    colnames(df) <- columnNames[1: length(colnames(df))]\n" +
+    "    result <- NULL\n" +
     "\n" +
-    "    closure_params <- length(formals(closure))\n" +
-    "    closure_args <- c(\n" +
-    "      list(df),\n" +
-    "      as.list(\n" +
-    "        if (nrow(df) > 0)\n" +
-    "          lapply(grouped_by, function(group_by_name) df[[group_by_name]][[1]])\n" +
-    "        else\n" +
-    "          NULL\n" +
-    "      )\n" +
-    "    )[0:closure_params]\n" +
+    "    if (nrow(df) == 0) {\n" +
+    "      worker_log(\"found that source has no rows to be proceesed\")\n" +
+    "    }\n" +
+    "    else {\n" +
+    "      colnames(df) <- columnNames[1: length(colnames(df))]\n" +
     "\n" +
-    "    worker_log(\"computing closure\")\n" +
-    "    result <- do.call(closure, closure_args)\n" +
-    "    worker_log(\"computed closure\")\n" +
+    "      closure_params <- length(formals(closure))\n" +
+    "      closure_args <- c(\n" +
+    "        list(df),\n" +
+    "        as.list(\n" +
+    "          if (nrow(df) > 0)\n" +
+    "            lapply(grouped_by, function(group_by_name) df[[group_by_name]][[1]])\n" +
+    "          else\n" +
+    "            NULL\n" +
+    "        )\n" +
+    "      )[0:closure_params]\n" +
     "\n" +
-    "    if (!identical(class(result), \"data.frame\")) {\n" +
-    "      worker_log(\"data.frame expected but \", class(result), \" found\")\n" +
-    "      result <- data.frame(result)\n" +
+    "      worker_log(\"computing closure\")\n" +
+    "      result <- do.call(closure, closure_args)\n" +
+    "      worker_log(\"computed closure\")\n" +
+    "\n" +
+    "      if (!identical(class(result), \"data.frame\")) {\n" +
+    "        worker_log(\"data.frame expected but \", class(result), \" found\")\n" +
+    "        result <- data.frame(result)\n" +
+    "      }\n" +
+    "\n" +
+    "      if (!is.data.frame(result)) stop(\"Result from closure is not a data.frame\")\n" +
     "    }\n" +
     "\n" +
     "    if (grouped) {\n" +
@@ -1016,11 +1025,16 @@ object Sources {
     "    all_results <- rbind(all_results, result)\n" +
     "  }\n" +
     "\n" +
-    "  all_data <- lapply(1:nrow(all_results), function(i) as.list(all_results[i,]))\n" +
-    "  worker_invoke(context, \"setResultArraySeq\", all_data)\n" +
-    "  worker_log(\"updated \", length(data), \" rows\")\n" +
+    "  if (!is.null(all_results)) {\n" +
+    "    worker_log(\"updating \", nrow(all_results), \" rows\")\n" +
+    "    all_data <- lapply(1:nrow(all_results), function(i) as.list(all_results[i,]))\n" +
     "\n" +
-    "  spark_split <- worker_invoke(context, \"finish\")\n" +
+    "    worker_invoke(context, \"setResultArraySeq\", all_data)\n" +
+    "    worker_log(\"updated \", nrow(all_results), \" rows\")\n" +
+    "  } else {\n" +
+    "    worker_log(\"found no rows in closure result\")\n" +
+    "  }\n" +
+    "\n" +
     "  worker_log(\"finished apply\")\n" +
     "}\n" +
     "\n" +
@@ -1051,8 +1065,13 @@ object Sources {
     "\n" +
     "  extractPath\n" +
     "}\n" +
-    "spark_worker_connect <- function(sessionId, config) {\n" +
-    "  gatewayPort <- spark_config_value(config, \"sparklyr.worker.gateway.port\", 8880)\n" +
+    "spark_worker_connect <- function(\n" +
+    "  sessionId,\n" +
+    "  backendPort = 8880,\n" +
+    "  config = list()) {\n" +
+    "\n" +
+    "  gatewayPort <- spark_config_value(config, \"sparklyr.worker.gateway.port\", backendPort)\n" +
+    "\n" +
     "  gatewayAddress <- spark_config_value(config, \"sparklyr.worker.gateway.address\", \"localhost\")\n" +
     "  config <- list()\n" +
     "\n" +
@@ -1180,7 +1199,11 @@ object Sources {
     "worker_log_error <- function(...) {\n" +
     "  worker_log_level(..., level = \"ERROR\")\n" +
     "}\n" +
-    "spark_worker_main <- function(sessionId, configRaw) {\n" +
+    "spark_worker_main <- function(\n" +
+    "  sessionId,\n" +
+    "  backendPort = 8880,\n" +
+    "  configRaw = worker_config_serialize(list())) {\n" +
+    "\n" +
     "  spark_worker_hooks()\n" +
     "\n" +
     "  config <- worker_config_deserialize(configRaw)\n" +
@@ -1198,13 +1221,13 @@ object Sources {
     "\n" +
     "  tryCatch({\n" +
     "\n" +
-    "    sc <- spark_worker_connect(sessionId, config)\n" +
+    "    sc <- spark_worker_connect(sessionId, backendPort, config)\n" +
     "    worker_log(\"is connected\")\n" +
     "\n" +
     "    spark_worker_apply(sc)\n" +
     "\n" +
     "  }, error = function(e) {\n" +
-    "    stop(\"terminated unexpectedly: \", e)\n" +
+    "    stop(\"terminated unexpectedly: \", e$message)\n" +
     "  })\n" +
     "\n" +
     "  worker_log(\"finished\")\n" +
@@ -1217,6 +1240,14 @@ object Sources {
     "  unlock(\"stop\",  as.environment(\"package:base\"))\n" +
     "  assign(\"stop\", function(...) {\n" +
     "    worker_log_error(...)\n" +
+    "\n" +
+    "    frame_names <- list()\n" +
+    "    frame_start <- max(1, sys.nframe() - 5)\n" +
+    "    for (i in frame_start:sys.nframe()) {\n" +
+    "      current_call <- sys.call(i)\n" +
+    "      frame_names[[1 + i - frame_start]] <- paste(i, \": \", paste(head(deparse(current_call), 5), collapse = \"\\n\"), sep = \"\")\n" +
+    "    }\n" +
+    "    worker_log_error(\"collected callstack: \\n\", paste(rev(frame_names), collapse = \"\\n\"))\n" +
     "    quit(status = -1)\n" +
     "  }, as.environment(\"package:base\"))\n" +
     "  lock(\"stop\",  as.environment(\"package:base\"))\n" +

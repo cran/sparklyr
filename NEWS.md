@@ -1,3 +1,27 @@
+# Sparklyr 0.6.1
+
+- Fixed error in `spark_apply()` that may triggered when multiple CPUs
+  are used in a single node due to race conditions while accesing the
+  gateway service and another in the `JVMObjectTracker`.
+
+- `spark_apply()` now supports explicit column types using the `columns`
+  argument to avoid sampling types.
+
+- `spark_apply()` with `group_by` no longer requires persisting to disk
+  nor memory.
+
+- Added support for Spark 1.6.3 under `spark_install()`.
+
+- `spark_apply()` now logs the current callstack when it fails.
+
+- Fixed error triggered while processing empty partitions in `spark_apply()`.
+
+- Fixed slow printing issue caused by `print` calculating the total row count, 
+  which is expensive for some tables.
+
+- Fixed `sparklyr 0.6` issue blocking concurrent `sparklyr` connections, which
+ required to set `config$sparklyr.gateway.remote = FALSE` as workaround.
+
 # Sparklyr 0.6.0
 
 ### Distributed R

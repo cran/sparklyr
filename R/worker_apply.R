@@ -43,7 +43,7 @@ spark_worker_apply <- function(sc) {
   length <- worker_invoke(context, "getSourceArrayLength")
   worker_log("found ", length, " rows")
 
-  groups <- worker_invoke(context, "getSourceArraySeq")
+  groups <- worker_invoke(context, if (grouped) "getSourceArrayGroupedSeq" else "getSourceArraySeq")
   worker_log("retrieved ", length(groups), " rows")
 
   closureRaw <- worker_invoke(context, "getClosure")
@@ -70,26 +70,35 @@ spark_worker_apply <- function(sc) {
     data <- group_entry[[1]]
 
     df <- do.call(rbind.data.frame, data)
-    colnames(df) <- columnNames[1: length(colnames(df))]
+    result <- NULL
 
-    closure_params <- length(formals(closure))
-    closure_args <- c(
-      list(df),
-      as.list(
-        if (nrow(df) > 0)
-          lapply(grouped_by, function(group_by_name) df[[group_by_name]][[1]])
-        else
-          NULL
-      )
-    )[0:closure_params]
+    if (nrow(df) == 0) {
+      worker_log("found that source has no rows to be proceesed")
+    }
+    else {
+      colnames(df) <- columnNames[1: length(colnames(df))]
 
-    worker_log("computing closure")
-    result <- do.call(closure, closure_args)
-    worker_log("computed closure")
+      closure_params <- length(formals(closure))
+      closure_args <- c(
+        list(df),
+        as.list(
+          if (nrow(df) > 0)
+            lapply(grouped_by, function(group_by_name) df[[group_by_name]][[1]])
+          else
+            NULL
+        )
+      )[0:closure_params]
 
-    if (!identical(class(result), "data.frame")) {
-      worker_log("data.frame expected but ", class(result), " found")
-      result <- data.frame(result)
+      worker_log("computing closure")
+      result <- do.call(closure, closure_args)
+      worker_log("computed closure")
+
+      if (!identical(class(result), "data.frame")) {
+        worker_log("data.frame expected but ", class(result), " found")
+        result <- data.frame(result)
+      }
+
+      if (!is.data.frame(result)) stop("Result from closure is not a data.frame")
     }
 
     if (grouped) {
@@ -102,11 +111,16 @@ spark_worker_apply <- function(sc) {
     all_results <- rbind(all_results, result)
   }
 
-  all_data <- lapply(1:nrow(all_results), function(i) as.list(all_results[i,]))
-  worker_invoke(context, "setResultArraySeq", all_data)
-  worker_log("updated ", length(data), " rows")
+  if (!is.null(all_results)) {
+    worker_log("updating ", nrow(all_results), " rows")
+    all_data <- lapply(1:nrow(all_results), function(i) as.list(all_results[i,]))
 
-  spark_split <- worker_invoke(context, "finish")
+    worker_invoke(context, "setResultArraySeq", all_data)
+    worker_log("updated ", nrow(all_results), " rows")
+  } else {
+    worker_log("found no rows in closure result")
+  }
+
   worker_log("finished apply")
 }
 
