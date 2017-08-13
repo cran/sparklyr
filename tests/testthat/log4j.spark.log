@@ -1,39 +1,111 @@
-17/07/31 10:55:28 INFO SparkContext: Running Spark version 2.1.0
-17/07/31 10:55:29 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/07/31 10:55:29 INFO SecurityManager: Changing view acls to: javierluraschi
-17/07/31 10:55:29 INFO SecurityManager: Changing modify acls to: javierluraschi
-17/07/31 10:55:29 INFO SecurityManager: Changing view acls groups to: 
-17/07/31 10:55:29 INFO SecurityManager: Changing modify acls groups to: 
-17/07/31 10:55:29 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
-17/07/31 10:55:29 INFO Utils: Successfully started service 'sparkDriver' on port 53469.
-17/07/31 10:55:29 INFO SparkEnv: Registering MapOutputTracker
-17/07/31 10:55:29 INFO SparkEnv: Registering BlockManagerMaster
-17/07/31 10:55:29 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/07/31 10:55:29 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/07/31 10:55:29 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-a466b899-5a49-4954-95ba-28234722acca
-17/07/31 10:55:29 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
-17/07/31 10:55:29 INFO SparkEnv: Registering OutputCommitCoordinator
-17/07/31 10:55:29 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
-17/07/31 10:55:29 WARN Utils: Service 'SparkUI' could not bind on port 4041. Attempting port 4042.
-17/07/31 10:55:29 WARN Utils: Service 'SparkUI' could not bind on port 4042. Attempting port 4043.
-17/07/31 10:55:29 INFO Utils: Successfully started service 'SparkUI' on port 4043.
-17/07/31 10:55:29 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4043
-17/07/31 10:55:29 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:53469/jars/sparklyr-2.1-2.11.jar with timestamp 1501523729665
-17/07/31 10:55:29 INFO Executor: Starting executor ID driver on host localhost
-17/07/31 10:55:29 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 53471.
-17/07/31 10:55:29 INFO NettyBlockTransferService: Server created on 127.0.0.1:53471
-17/07/31 10:55:29 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/07/31 10:55:29 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 53471, None)
-17/07/31 10:55:29 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:53471 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 53471, None)
-17/07/31 10:55:29 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 53471, None)
-17/07/31 10:55:29 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 53471, None)
-17/07/31 10:55:29 INFO SparkContext: Invoking stop() from shutdown hook
-17/07/31 10:55:29 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4043
-17/07/31 10:55:29 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
-17/07/31 10:55:29 INFO MemoryStore: MemoryStore cleared
-17/07/31 10:55:29 INFO BlockManager: BlockManager stopped
-17/07/31 10:55:29 INFO BlockManagerMaster: BlockManagerMaster stopped
-17/07/31 10:55:29 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
-17/07/31 10:55:29 INFO SparkContext: Successfully stopped SparkContext
-17/07/31 10:55:29 INFO ShutdownHookManager: Shutdown hook called
-17/07/31 10:55:29 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-7cbc492c-ce61-459a-a814-b5b81ed9f370
+17/08/10 10:36:01 INFO SparkContext: Running Spark version 2.1.0
+17/08/10 10:36:01 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/08/10 10:36:01 INFO SecurityManager: Changing view acls to: javierluraschi
+17/08/10 10:36:01 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/08/10 10:36:01 INFO SecurityManager: Changing view acls groups to: 
+17/08/10 10:36:01 INFO SecurityManager: Changing modify acls groups to: 
+17/08/10 10:36:01 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/08/10 10:36:01 INFO Utils: Successfully started service 'sparkDriver' on port 56376.
+17/08/10 10:36:01 INFO SparkEnv: Registering MapOutputTracker
+17/08/10 10:36:01 INFO SparkEnv: Registering BlockManagerMaster
+17/08/10 10:36:01 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/08/10 10:36:01 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/08/10 10:36:01 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-9d21912d-5e97-4b18-9486-1913784d32e9
+17/08/10 10:36:01 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/08/10 10:36:01 INFO SparkEnv: Registering OutputCommitCoordinator
+17/08/10 10:36:02 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/08/10 10:36:02 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/08/10 10:36:02 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/08/10 10:36:02 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:56376/jars/sparklyr-2.1-2.11.jar with timestamp 1502386562039
+17/08/10 10:36:02 INFO Executor: Starting executor ID driver on host localhost
+17/08/10 10:36:02 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 56377.
+17/08/10 10:36:02 INFO NettyBlockTransferService: Server created on 127.0.0.1:56377
+17/08/10 10:36:02 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/08/10 10:36:02 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 56377, None)
+17/08/10 10:36:02 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:56377 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 56377, None)
+17/08/10 10:36:02 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 56377, None)
+17/08/10 10:36:02 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 56377, None)
+17/08/10 10:36:02 INFO SparkContext: Invoking stop() from shutdown hook
+17/08/10 10:36:02 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/08/10 10:36:02 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/08/10 10:36:02 INFO MemoryStore: MemoryStore cleared
+17/08/10 10:36:02 INFO BlockManager: BlockManager stopped
+17/08/10 10:36:02 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/08/10 10:36:02 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/08/10 10:36:02 INFO SparkContext: Successfully stopped SparkContext
+17/08/10 10:36:02 INFO ShutdownHookManager: Shutdown hook called
+17/08/10 10:36:02 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-33804cef-48bd-4884-99ae-0a93e8fd8f4c
+17/08/10 10:44:58 INFO SparkContext: Running Spark version 2.1.0
+17/08/10 10:44:59 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/08/10 10:44:59 INFO SecurityManager: Changing view acls to: javierluraschi
+17/08/10 10:44:59 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/08/10 10:44:59 INFO SecurityManager: Changing view acls groups to: 
+17/08/10 10:44:59 INFO SecurityManager: Changing modify acls groups to: 
+17/08/10 10:44:59 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/08/10 10:44:59 INFO Utils: Successfully started service 'sparkDriver' on port 59141.
+17/08/10 10:44:59 INFO SparkEnv: Registering MapOutputTracker
+17/08/10 10:44:59 INFO SparkEnv: Registering BlockManagerMaster
+17/08/10 10:44:59 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/08/10 10:44:59 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/08/10 10:44:59 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-d8b652a8-795f-4fa8-b1ba-0eef2a44f42d
+17/08/10 10:44:59 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/08/10 10:44:59 INFO SparkEnv: Registering OutputCommitCoordinator
+17/08/10 10:44:59 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/08/10 10:44:59 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/08/10 10:44:59 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/08/10 10:44:59 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:59141/jars/sparklyr-2.1-2.11.jar with timestamp 1502387099895
+17/08/10 10:44:59 INFO Executor: Starting executor ID driver on host localhost
+17/08/10 10:44:59 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 59142.
+17/08/10 10:44:59 INFO NettyBlockTransferService: Server created on 127.0.0.1:59142
+17/08/10 10:44:59 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/08/10 10:44:59 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 59142, None)
+17/08/10 10:44:59 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:59142 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 59142, None)
+17/08/10 10:44:59 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 59142, None)
+17/08/10 10:44:59 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 59142, None)
+17/08/10 10:45:00 INFO SparkContext: Invoking stop() from shutdown hook
+17/08/10 10:45:00 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/08/10 10:45:00 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/08/10 10:45:00 INFO MemoryStore: MemoryStore cleared
+17/08/10 10:45:00 INFO BlockManager: BlockManager stopped
+17/08/10 10:45:00 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/08/10 10:45:00 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/08/10 10:45:00 INFO SparkContext: Successfully stopped SparkContext
+17/08/10 10:45:00 INFO ShutdownHookManager: Shutdown hook called
+17/08/10 10:45:00 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-17cf3d79-63f4-4bd2-ba60-aadb9b0c1f55
+17/08/10 16:27:07 INFO SparkContext: Running Spark version 2.1.0
+17/08/10 16:27:08 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/08/10 16:27:08 INFO SecurityManager: Changing view acls to: javierluraschi
+17/08/10 16:27:08 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/08/10 16:27:08 INFO SecurityManager: Changing view acls groups to: 
+17/08/10 16:27:08 INFO SecurityManager: Changing modify acls groups to: 
+17/08/10 16:27:08 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/08/10 16:27:08 INFO Utils: Successfully started service 'sparkDriver' on port 62443.
+17/08/10 16:27:08 INFO SparkEnv: Registering MapOutputTracker
+17/08/10 16:27:08 INFO SparkEnv: Registering BlockManagerMaster
+17/08/10 16:27:08 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/08/10 16:27:08 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/08/10 16:27:08 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-9bbc0494-8ff5-4a70-88f3-6307d5ddd5a4
+17/08/10 16:27:08 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/08/10 16:27:08 INFO SparkEnv: Registering OutputCommitCoordinator
+17/08/10 16:27:08 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/08/10 16:27:08 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/08/10 16:27:08 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/08/10 16:27:08 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:62443/jars/sparklyr-2.1-2.11.jar with timestamp 1502407628766
+17/08/10 16:27:08 INFO Executor: Starting executor ID driver on host localhost
+17/08/10 16:27:08 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 62444.
+17/08/10 16:27:08 INFO NettyBlockTransferService: Server created on 127.0.0.1:62444
+17/08/10 16:27:08 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/08/10 16:27:08 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 62444, None)
+17/08/10 16:27:08 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:62444 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 62444, None)
+17/08/10 16:27:08 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 62444, None)
+17/08/10 16:27:08 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 62444, None)
+17/08/10 16:27:09 INFO SparkContext: Invoking stop() from shutdown hook
+17/08/10 16:27:09 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/08/10 16:27:09 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/08/10 16:27:09 INFO MemoryStore: MemoryStore cleared
+17/08/10 16:27:09 INFO BlockManager: BlockManager stopped
+17/08/10 16:27:09 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/08/10 16:27:09 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/08/10 16:27:09 INFO SparkContext: Successfully stopped SparkContext
+17/08/10 16:27:09 INFO ShutdownHookManager: Shutdown hook called
+17/08/10 16:27:09 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-84f07f59-01ed-476b-a0be-9243bfcb9c83

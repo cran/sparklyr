@@ -1,10 +1,10 @@
-43edad1d353a371ba52fd7d5c3ab8433 *DESCRIPTION
+4b96e1a31dbfb935b52ce12c9ee0dbb4 *DESCRIPTION
 3c340760b90af6b5cd5c7a9cc32bb228 *LICENSE
 7ea09a2bbc3e061a0d3658684cb7e527 *NAMESPACE
-e244e7b7f07d52407d02e9141a10b45e *NEWS.md
+aa328a527195e084411e00d236b19f56 *NEWS.md
 1e60b2d590d6b81a8dff306449846d13 *R/config_spark.R
 9af77baec1725e72c20387e674f8f6d3 *R/connection_instances.R
-3b033d4d78c2fc28b4f41213af4a0e50 *R/connection_shinyapp.R
+bbd5492f0625b0d16e126ed681db889d *R/connection_shinyapp.R
 9ba74802da2641693367b069f9191cd2 *R/connection_spark.R
 e2db2625baf47cf7c3be83d2162b5c07 *R/connection_viewer.R
 a6c6ca0d79825ab890ae9f8591d44484 *R/core_config.R
@@ -33,7 +33,7 @@ de358185cedc009b32a0fb27a6ba4ba8 *R/dplyr_spark_table.R
 26b702f165e2ed39f3e3a23cd6e9eaa7 *R/dplyr_sql.R
 5e98841172eaf733b0d1ebdc90afe773 *R/formulas.R
 7752608d6739b030ac7345f8fb04eb83 *R/imports.R
-3ea30b7f7a0219f260291d73b4e56ad5 *R/install_spark.R
+211187ebe01e1649908330ee21428c7b *R/install_spark.R
 fd16dbc7972908a78eeb6ae4336a3fc2 *R/install_spark_versions.R
 bc04b16f361e9a2add3be5f52abeaabb *R/install_spark_windows.R
 2e074bb25a74d2a62f5006a3638be735 *R/install_tools.R
@@ -138,7 +138,7 @@ ad8f3796c521c8681db1bbbec9bbc046 *inst/livy/spark-1.5.2/stream.scala
 ce75176df069dcf6588776b52e1146cc *inst/livy/spark-1.5.2/utils.scala
 3550719af550c3b926387608187efbea *inst/livy/spark-2.0.0/utils.scala
 ad26b56abfa9f918edd1bb4ac4a8ecc4 *inst/rstudio/connections.dcf
-5e779ea884e71b2d31348d9bb70f9e24 *inst/rstudio/connections/livy.R
+5e779ea884e71b2d31348d9bb70f9e24 *inst/rstudio/connections/Livy.R
 4de9ed5c06f2736c549f9b0f88046a83 *java/spark-1.5.2/backend.scala
 7dba90439edc4fad08b3d3369fdbebf3 *java/spark-1.5.2/channel.scala
 ed2532378f52e07afb13f857dbbfb19d *java/spark-1.5.2/handler.scala
@@ -295,7 +295,9 @@ c2edb9a79aa6c0e9070fbc862ad62fed *man/tbl_uncache.Rd
 65bf62767fc5260f34fcae28a48408db *man/worker_spark_apply_unbundle.Rd
 f3c6d8657e6e6118d2d9e99c10ddcc95 *tests/testthat.R
 95c192cf4bf3decc999fd9471de97cef *tests/testthat/helper-initialize.R
-64f09024e6e5b03f36190d1fad6250d2 *tests/testthat/log4j.spark.log
+a4550db7c8967937f542d991895f0e7b *tests/testthat/log4j.spark.log
+64f09024e6e5b03f36190d1fad6250d2 *tests/testthat/log4j.spark.log.2017-07-31
+bd531ae84457fcee89bced86507c5449 *tests/testthat/log4j.spark.log.2017-08-09
 2aa119644ecb35ca14c9bc802d397fdc *tests/testthat/test-binds.R
 d1a2413f015f76ff69587be7dfdc1cfe *tests/testthat/test-broom.R
 a5bc58f38df5d8bf3f1b9bd91ff44742 *tests/testthat/test-checkpoint.R
