@@ -102,10 +102,46 @@ test_that("'spark_apply' works with 'group_by' over multiple columns", {
 
 test_that("'spark_apply' works over empty partitions", {
   expect_equal(
-    sdf_len(sc, 10, repartition = 12) %>%
+    sdf_len(sc, 2, repartition = 4) %>%
       spark_apply(function(e) e) %>%
       collect() %>%
       as.data.frame(),
-    data.frame(id = seq_len(10))
+    data.frame(id = seq_len(2))
+  )
+})
+
+test_that("'spark_apply' works over 'tryCatch'", {
+  expect_equal(
+    sdf_len(sc, 3, repartition = 3) %>%
+      spark_apply(function(e) {
+        tryCatch({
+          if (e == "2") stop("x") else e
+        }, error = function(e) {
+          100
+        })
+      }) %>%
+      collect() %>%
+      as.data.frame(),
+    data.frame(id = c(1, 100, 3))
+  )
+})
+
+test_that("'spark_apply' works over empty partitions", {
+  expect_equal(
+    sdf_len(sc, 10) %>%
+      spark_apply(function(e) as.data.frame(e[e$x > 1,])) %>%
+      collect() %>%
+      nrow(),
+    0
+  )
+})
+
+test_that("'spark_apply' can filter using dplyr", {
+  expect_equal(
+    sdf_len(sc, 10) %>%
+      spark_apply(function(e) dplyr::filter(e, id > 1)) %>%
+      collect() %>%
+      as.data.frame(),
+    data.frame(id = c(2:10))
   )
 })

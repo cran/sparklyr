@@ -84,6 +84,7 @@ class Backend {
   private[this] var gatewayServerSocket: ServerSocket = null
   private[this] var port: Int = 0
   private[this] var sessionId: Int = 0
+  private[this] var connectionTimeout: Int = 60
 
   private[this] var sc: SparkContext = null
   private[this] var hc: HiveContext = null
@@ -93,6 +94,8 @@ class Backend {
   private[this] var inetAddress: InetAddress = InetAddress.getLoopbackAddress()
 
   private[this] var logger: Logger = new Logger("Session", 0);
+
+  private[this] var oneConnection: Boolean = false;
 
   object GatewayOperattions extends Enumeration {
     val GetPorts, RegisterInstance, UnregisterInstance = Value
@@ -149,10 +152,12 @@ class Backend {
   }
 
   def init(portParam: Int,
-           sessionIdParam: Int): Unit = {
+           sessionIdParam: Int,
+           connectionTimeoutParam: Int): Unit = {
 
     port = portParam
     sessionId = sessionIdParam
+    connectionTimeout = connectionTimeoutParam
 
     logger = new Logger("Session", sessionId)
 
@@ -168,7 +173,12 @@ class Backend {
     }
 
     try {
-      if (portIsAvailable(port, inetAddress))
+      if (isWorker)
+      {
+        gatewayServerSocket = new ServerSocket(0, 1, inetAddress)
+        port = gatewayServerSocket.getLocalPort()
+      }
+      else if (portIsAvailable(port, inetAddress))
       {
         logger.log("found port " + port + " is available")
         logger = new Logger("Gateway", sessionId)
@@ -209,12 +219,13 @@ class Backend {
 
   def run(): Unit = {
     try {
+      initMonitor()
       while(isRunning) {
         bind()
       }
     } catch {
       case e: java.net.SocketException =>
-        logger.log("is shutting down with expected SocketException")
+        logger.log("is shutting down with expected SocketException", e)
         if (!isService) System.exit(1)
       case e: IOException =>
         logger.logError("is shutting down from run() with exception ", e)
@@ -222,9 +233,23 @@ class Backend {
     }
   }
 
+  def initMonitor(): Unit = {
+    new Thread("starting init monitor thread") {
+      override def run(): Unit = {
+        Thread.sleep(connectionTimeout * 1000)
+        if (!oneConnection && !isService) {
+          logger.log("is terminating backend since no client has connected after " + connectionTimeout + " seconds")
+          System.exit(1)
+        }
+      }
+    }.start()
+  }
+
   def bind(): Unit = {
     logger.log("is waiting for sparklyr client to connect to port " + port)
     val gatewaySocket = gatewayServerSocket.accept()
+
+    oneConnection = true
 
     logger.log("accepted connection")
     val buf = new Array[Byte](1024)
@@ -251,7 +276,7 @@ class Backend {
                 logger.log("found requested session matches current session")
                 logger.log("is creating backend and allocating system resources")
 
-                val backendChannel = new BackendChannel(logger)
+                val backendChannel = new BackendChannel(logger, terminate)
                 backendChannel.setHostContext(hostContext)
 
                 val backendPort: Int = backendChannel.init(isRemote)
@@ -275,18 +300,8 @@ class Backend {
                           logger.logError("failed with exception ", e)
 
                         if (!isService) System.exit(1)
-                      }
 
-                      if (isRegistered) {
-                        val success = unregister(gatewayPort, sessionId)
-                        if (!success) {
-                          logger.logError("failed to unregister on gateway port " + gatewayPort)
-                          if (!isService) System.exit(1)
-                        }
-                      }
-
-                      if (!isService || isWorker) {
-                        isRunning = false
+                        terminate()
                       }
                     }
                   }.start()
@@ -409,23 +424,43 @@ class Backend {
     status == 0
   }
 
+  def terminate() = {
+    if (isRegistered && !isWorker) {
+      val success = unregister(gatewayPort, sessionId)
+      if (!success) {
+        logger.logError("failed to unregister on gateway port " + gatewayPort)
+        if (!isService) System.exit(1)
+      }
+    }
+
+    if (!isService || isWorker) {
+      isRunning = false
+    }
+  }
+
   def unregister(gatewayPort: Int, sessionId: Int): Boolean = {
-    logger.log("is unregistering session in gateway")
+    try {
+      logger.log("is unregistering session in gateway")
 
-    val s = new Socket(InetAddress.getLoopbackAddress(), gatewayPort)
+      val s = new Socket(InetAddress.getLoopbackAddress(), gatewayPort)
 
-    val dos = new DataOutputStream(s.getOutputStream())
-    dos.writeInt(GatewayOperattions.UnregisterInstance.id)
-    dos.writeInt(sessionId)
+      val dos = new DataOutputStream(s.getOutputStream())
+      dos.writeInt(GatewayOperattions.UnregisterInstance.id)
+      dos.writeInt(sessionId)
 
-    logger.log("is waiting for unregistration in gateway")
+      logger.log("is waiting for unregistration in gateway")
 
-    val dis = new DataInputStream(s.getInputStream())
-    val status = dis.readInt()
+      val dis = new DataInputStream(s.getInputStream())
+      val status = dis.readInt()
 
-    logger.log("finished unregistration in gateway with status " + status)
+      logger.log("finished unregistration in gateway with status " + status)
 
-    s.close()
-    status == 0
+      s.close()
+      status == 0
+    } catch {
+      case e: Exception =>
+        logger.log("failed to unregister from gateway: " + e.toString)
+        false
+    }
   }
 }

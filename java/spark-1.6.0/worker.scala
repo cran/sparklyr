@@ -3,6 +3,7 @@ package sparklyr
 import org.apache.spark._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
+import scala.collection.JavaConversions._
 
 class WorkerContext(
   sourceArray: Array[Row],
@@ -75,7 +76,16 @@ object WorkerHelper {
     columns: Array[String],
     groupBy: Array[String],
     closureRLang: Array[Byte],
-    bundlePath: String): RDD[Row] = {
+    bundlePath: String,
+    customEnv: java.util.Map[Object, Object],
+    connectionTimeout: Int
+  ): RDD[Row] = {
+
+    var customEnvMap = scala.collection.mutable.Map[String, String]();
+    customEnv.foreach(kv => customEnvMap.put(
+      kv._1.asInstanceOf[String],
+      kv._2.asInstanceOf[String])
+    )
 
     val computed: RDD[Row] = new WorkerRDD(
       rdd,
@@ -85,7 +95,9 @@ object WorkerHelper {
       port,
       groupBy,
       closureRLang,
-      bundlePath)
+      bundlePath,
+      Map() ++ customEnvMap,
+      connectionTimeout)
 
     computed
   }

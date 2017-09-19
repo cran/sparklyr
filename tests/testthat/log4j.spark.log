@@ -1,111 +1,1562 @@
-17/08/10 10:36:01 INFO SparkContext: Running Spark version 2.1.0
-17/08/10 10:36:01 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/08/10 10:36:01 INFO SecurityManager: Changing view acls to: javierluraschi
-17/08/10 10:36:01 INFO SecurityManager: Changing modify acls to: javierluraschi
-17/08/10 10:36:01 INFO SecurityManager: Changing view acls groups to: 
-17/08/10 10:36:01 INFO SecurityManager: Changing modify acls groups to: 
-17/08/10 10:36:01 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
-17/08/10 10:36:01 INFO Utils: Successfully started service 'sparkDriver' on port 56376.
-17/08/10 10:36:01 INFO SparkEnv: Registering MapOutputTracker
-17/08/10 10:36:01 INFO SparkEnv: Registering BlockManagerMaster
-17/08/10 10:36:01 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/08/10 10:36:01 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/08/10 10:36:01 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-9d21912d-5e97-4b18-9486-1913784d32e9
-17/08/10 10:36:01 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
-17/08/10 10:36:01 INFO SparkEnv: Registering OutputCommitCoordinator
-17/08/10 10:36:02 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
-17/08/10 10:36:02 INFO Utils: Successfully started service 'SparkUI' on port 4041.
-17/08/10 10:36:02 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
-17/08/10 10:36:02 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:56376/jars/sparklyr-2.1-2.11.jar with timestamp 1502386562039
-17/08/10 10:36:02 INFO Executor: Starting executor ID driver on host localhost
-17/08/10 10:36:02 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 56377.
-17/08/10 10:36:02 INFO NettyBlockTransferService: Server created on 127.0.0.1:56377
-17/08/10 10:36:02 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/08/10 10:36:02 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 56377, None)
-17/08/10 10:36:02 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:56377 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 56377, None)
-17/08/10 10:36:02 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 56377, None)
-17/08/10 10:36:02 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 56377, None)
-17/08/10 10:36:02 INFO SparkContext: Invoking stop() from shutdown hook
-17/08/10 10:36:02 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
-17/08/10 10:36:02 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
-17/08/10 10:36:02 INFO MemoryStore: MemoryStore cleared
-17/08/10 10:36:02 INFO BlockManager: BlockManager stopped
-17/08/10 10:36:02 INFO BlockManagerMaster: BlockManagerMaster stopped
-17/08/10 10:36:02 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
-17/08/10 10:36:02 INFO SparkContext: Successfully stopped SparkContext
-17/08/10 10:36:02 INFO ShutdownHookManager: Shutdown hook called
-17/08/10 10:36:02 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-33804cef-48bd-4884-99ae-0a93e8fd8f4c
-17/08/10 10:44:58 INFO SparkContext: Running Spark version 2.1.0
-17/08/10 10:44:59 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/08/10 10:44:59 INFO SecurityManager: Changing view acls to: javierluraschi
-17/08/10 10:44:59 INFO SecurityManager: Changing modify acls to: javierluraschi
-17/08/10 10:44:59 INFO SecurityManager: Changing view acls groups to: 
-17/08/10 10:44:59 INFO SecurityManager: Changing modify acls groups to: 
-17/08/10 10:44:59 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
-17/08/10 10:44:59 INFO Utils: Successfully started service 'sparkDriver' on port 59141.
-17/08/10 10:44:59 INFO SparkEnv: Registering MapOutputTracker
-17/08/10 10:44:59 INFO SparkEnv: Registering BlockManagerMaster
-17/08/10 10:44:59 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/08/10 10:44:59 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/08/10 10:44:59 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-d8b652a8-795f-4fa8-b1ba-0eef2a44f42d
-17/08/10 10:44:59 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
-17/08/10 10:44:59 INFO SparkEnv: Registering OutputCommitCoordinator
-17/08/10 10:44:59 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
-17/08/10 10:44:59 INFO Utils: Successfully started service 'SparkUI' on port 4041.
-17/08/10 10:44:59 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
-17/08/10 10:44:59 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:59141/jars/sparklyr-2.1-2.11.jar with timestamp 1502387099895
-17/08/10 10:44:59 INFO Executor: Starting executor ID driver on host localhost
-17/08/10 10:44:59 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 59142.
-17/08/10 10:44:59 INFO NettyBlockTransferService: Server created on 127.0.0.1:59142
-17/08/10 10:44:59 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/08/10 10:44:59 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 59142, None)
-17/08/10 10:44:59 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:59142 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 59142, None)
-17/08/10 10:44:59 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 59142, None)
-17/08/10 10:44:59 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 59142, None)
-17/08/10 10:45:00 INFO SparkContext: Invoking stop() from shutdown hook
-17/08/10 10:45:00 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
-17/08/10 10:45:00 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
-17/08/10 10:45:00 INFO MemoryStore: MemoryStore cleared
-17/08/10 10:45:00 INFO BlockManager: BlockManager stopped
-17/08/10 10:45:00 INFO BlockManagerMaster: BlockManagerMaster stopped
-17/08/10 10:45:00 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
-17/08/10 10:45:00 INFO SparkContext: Successfully stopped SparkContext
-17/08/10 10:45:00 INFO ShutdownHookManager: Shutdown hook called
-17/08/10 10:45:00 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-17cf3d79-63f4-4bd2-ba60-aadb9b0c1f55
-17/08/10 16:27:07 INFO SparkContext: Running Spark version 2.1.0
-17/08/10 16:27:08 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/08/10 16:27:08 INFO SecurityManager: Changing view acls to: javierluraschi
-17/08/10 16:27:08 INFO SecurityManager: Changing modify acls to: javierluraschi
-17/08/10 16:27:08 INFO SecurityManager: Changing view acls groups to: 
-17/08/10 16:27:08 INFO SecurityManager: Changing modify acls groups to: 
-17/08/10 16:27:08 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
-17/08/10 16:27:08 INFO Utils: Successfully started service 'sparkDriver' on port 62443.
-17/08/10 16:27:08 INFO SparkEnv: Registering MapOutputTracker
-17/08/10 16:27:08 INFO SparkEnv: Registering BlockManagerMaster
-17/08/10 16:27:08 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/08/10 16:27:08 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/08/10 16:27:08 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-9bbc0494-8ff5-4a70-88f3-6307d5ddd5a4
-17/08/10 16:27:08 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
-17/08/10 16:27:08 INFO SparkEnv: Registering OutputCommitCoordinator
-17/08/10 16:27:08 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
-17/08/10 16:27:08 INFO Utils: Successfully started service 'SparkUI' on port 4041.
-17/08/10 16:27:08 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
-17/08/10 16:27:08 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:62443/jars/sparklyr-2.1-2.11.jar with timestamp 1502407628766
-17/08/10 16:27:08 INFO Executor: Starting executor ID driver on host localhost
-17/08/10 16:27:08 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 62444.
-17/08/10 16:27:08 INFO NettyBlockTransferService: Server created on 127.0.0.1:62444
-17/08/10 16:27:08 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/08/10 16:27:08 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 62444, None)
-17/08/10 16:27:08 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:62444 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 62444, None)
-17/08/10 16:27:08 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 62444, None)
-17/08/10 16:27:08 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 62444, None)
-17/08/10 16:27:09 INFO SparkContext: Invoking stop() from shutdown hook
-17/08/10 16:27:09 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
-17/08/10 16:27:09 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
-17/08/10 16:27:09 INFO MemoryStore: MemoryStore cleared
-17/08/10 16:27:09 INFO BlockManager: BlockManager stopped
-17/08/10 16:27:09 INFO BlockManagerMaster: BlockManagerMaster stopped
-17/08/10 16:27:09 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
-17/08/10 16:27:09 INFO SparkContext: Successfully stopped SparkContext
-17/08/10 16:27:09 INFO ShutdownHookManager: Shutdown hook called
-17/08/10 16:27:09 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-84f07f59-01ed-476b-a0be-9243bfcb9c83
+17/09/07 13:52:43 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 13:52:44 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 13:52:44 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 13:52:44 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 13:52:44 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 13:52:44 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 13:52:44 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 13:52:44 INFO Utils: Successfully started service 'sparkDriver' on port 50891.
+17/09/07 13:52:44 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 13:52:44 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 13:52:44 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 13:52:44 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 13:52:44 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-d234753b-2107-4679-8faa-3e29bc5a9bbf
+17/09/07 13:52:44 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 13:52:44 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 13:52:44 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/09/07 13:52:44 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/09/07 13:52:44 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/09/07 13:52:44 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:50891/jars/sparklyr-2.1-2.11.jar with timestamp 1504817564857
+17/09/07 13:52:44 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 13:52:44 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 50892.
+17/09/07 13:52:44 INFO NettyBlockTransferService: Server created on 127.0.0.1:50892
+17/09/07 13:52:44 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 13:52:44 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 50892, None)
+17/09/07 13:52:44 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:50892 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 50892, None)
+17/09/07 13:52:44 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 50892, None)
+17/09/07 13:52:44 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 50892, None)
+17/09/07 13:52:45 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 13:52:45 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/09/07 13:52:45 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 13:52:45 INFO MemoryStore: MemoryStore cleared
+17/09/07 13:52:45 INFO BlockManager: BlockManager stopped
+17/09/07 13:52:45 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 13:52:45 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 13:52:45 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 13:52:45 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 13:52:45 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-0ff14c5b-59fe-4348-8ab5-5b690df4d824
+17/09/07 13:53:54 INFO RSCDriver: Connecting to: 10.0.1.18:51028
+17/09/07 13:53:54 INFO RSCDriver: Starting RPC server...
+17/09/07 13:53:59 WARN RSCConf: Your hostname, 10.0.1.18, resolves to a loopback address, but we couldn't find any external IP address!
+17/09/07 13:53:59 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+17/09/07 13:54:00 INFO RSCDriver: Received job request 2e19c132-1d6b-4d30-9502-d575ef70d0b4
+17/09/07 13:54:00 INFO RSCDriver: SparkContext not yet up, queueing job request.
+17/09/07 13:54:02 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 13:54:03 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 13:54:08 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 13:54:08 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 13:54:08 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 13:54:08 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 13:54:08 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 13:54:08 INFO Utils: Successfully started service 'sparkDriver' on port 51040.
+17/09/07 13:54:08 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 13:54:08 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 13:54:08 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 13:54:08 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 13:54:08 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-5a75bac3-46bd-43b1-aa95-29c0dfc0e848
+17/09/07 13:54:08 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 13:54:08 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 13:54:08 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/07 13:54:08 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://10.0.1.18:4040
+17/09/07 13:54:08 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://10.0.1.18:51040/jars/livy-api-0.3.0.jar with timestamp 1504817648683
+17/09/07 13:54:08 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://10.0.1.18:51040/jars/livy-rsc-0.3.0.jar with timestamp 1504817648684
+17/09/07 13:54:08 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://10.0.1.18:51040/jars/netty-all-4.0.29.Final.jar with timestamp 1504817648684
+17/09/07 13:54:08 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://10.0.1.18:51040/jars/commons-codec-1.9.jar with timestamp 1504817648684
+17/09/07 13:54:08 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://10.0.1.18:51040/jars/livy-core_2.11-0.3.0.jar with timestamp 1504817648685
+17/09/07 13:54:08 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://10.0.1.18:51040/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504817648685
+17/09/07 13:54:08 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 13:54:08 INFO Executor: Using REPL class URI: spark://10.0.1.18:51040/classes
+17/09/07 13:54:08 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 51046.
+17/09/07 13:54:08 INFO NettyBlockTransferService: Server created on 10.0.1.18:51046
+17/09/07 13:54:08 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 13:54:08 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.1.18, 51046, None)
+17/09/07 13:54:08 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.1.18:51046 with 366.3 MB RAM, BlockManagerId(driver, 10.0.1.18, 51046, None)
+17/09/07 13:54:08 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.1.18, 51046, None)
+17/09/07 13:54:08 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 10.0.1.18, 51046, None)
+17/09/07 13:54:08 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse'.
+17/09/07 13:54:09 INFO SparkInterpreter: Created Spark session.
+17/09/07 13:56:14 INFO SparkUI: Stopped Spark web UI at http://10.0.1.18:4040
+17/09/07 13:56:14 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 13:56:14 INFO MemoryStore: MemoryStore cleared
+17/09/07 13:56:14 INFO BlockManager: BlockManager stopped
+17/09/07 13:56:14 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 13:56:14 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 13:56:14 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 13:56:14 INFO SparkContext: SparkContext already stopped.
+17/09/07 13:56:14 WARN SingleThreadEventExecutor: An event executor terminated with non-empty task queue (1)
+17/09/07 13:56:14 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 13:56:14 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-2c46ac95-f623-4f28-b730-cd801e5f019f
+17/09/07 14:13:36 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 14:13:36 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 14:13:36 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 14:13:36 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 14:13:36 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 14:13:36 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 14:13:36 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 14:13:36 INFO Utils: Successfully started service 'sparkDriver' on port 52176.
+17/09/07 14:13:36 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 14:13:36 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 14:13:36 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 14:13:36 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 14:13:36 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-7b047784-4b9c-41fb-a170-e599dafac82d
+17/09/07 14:13:36 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 14:13:37 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 14:13:37 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/09/07 14:13:37 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/09/07 14:13:37 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/09/07 14:13:37 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:52176/jars/sparklyr-2.1-2.11.jar with timestamp 1504818817230
+17/09/07 14:13:37 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 14:13:37 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 52177.
+17/09/07 14:13:37 INFO NettyBlockTransferService: Server created on 127.0.0.1:52177
+17/09/07 14:13:37 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 14:13:37 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 52177, None)
+17/09/07 14:13:37 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:52177 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 52177, None)
+17/09/07 14:13:37 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 52177, None)
+17/09/07 14:13:37 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 52177, None)
+17/09/07 14:13:37 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 14:13:37 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/09/07 14:13:37 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 14:13:37 INFO MemoryStore: MemoryStore cleared
+17/09/07 14:13:37 INFO BlockManager: BlockManager stopped
+17/09/07 14:13:37 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 14:13:37 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 14:13:37 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 14:13:37 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 14:13:37 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-98c67309-3c76-4790-86af-ff091eab8c53
+17/09/07 14:17:49 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 14:17:49 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 14:17:50 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 14:17:50 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 14:17:50 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 14:17:50 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 14:17:50 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 14:17:50 INFO Utils: Successfully started service 'sparkDriver' on port 52655.
+17/09/07 14:17:50 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 14:17:50 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 14:17:50 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 14:17:50 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 14:17:50 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-22441ca2-c55f-4bdb-99d6-a7ba37d09d9e
+17/09/07 14:17:50 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 14:17:50 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 14:17:50 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/09/07 14:17:50 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/09/07 14:17:50 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/09/07 14:17:50 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:52655/jars/sparklyr-2.1-2.11.jar with timestamp 1504819070533
+17/09/07 14:17:50 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 14:17:50 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 52656.
+17/09/07 14:17:50 INFO NettyBlockTransferService: Server created on 127.0.0.1:52656
+17/09/07 14:17:50 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 14:17:50 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 52656, None)
+17/09/07 14:17:50 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:52656 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 52656, None)
+17/09/07 14:17:50 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 52656, None)
+17/09/07 14:17:50 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 52656, None)
+17/09/07 14:17:50 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 14:17:50 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/09/07 14:17:50 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 14:17:50 INFO MemoryStore: MemoryStore cleared
+17/09/07 14:17:50 INFO BlockManager: BlockManager stopped
+17/09/07 14:17:50 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 14:17:50 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 14:17:50 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 14:17:50 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 14:17:50 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-6ee1bb33-123c-4e6c-834c-8cc4b22e4485
+17/09/07 14:18:42 INFO RSCDriver: Connecting to: 10.0.1.18:52781
+17/09/07 14:18:42 INFO RSCDriver: Starting RPC server...
+17/09/07 14:18:48 WARN RSCConf: Your hostname, 10.0.1.18, resolves to a loopback address, but we couldn't find any external IP address!
+17/09/07 14:18:48 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+17/09/07 14:18:48 INFO RSCDriver: Received job request 5ece14b4-8c87-4199-921c-8d93578c2808
+17/09/07 14:18:48 INFO RSCDriver: SparkContext not yet up, queueing job request.
+17/09/07 14:18:50 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 14:18:50 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 14:18:56 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 14:18:56 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 14:18:56 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 14:18:56 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 14:18:56 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 14:18:56 INFO Utils: Successfully started service 'sparkDriver' on port 52814.
+17/09/07 14:18:56 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 14:18:56 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 14:18:56 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 14:18:56 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 14:18:56 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-637bfcf7-f5ed-493a-b12e-90d91091ca15
+17/09/07 14:18:56 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 14:18:56 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 14:18:56 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/07 14:18:56 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://10.0.1.18:4040
+17/09/07 14:18:56 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://10.0.1.18:52814/jars/livy-api-0.3.0.jar with timestamp 1504819136735
+17/09/07 14:18:56 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://10.0.1.18:52814/jars/livy-rsc-0.3.0.jar with timestamp 1504819136736
+17/09/07 14:18:56 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://10.0.1.18:52814/jars/netty-all-4.0.29.Final.jar with timestamp 1504819136736
+17/09/07 14:18:56 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://10.0.1.18:52814/jars/commons-codec-1.9.jar with timestamp 1504819136736
+17/09/07 14:18:56 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://10.0.1.18:52814/jars/livy-core_2.11-0.3.0.jar with timestamp 1504819136736
+17/09/07 14:18:56 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://10.0.1.18:52814/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504819136737
+17/09/07 14:18:56 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 14:18:56 INFO Executor: Using REPL class URI: spark://10.0.1.18:52814/classes
+17/09/07 14:18:56 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 52820.
+17/09/07 14:18:56 INFO NettyBlockTransferService: Server created on 10.0.1.18:52820
+17/09/07 14:18:56 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 14:18:56 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.1.18, 52820, None)
+17/09/07 14:18:56 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.1.18:52820 with 366.3 MB RAM, BlockManagerId(driver, 10.0.1.18, 52820, None)
+17/09/07 14:18:56 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.1.18, 52820, None)
+17/09/07 14:18:56 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 10.0.1.18, 52820, None)
+17/09/07 14:18:56 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/'.
+17/09/07 14:18:57 INFO SparkInterpreter: Created Spark session.
+17/09/07 14:20:59 INFO SparkUI: Stopped Spark web UI at http://10.0.1.18:4040
+17/09/07 14:20:59 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 14:20:59 INFO MemoryStore: MemoryStore cleared
+17/09/07 14:20:59 INFO BlockManager: BlockManager stopped
+17/09/07 14:20:59 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 14:20:59 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 14:20:59 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 14:20:59 INFO SparkContext: SparkContext already stopped.
+17/09/07 14:20:59 WARN DefaultPromise: An exception was thrown by com.cloudera.livy.rsc.Utils$2.operationComplete()
+java.util.concurrent.RejectedExecutionException: event executor terminated
+	at io.netty.util.concurrent.SingleThreadEventExecutor.reject(SingleThreadEventExecutor.java:805)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.offerTask(SingleThreadEventExecutor.java:345)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.addTask(SingleThreadEventExecutor.java:338)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.execute(SingleThreadEventExecutor.java:748)
+	at io.netty.util.concurrent.AbstractScheduledEventExecutor.schedule(AbstractScheduledEventExecutor.java:190)
+	at io.netty.util.concurrent.AbstractScheduledEventExecutor.schedule(AbstractScheduledEventExecutor.java:134)
+	at io.netty.util.concurrent.AbstractEventExecutorGroup.schedule(AbstractEventExecutorGroup.java:49)
+	at com.cloudera.livy.rsc.driver.RSCDriver.setupIdleTimeout(RSCDriver.java:239)
+	at com.cloudera.livy.rsc.driver.RSCDriver.access$100(RSCDriver.java:71)
+	at com.cloudera.livy.rsc.driver.RSCDriver$2.onSuccess(RSCDriver.java:221)
+	at com.cloudera.livy.rsc.driver.RSCDriver$2.onSuccess(RSCDriver.java:217)
+	at com.cloudera.livy.rsc.Utils$2.operationComplete(Utils.java:108)
+	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:514)
+	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:488)
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:427)
+	at io.netty.util.concurrent.DefaultPromise.trySuccess(DefaultPromise.java:111)
+	at io.netty.channel.DefaultChannelPromise.trySuccess(DefaultChannelPromise.java:82)
+	at io.netty.channel.AbstractChannel$CloseFuture.setClosed(AbstractChannel.java:1004)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.doClose0(AbstractChannel.java:633)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:611)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:554)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.close(DefaultChannelPipeline.java:1236)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeClose(AbstractChannelHandlerContext.java:629)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:613)
+	at io.netty.channel.ChannelDuplexHandler.close(ChannelDuplexHandler.java:73)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeClose(AbstractChannelHandlerContext.java:629)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:613)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:470)
+	at io.netty.channel.DefaultChannelPipeline.close(DefaultChannelPipeline.java:949)
+	at io.netty.channel.AbstractChannel.close(AbstractChannel.java:194)
+	at com.cloudera.livy.rsc.rpc.Rpc.close(Rpc.java:307)
+	at com.cloudera.livy.rsc.driver.RSCDriver.shutdownServer(RSCDriver.java:312)
+	at com.cloudera.livy.rsc.driver.RSCDriver.shutdown(RSCDriver.java:134)
+	at com.cloudera.livy.rsc.driver.RSCDriver.handle(RSCDriver.java:399)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at com.cloudera.livy.rsc.rpc.RpcDispatcher.handleCall(RpcDispatcher.java:130)
+	at com.cloudera.livy.rsc.rpc.RpcDispatcher.channelRead0(RpcDispatcher.java:77)
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:105)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelRead(ChannelInboundHandlerAdapter.java:86)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:293)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:267)
+	at io.netty.handler.codec.ByteToMessageCodec.channelRead(ByteToMessageCodec.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1294)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:911)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:131)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:652)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:575)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:489)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:451)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:140)
+	at java.lang.Thread.run(Thread.java:745)
+17/09/07 14:20:59 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 14:20:59 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-982d239d-c120-433d-b6b5-b5360e0a410c
+17/09/07 14:27:07 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 14:27:08 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 14:27:08 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 14:27:08 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 14:27:08 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 14:27:08 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 14:27:08 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 14:27:08 INFO Utils: Successfully started service 'sparkDriver' on port 53325.
+17/09/07 14:27:08 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 14:27:08 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 14:27:08 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 14:27:08 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 14:27:08 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-6201b383-2f08-4c40-8942-d8d79cbcc895
+17/09/07 14:27:08 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 14:27:08 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 14:27:08 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/09/07 14:27:08 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/09/07 14:27:08 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/09/07 14:27:08 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:53325/jars/sparklyr-2.1-2.11.jar with timestamp 1504819628677
+17/09/07 14:27:08 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 14:27:08 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 53326.
+17/09/07 14:27:08 INFO NettyBlockTransferService: Server created on 127.0.0.1:53326
+17/09/07 14:27:08 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 14:27:08 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 53326, None)
+17/09/07 14:27:08 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:53326 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 53326, None)
+17/09/07 14:27:08 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 53326, None)
+17/09/07 14:27:08 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 53326, None)
+17/09/07 14:27:08 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 14:27:08 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/09/07 14:27:08 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 14:27:08 INFO MemoryStore: MemoryStore cleared
+17/09/07 14:27:08 INFO BlockManager: BlockManager stopped
+17/09/07 14:27:08 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 14:27:08 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 14:27:08 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 14:27:08 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 14:27:08 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-429c6314-3be0-4d6b-b937-50bcc27ed8af
+17/09/07 14:28:01 INFO RSCDriver: Connecting to: 10.0.1.18:53473
+17/09/07 14:28:01 INFO RSCDriver: Starting RPC server...
+17/09/07 14:28:06 WARN RSCConf: Your hostname, 10.0.1.18, resolves to a loopback address, but we couldn't find any external IP address!
+17/09/07 14:28:06 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+17/09/07 14:28:06 INFO RSCDriver: Received job request 95ee4948-d8ed-47e5-b2a1-274659c38efe
+17/09/07 14:28:06 INFO RSCDriver: SparkContext not yet up, queueing job request.
+17/09/07 14:28:09 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 14:28:09 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 14:28:14 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 14:28:14 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 14:28:14 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 14:28:14 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 14:28:14 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 14:28:14 INFO Utils: Successfully started service 'sparkDriver' on port 53489.
+17/09/07 14:28:14 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 14:28:14 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 14:28:14 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 14:28:14 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 14:28:14 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-7903c3f5-6aed-44ea-ab48-c5ad710ebc11
+17/09/07 14:28:14 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 14:28:14 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 14:28:14 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/07 14:28:14 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://10.0.1.18:4040
+17/09/07 14:28:14 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://10.0.1.18:53489/jars/livy-api-0.3.0.jar with timestamp 1504819694932
+17/09/07 14:28:14 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://10.0.1.18:53489/jars/livy-rsc-0.3.0.jar with timestamp 1504819694933
+17/09/07 14:28:14 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://10.0.1.18:53489/jars/netty-all-4.0.29.Final.jar with timestamp 1504819694933
+17/09/07 14:28:14 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://10.0.1.18:53489/jars/commons-codec-1.9.jar with timestamp 1504819694933
+17/09/07 14:28:14 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://10.0.1.18:53489/jars/livy-core_2.11-0.3.0.jar with timestamp 1504819694933
+17/09/07 14:28:14 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://10.0.1.18:53489/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504819694933
+17/09/07 14:28:14 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 14:28:15 INFO Executor: Using REPL class URI: spark://10.0.1.18:53489/classes
+17/09/07 14:28:15 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 53496.
+17/09/07 14:28:15 INFO NettyBlockTransferService: Server created on 10.0.1.18:53496
+17/09/07 14:28:15 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 14:28:15 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.1.18, 53496, None)
+17/09/07 14:28:15 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.1.18:53496 with 366.3 MB RAM, BlockManagerId(driver, 10.0.1.18, 53496, None)
+17/09/07 14:28:15 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.1.18, 53496, None)
+17/09/07 14:28:15 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 10.0.1.18, 53496, None)
+17/09/07 14:28:15 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/'.
+17/09/07 14:28:15 INFO SparkInterpreter: Created Spark session.
+17/09/07 14:28:32 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 14:28:32 INFO SparkContext: SparkContext already stopped.
+17/09/07 14:28:32 INFO SparkContext: SparkContext already stopped.
+17/09/07 14:28:32 INFO SparkUI: Stopped Spark web UI at http://10.0.1.18:4040
+17/09/07 14:28:32 WARN DefaultPromise: An exception was thrown by com.cloudera.livy.rsc.Utils$2.operationComplete()
+java.util.concurrent.RejectedExecutionException: event executor terminated
+	at io.netty.util.concurrent.SingleThreadEventExecutor.reject(SingleThreadEventExecutor.java:805)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.offerTask(SingleThreadEventExecutor.java:345)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.addTask(SingleThreadEventExecutor.java:338)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.execute(SingleThreadEventExecutor.java:748)
+	at io.netty.util.concurrent.AbstractScheduledEventExecutor.schedule(AbstractScheduledEventExecutor.java:190)
+	at io.netty.util.concurrent.AbstractScheduledEventExecutor.schedule(AbstractScheduledEventExecutor.java:134)
+	at io.netty.util.concurrent.AbstractEventExecutorGroup.schedule(AbstractEventExecutorGroup.java:49)
+	at com.cloudera.livy.rsc.driver.RSCDriver.setupIdleTimeout(RSCDriver.java:239)
+	at com.cloudera.livy.rsc.driver.RSCDriver.access$100(RSCDriver.java:71)
+	at com.cloudera.livy.rsc.driver.RSCDriver$2.onSuccess(RSCDriver.java:221)
+	at com.cloudera.livy.rsc.driver.RSCDriver$2.onSuccess(RSCDriver.java:217)
+	at com.cloudera.livy.rsc.Utils$2.operationComplete(Utils.java:108)
+	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:514)
+	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:488)
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:427)
+	at io.netty.util.concurrent.DefaultPromise.trySuccess(DefaultPromise.java:111)
+	at io.netty.channel.DefaultChannelPromise.trySuccess(DefaultChannelPromise.java:82)
+	at io.netty.channel.AbstractChannel$CloseFuture.setClosed(AbstractChannel.java:1004)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.doClose0(AbstractChannel.java:633)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:611)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:554)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.close(DefaultChannelPipeline.java:1236)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeClose(AbstractChannelHandlerContext.java:629)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:613)
+	at io.netty.channel.ChannelDuplexHandler.close(ChannelDuplexHandler.java:73)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeClose(AbstractChannelHandlerContext.java:629)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:613)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:470)
+	at io.netty.channel.DefaultChannelPipeline.close(DefaultChannelPipeline.java:949)
+	at io.netty.channel.AbstractChannel.close(AbstractChannel.java:194)
+	at com.cloudera.livy.rsc.rpc.Rpc.close(Rpc.java:307)
+	at com.cloudera.livy.rsc.driver.RSCDriver.shutdownServer(RSCDriver.java:312)
+	at com.cloudera.livy.rsc.driver.RSCDriver.shutdown(RSCDriver.java:134)
+	at com.cloudera.livy.rsc.driver.RSCDriver.handle(RSCDriver.java:399)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at com.cloudera.livy.rsc.rpc.RpcDispatcher.handleCall(RpcDispatcher.java:130)
+	at com.cloudera.livy.rsc.rpc.RpcDispatcher.channelRead0(RpcDispatcher.java:77)
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:105)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelRead(ChannelInboundHandlerAdapter.java:86)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:293)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:267)
+	at io.netty.handler.codec.ByteToMessageCodec.channelRead(ByteToMessageCodec.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1294)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:911)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:131)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:652)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:575)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:489)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:451)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:140)
+	at java.lang.Thread.run(Thread.java:745)
+17/09/07 14:28:32 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 14:28:32 INFO MemoryStore: MemoryStore cleared
+17/09/07 14:28:32 INFO BlockManager: BlockManager stopped
+17/09/07 14:28:32 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 14:28:32 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 14:28:32 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 14:28:32 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 14:28:32 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-1a194fd9-b941-478a-bdff-d250678b7502
+17/09/07 14:33:16 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 14:33:16 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 14:33:16 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 14:33:16 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 14:33:16 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 14:33:16 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 14:33:16 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 14:33:16 INFO Utils: Successfully started service 'sparkDriver' on port 54110.
+17/09/07 14:33:16 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 14:33:16 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 14:33:16 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 14:33:16 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 14:33:16 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-2653dc1b-7e2c-4804-81c9-3393bb458dde
+17/09/07 14:33:16 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 14:33:16 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 14:33:17 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/09/07 14:33:17 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/09/07 14:33:17 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/09/07 14:33:17 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:54110/jars/sparklyr-2.1-2.11.jar with timestamp 1504819997070
+17/09/07 14:33:17 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 14:33:17 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 54111.
+17/09/07 14:33:17 INFO NettyBlockTransferService: Server created on 127.0.0.1:54111
+17/09/07 14:33:17 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 14:33:17 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 54111, None)
+17/09/07 14:33:17 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:54111 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 54111, None)
+17/09/07 14:33:17 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 54111, None)
+17/09/07 14:33:17 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 54111, None)
+17/09/07 14:33:17 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 14:33:17 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/09/07 14:33:17 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 14:33:17 INFO MemoryStore: MemoryStore cleared
+17/09/07 14:33:17 INFO BlockManager: BlockManager stopped
+17/09/07 14:33:17 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 14:33:17 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 14:33:17 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 14:33:17 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 14:33:17 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-603266d4-7ba4-4049-b64c-7094601b522e
+17/09/07 14:34:09 INFO RSCDriver: Connecting to: 10.0.1.18:54254
+17/09/07 14:34:09 INFO RSCDriver: Starting RPC server...
+17/09/07 14:34:15 WARN RSCConf: Your hostname, 10.0.1.18, resolves to a loopback address, but we couldn't find any external IP address!
+17/09/07 14:34:15 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+17/09/07 14:34:15 INFO RSCDriver: Received job request d8ee21e9-e7f3-45d3-be11-bf9c9c4f2e8b
+17/09/07 14:34:15 INFO RSCDriver: SparkContext not yet up, queueing job request.
+17/09/07 14:34:17 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 14:34:17 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 14:34:22 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 14:34:22 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 14:34:22 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 14:34:22 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 14:34:22 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 14:34:23 INFO Utils: Successfully started service 'sparkDriver' on port 54269.
+17/09/07 14:34:23 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 14:34:23 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 14:34:23 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 14:34:23 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 14:34:23 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-cde6f657-1364-45eb-9916-afd86126e56c
+17/09/07 14:34:23 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 14:34:23 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 14:34:23 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/07 14:34:23 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://10.0.1.18:4040
+17/09/07 14:34:23 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://10.0.1.18:54269/jars/livy-api-0.3.0.jar with timestamp 1504820063376
+17/09/07 14:34:23 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://10.0.1.18:54269/jars/livy-rsc-0.3.0.jar with timestamp 1504820063377
+17/09/07 14:34:23 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://10.0.1.18:54269/jars/netty-all-4.0.29.Final.jar with timestamp 1504820063377
+17/09/07 14:34:23 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://10.0.1.18:54269/jars/commons-codec-1.9.jar with timestamp 1504820063377
+17/09/07 14:34:23 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://10.0.1.18:54269/jars/livy-core_2.11-0.3.0.jar with timestamp 1504820063378
+17/09/07 14:34:23 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://10.0.1.18:54269/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504820063378
+17/09/07 14:34:23 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 14:34:23 INFO Executor: Using REPL class URI: spark://10.0.1.18:54269/classes
+17/09/07 14:34:23 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 54273.
+17/09/07 14:34:23 INFO NettyBlockTransferService: Server created on 10.0.1.18:54273
+17/09/07 14:34:23 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 14:34:23 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.1.18, 54273, None)
+17/09/07 14:34:23 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.1.18:54273 with 366.3 MB RAM, BlockManagerId(driver, 10.0.1.18, 54273, None)
+17/09/07 14:34:23 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.1.18, 54273, None)
+17/09/07 14:34:23 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 10.0.1.18, 54273, None)
+17/09/07 14:34:23 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/'.
+17/09/07 14:34:24 INFO SparkInterpreter: Created Spark session.
+17/09/07 14:34:34 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 14:34:34 INFO SparkContext: SparkContext already stopped.
+17/09/07 14:34:34 INFO SparkContext: SparkContext already stopped.
+17/09/07 14:34:34 INFO SparkUI: Stopped Spark web UI at http://10.0.1.18:4040
+17/09/07 14:34:34 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 14:34:34 INFO MemoryStore: MemoryStore cleared
+17/09/07 14:34:34 INFO BlockManager: BlockManager stopped
+17/09/07 14:34:34 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 14:34:34 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 14:34:34 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 14:34:34 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 14:34:34 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-8506052e-97e5-4fde-b619-42874c3f6aa3
+17/09/07 15:22:56 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 15:22:57 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 15:22:57 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 15:22:57 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 15:22:57 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 15:22:57 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 15:22:57 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 15:22:57 INFO Utils: Successfully started service 'sparkDriver' on port 57874.
+17/09/07 15:22:57 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 15:22:57 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 15:22:57 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 15:22:57 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 15:22:57 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-386baab6-89c2-4e16-bc30-645378340002
+17/09/07 15:22:57 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 15:22:57 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 15:22:57 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/09/07 15:22:57 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/09/07 15:22:57 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/09/07 15:22:57 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:57874/jars/sparklyr-2.1-2.11.jar with timestamp 1504822977546
+17/09/07 15:22:57 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 15:22:57 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 57875.
+17/09/07 15:22:57 INFO NettyBlockTransferService: Server created on 127.0.0.1:57875
+17/09/07 15:22:57 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 15:22:57 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 57875, None)
+17/09/07 15:22:57 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:57875 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 57875, None)
+17/09/07 15:22:57 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 57875, None)
+17/09/07 15:22:57 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 57875, None)
+17/09/07 15:22:57 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 15:22:57 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/09/07 15:22:57 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 15:22:57 INFO MemoryStore: MemoryStore cleared
+17/09/07 15:22:57 INFO BlockManager: BlockManager stopped
+17/09/07 15:22:57 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 15:22:57 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 15:22:57 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 15:22:57 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 15:22:57 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-279b62fd-30d0-48d3-b071-5652bbed3707
+17/09/07 15:23:51 INFO RSCDriver: Connecting to: 10.0.1.18:58115
+17/09/07 15:23:51 INFO RSCDriver: Starting RPC server...
+17/09/07 15:23:56 WARN RSCConf: Your hostname, 10.0.1.18, resolves to a loopback address, but we couldn't find any external IP address!
+17/09/07 15:23:56 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+17/09/07 15:23:57 INFO RSCDriver: Received job request b60a4699-4851-4bde-b518-18e53ac1cdcd
+17/09/07 15:23:57 INFO RSCDriver: SparkContext not yet up, queueing job request.
+17/09/07 15:23:59 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 15:24:00 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 15:24:05 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 15:24:05 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 15:24:05 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 15:24:05 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 15:24:05 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 15:24:05 INFO Utils: Successfully started service 'sparkDriver' on port 58177.
+17/09/07 15:24:05 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 15:24:05 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 15:24:05 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 15:24:05 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 15:24:05 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-128a7c9d-7749-4399-be15-c98a9610f9e1
+17/09/07 15:24:05 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 15:24:05 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 15:24:05 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/07 15:24:05 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://10.0.1.18:4040
+17/09/07 15:24:05 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://10.0.1.18:58177/jars/livy-api-0.3.0.jar with timestamp 1504823045580
+17/09/07 15:24:05 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://10.0.1.18:58177/jars/livy-rsc-0.3.0.jar with timestamp 1504823045581
+17/09/07 15:24:05 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://10.0.1.18:58177/jars/netty-all-4.0.29.Final.jar with timestamp 1504823045581
+17/09/07 15:24:05 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://10.0.1.18:58177/jars/commons-codec-1.9.jar with timestamp 1504823045581
+17/09/07 15:24:05 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://10.0.1.18:58177/jars/livy-core_2.11-0.3.0.jar with timestamp 1504823045582
+17/09/07 15:24:05 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://10.0.1.18:58177/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504823045582
+17/09/07 15:24:05 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 15:24:05 INFO Executor: Using REPL class URI: spark://10.0.1.18:58177/classes
+17/09/07 15:24:05 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 58183.
+17/09/07 15:24:05 INFO NettyBlockTransferService: Server created on 10.0.1.18:58183
+17/09/07 15:24:05 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 15:24:05 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.1.18, 58183, None)
+17/09/07 15:24:05 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.1.18:58183 with 366.3 MB RAM, BlockManagerId(driver, 10.0.1.18, 58183, None)
+17/09/07 15:24:05 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.1.18, 58183, None)
+17/09/07 15:24:05 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 10.0.1.18, 58183, None)
+17/09/07 15:24:05 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/'.
+17/09/07 15:24:06 INFO SparkInterpreter: Created Spark session.
+17/09/07 15:24:53 WARN SparkSession$Builder: Using an existing SparkSession; some configuration may not take effect.
+17/09/07 15:24:55 INFO SparkSqlParser: Parsing command: SHOW TABLES
+17/09/07 15:25:06 INFO CodeGenerator: Code generated in 178.189301 ms
+17/09/07 15:25:06 INFO SparkContext: Starting job: collect at <console>:86
+17/09/07 15:25:06 INFO DAGScheduler: Got job 0 (collect at <console>:86) with 1 output partitions
+17/09/07 15:25:06 INFO DAGScheduler: Final stage: ResultStage 0 (collect at <console>:86)
+17/09/07 15:25:06 INFO DAGScheduler: Parents of final stage: List()
+17/09/07 15:25:06 INFO DAGScheduler: Missing parents: List()
+17/09/07 15:25:06 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[5] at map at <console>:83), which has no missing parents
+17/09/07 15:25:07 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 8.8 KB, free 366.3 MB)
+17/09/07 15:25:07 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 4.6 KB, free 366.3 MB)
+17/09/07 15:25:07 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on 10.0.1.18:58183 (size: 4.6 KB, free: 366.3 MB)
+17/09/07 15:25:07 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:996
+17/09/07 15:25:07 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[5] at map at <console>:83)
+17/09/07 15:25:07 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks
+17/09/07 15:25:07 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, executor driver, partition 0, PROCESS_LOCAL, 6462 bytes)
+17/09/07 15:25:07 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+17/09/07 15:25:07 INFO Executor: Fetching spark://10.0.1.18:58177/jars/commons-codec-1.9.jar with timestamp 1504823045581
+17/09/07 15:25:07 INFO TransportClientFactory: Successfully created connection to /10.0.1.18:58177 after 7 ms (0 ms spent in bootstraps)
+17/09/07 15:25:07 INFO Utils: Fetching spark://10.0.1.18:58177/jars/commons-codec-1.9.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/fetchFileTemp6596748985626094036.tmp
+17/09/07 15:25:07 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/commons-codec-1.9.jar to class loader
+17/09/07 15:25:07 INFO Executor: Fetching spark://10.0.1.18:58177/jars/livy-api-0.3.0.jar with timestamp 1504823045580
+17/09/07 15:25:07 INFO Utils: Fetching spark://10.0.1.18:58177/jars/livy-api-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/fetchFileTemp8558718438563945694.tmp
+17/09/07 15:25:07 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/livy-api-0.3.0.jar to class loader
+17/09/07 15:25:07 INFO Executor: Fetching spark://10.0.1.18:58177/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504823045582
+17/09/07 15:25:07 INFO Utils: Fetching spark://10.0.1.18:58177/jars/livy-repl_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/fetchFileTemp526467002317254743.tmp
+17/09/07 15:25:07 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/livy-repl_2.11-0.3.0.jar to class loader
+17/09/07 15:25:07 INFO Executor: Fetching spark://10.0.1.18:58177/jars/netty-all-4.0.29.Final.jar with timestamp 1504823045581
+17/09/07 15:25:07 INFO Utils: Fetching spark://10.0.1.18:58177/jars/netty-all-4.0.29.Final.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/fetchFileTemp6332947995057224253.tmp
+17/09/07 15:25:07 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/netty-all-4.0.29.Final.jar to class loader
+17/09/07 15:25:07 INFO Executor: Fetching spark://10.0.1.18:58177/jars/livy-rsc-0.3.0.jar with timestamp 1504823045581
+17/09/07 15:25:07 INFO Utils: Fetching spark://10.0.1.18:58177/jars/livy-rsc-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/fetchFileTemp6398680041839992730.tmp
+17/09/07 15:25:07 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/livy-rsc-0.3.0.jar to class loader
+17/09/07 15:25:07 INFO Executor: Fetching spark://10.0.1.18:58177/jars/livy-core_2.11-0.3.0.jar with timestamp 1504823045582
+17/09/07 15:25:07 INFO Utils: Fetching spark://10.0.1.18:58177/jars/livy-core_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/fetchFileTemp8113653784942059832.tmp
+17/09/07 15:25:07 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0/userFiles-512dcf41-fff0-4000-8d88-496741fc2d3f/livy-core_2.11-0.3.0.jar to class loader
+17/09/07 15:25:07 INFO CodeGenerator: Code generated in 17.693793 ms
+17/09/07 15:25:07 INFO CodeGenerator: Code generated in 13.970104 ms
+17/09/07 15:25:07 INFO Executor: Finished task 0.0 in stage 0.0 (TID 0). 1391 bytes result sent to driver
+17/09/07 15:25:07 INFO TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 283 ms on localhost (executor driver) (1/1)
+17/09/07 15:25:07 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+17/09/07 15:25:07 INFO DAGScheduler: ResultStage 0 (collect at <console>:86) finished in 0.296 s
+17/09/07 15:25:07 INFO DAGScheduler: Job 0 finished: collect at <console>:86, took 0.454286 s
+17/09/07 15:25:09 INFO ContextCleaner: Cleaned accumulator 0
+17/09/07 15:25:09 INFO ContextCleaner: Cleaned accumulator 1
+17/09/07 15:25:09 INFO BlockManagerInfo: Removed broadcast_0_piece0 on 10.0.1.18:58183 in memory (size: 4.6 KB, free: 366.3 MB)
+17/09/07 15:25:12 INFO SparkSqlParser: Parsing command: df
+17/09/07 15:25:13 INFO SparkSqlParser: Parsing command: CACHE TABLE `df`
+17/09/07 15:25:13 INFO SparkSqlParser: Parsing command: `df`
+17/09/07 15:25:13 INFO CodeGenerator: Code generated in 15.297349 ms
+17/09/07 15:25:13 INFO CodeGenerator: Code generated in 10.653379 ms
+17/09/07 15:25:13 INFO SparkContext: Starting job: sql at NativeMethodAccessorImpl.java:0
+17/09/07 15:25:13 INFO DAGScheduler: Registering RDD 13 (sql at NativeMethodAccessorImpl.java:0)
+17/09/07 15:25:13 INFO DAGScheduler: Got job 1 (sql at NativeMethodAccessorImpl.java:0) with 1 output partitions
+17/09/07 15:25:13 INFO DAGScheduler: Final stage: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0)
+17/09/07 15:25:13 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 1)
+17/09/07 15:25:13 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 1)
+17/09/07 15:25:13 INFO DAGScheduler: Submitting ShuffleMapStage 1 (MapPartitionsRDD[13] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+17/09/07 15:25:13 INFO MemoryStore: Block broadcast_1 stored as values in memory (estimated size 15.3 KB, free 366.3 MB)
+17/09/07 15:25:13 INFO MemoryStore: Block broadcast_1_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+17/09/07 15:25:13 INFO BlockManagerInfo: Added broadcast_1_piece0 in memory on 10.0.1.18:58183 (size: 7.6 KB, free: 366.3 MB)
+17/09/07 15:25:13 INFO SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:996
+17/09/07 15:25:13 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 1 (MapPartitionsRDD[13] at sql at NativeMethodAccessorImpl.java:0)
+17/09/07 15:25:13 INFO TaskSchedulerImpl: Adding task set 1.0 with 1 tasks
+17/09/07 15:25:13 INFO TaskSetManager: Starting task 0.0 in stage 1.0 (TID 1, localhost, executor driver, partition 0, PROCESS_LOCAL, 6686 bytes)
+17/09/07 15:25:13 INFO Executor: Running task 0.0 in stage 1.0 (TID 1)
+17/09/07 15:25:13 INFO CodeGenerator: Code generated in 13.296127 ms
+17/09/07 15:25:13 INFO CodeGenerator: Code generated in 43.53767 ms
+17/09/07 15:25:13 INFO MemoryStore: Block rdd_10_0 stored as values in memory (estimated size 464.0 B, free 366.3 MB)
+17/09/07 15:25:13 INFO BlockManagerInfo: Added rdd_10_0 in memory on 10.0.1.18:58183 (size: 464.0 B, free: 366.3 MB)
+17/09/07 15:25:13 INFO CodeGenerator: Code generated in 6.937153 ms
+17/09/07 15:25:13 INFO CodeGenerator: Code generated in 18.967619 ms
+17/09/07 15:25:13 INFO Executor: Finished task 0.0 in stage 1.0 (TID 1). 2747 bytes result sent to driver
+17/09/07 15:25:13 INFO TaskSetManager: Finished task 0.0 in stage 1.0 (TID 1) in 184 ms on localhost (executor driver) (1/1)
+17/09/07 15:25:13 INFO TaskSchedulerImpl: Removed TaskSet 1.0, whose tasks have all completed, from pool 
+17/09/07 15:25:13 INFO DAGScheduler: ShuffleMapStage 1 (sql at NativeMethodAccessorImpl.java:0) finished in 0.186 s
+17/09/07 15:25:13 INFO DAGScheduler: looking for newly runnable stages
+17/09/07 15:25:13 INFO DAGScheduler: running: Set()
+17/09/07 15:25:13 INFO DAGScheduler: waiting: Set(ResultStage 2)
+17/09/07 15:25:13 INFO DAGScheduler: failed: Set()
+17/09/07 15:25:13 INFO DAGScheduler: Submitting ResultStage 2 (MapPartitionsRDD[16] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+17/09/07 15:25:13 INFO MemoryStore: Block broadcast_2 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+17/09/07 15:25:13 INFO MemoryStore: Block broadcast_2_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+17/09/07 15:25:13 INFO BlockManagerInfo: Added broadcast_2_piece0 in memory on 10.0.1.18:58183 (size: 3.7 KB, free: 366.3 MB)
+17/09/07 15:25:13 INFO SparkContext: Created broadcast 2 from broadcast at DAGScheduler.scala:996
+17/09/07 15:25:13 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 2 (MapPartitionsRDD[16] at sql at NativeMethodAccessorImpl.java:0)
+17/09/07 15:25:13 INFO TaskSchedulerImpl: Adding task set 2.0 with 1 tasks
+17/09/07 15:25:13 INFO TaskSetManager: Starting task 0.0 in stage 2.0 (TID 2, localhost, executor driver, partition 0, ANY, 6374 bytes)
+17/09/07 15:25:13 INFO Executor: Running task 0.0 in stage 2.0 (TID 2)
+17/09/07 15:25:13 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+17/09/07 15:25:13 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 4 ms
+17/09/07 15:25:13 INFO Executor: Finished task 0.0 in stage 2.0 (TID 2). 2129 bytes result sent to driver
+17/09/07 15:25:13 INFO TaskSetManager: Finished task 0.0 in stage 2.0 (TID 2) in 30 ms on localhost (executor driver) (1/1)
+17/09/07 15:25:13 INFO TaskSchedulerImpl: Removed TaskSet 2.0, whose tasks have all completed, from pool 
+17/09/07 15:25:13 INFO DAGScheduler: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0) finished in 0.031 s
+17/09/07 15:25:13 INFO DAGScheduler: Job 1 finished: sql at NativeMethodAccessorImpl.java:0, took 0.257446 s
+17/09/07 15:25:13 INFO CodeGenerator: Code generated in 7.808354 ms
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 52
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 53
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 54
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 55
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 56
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 57
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 58
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 59
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 60
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 61
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 62
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 63
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned accumulator 64
+17/09/07 15:25:15 INFO ContextCleaner: Cleaned shuffle 0
+17/09/07 15:25:15 INFO BlockManagerInfo: Removed broadcast_1_piece0 on 10.0.1.18:58183 in memory (size: 7.6 KB, free: 366.3 MB)
+17/09/07 15:25:15 INFO BlockManagerInfo: Removed broadcast_2_piece0 on 10.0.1.18:58183 in memory (size: 3.7 KB, free: 366.3 MB)
+17/09/07 15:25:15 INFO SparkSqlParser: Parsing command: SELECT count(*) FROM  `df`
+17/09/07 15:25:16 INFO SparkContext: Starting job: collect at <console>:224
+17/09/07 15:25:16 INFO DAGScheduler: Registering RDD 20 (collect at <console>:224)
+17/09/07 15:25:16 INFO DAGScheduler: Got job 2 (collect at <console>:224) with 1 output partitions
+17/09/07 15:25:16 INFO DAGScheduler: Final stage: ResultStage 4 (collect at <console>:224)
+17/09/07 15:25:16 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 3)
+17/09/07 15:25:16 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 3)
+17/09/07 15:25:16 INFO DAGScheduler: Submitting ShuffleMapStage 3 (MapPartitionsRDD[20] at collect at <console>:224), which has no missing parents
+17/09/07 15:25:16 INFO MemoryStore: Block broadcast_3 stored as values in memory (estimated size 15.3 KB, free 366.3 MB)
+17/09/07 15:25:16 INFO MemoryStore: Block broadcast_3_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+17/09/07 15:25:16 INFO BlockManagerInfo: Added broadcast_3_piece0 in memory on 10.0.1.18:58183 (size: 7.6 KB, free: 366.3 MB)
+17/09/07 15:25:16 INFO SparkContext: Created broadcast 3 from broadcast at DAGScheduler.scala:996
+17/09/07 15:25:16 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 3 (MapPartitionsRDD[20] at collect at <console>:224)
+17/09/07 15:25:16 INFO TaskSchedulerImpl: Adding task set 3.0 with 1 tasks
+17/09/07 15:25:16 INFO TaskSetManager: Starting task 0.0 in stage 3.0 (TID 3, localhost, executor driver, partition 0, PROCESS_LOCAL, 6678 bytes)
+17/09/07 15:25:16 INFO Executor: Running task 0.0 in stage 3.0 (TID 3)
+17/09/07 15:25:16 INFO BlockManager: Found block rdd_10_0 locally
+17/09/07 15:25:16 INFO Executor: Finished task 0.0 in stage 3.0 (TID 3). 2098 bytes result sent to driver
+17/09/07 15:25:16 INFO TaskSetManager: Finished task 0.0 in stage 3.0 (TID 3) in 14 ms on localhost (executor driver) (1/1)
+17/09/07 15:25:16 INFO TaskSchedulerImpl: Removed TaskSet 3.0, whose tasks have all completed, from pool 
+17/09/07 15:25:16 INFO DAGScheduler: ShuffleMapStage 3 (collect at <console>:224) finished in 0.015 s
+17/09/07 15:25:16 INFO DAGScheduler: looking for newly runnable stages
+17/09/07 15:25:16 INFO DAGScheduler: running: Set()
+17/09/07 15:25:16 INFO DAGScheduler: waiting: Set(ResultStage 4)
+17/09/07 15:25:16 INFO DAGScheduler: failed: Set()
+17/09/07 15:25:16 INFO DAGScheduler: Submitting ResultStage 4 (MapPartitionsRDD[23] at collect at <console>:224), which has no missing parents
+17/09/07 15:25:16 INFO MemoryStore: Block broadcast_4 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+17/09/07 15:25:16 INFO MemoryStore: Block broadcast_4_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+17/09/07 15:25:16 INFO BlockManagerInfo: Added broadcast_4_piece0 in memory on 10.0.1.18:58183 (size: 3.7 KB, free: 366.3 MB)
+17/09/07 15:25:16 INFO SparkContext: Created broadcast 4 from broadcast at DAGScheduler.scala:996
+17/09/07 15:25:16 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 4 (MapPartitionsRDD[23] at collect at <console>:224)
+17/09/07 15:25:16 INFO TaskSchedulerImpl: Adding task set 4.0 with 1 tasks
+17/09/07 15:25:16 INFO TaskSetManager: Starting task 0.0 in stage 4.0 (TID 4, localhost, executor driver, partition 0, ANY, 6366 bytes)
+17/09/07 15:25:16 INFO Executor: Running task 0.0 in stage 4.0 (TID 4)
+17/09/07 15:25:16 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+17/09/07 15:25:16 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 1 ms
+17/09/07 15:25:16 INFO Executor: Finished task 0.0 in stage 4.0 (TID 4). 2129 bytes result sent to driver
+17/09/07 15:25:16 INFO TaskSetManager: Finished task 0.0 in stage 4.0 (TID 4) in 7 ms on localhost (executor driver) (1/1)
+17/09/07 15:25:16 INFO TaskSchedulerImpl: Removed TaskSet 4.0, whose tasks have all completed, from pool 
+17/09/07 15:25:16 INFO DAGScheduler: ResultStage 4 (collect at <console>:224) finished in 0.007 s
+17/09/07 15:25:16 INFO DAGScheduler: Job 2 finished: collect at <console>:224, took 0.033724 s
+17/09/07 15:25:17 INFO ContextCleaner: Cleaned accumulator 161
+17/09/07 15:25:17 INFO BlockManagerInfo: Removed broadcast_3_piece0 on 10.0.1.18:58183 in memory (size: 7.6 KB, free: 366.3 MB)
+17/09/07 15:25:17 INFO BlockManagerInfo: Removed broadcast_4_piece0 on 10.0.1.18:58183 in memory (size: 3.7 KB, free: 366.3 MB)
+17/09/07 15:25:18 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df` AS `zzz432`
+WHERE (0 = 1)
+17/09/07 15:25:20 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df`
+17/09/07 15:25:21 INFO SparkContext: Starting job: collect at <console>:224
+17/09/07 15:25:21 INFO DAGScheduler: Got job 3 (collect at <console>:224) with 1 output partitions
+17/09/07 15:25:21 INFO DAGScheduler: Final stage: ResultStage 5 (collect at <console>:224)
+17/09/07 15:25:21 INFO DAGScheduler: Parents of final stage: List()
+17/09/07 15:25:21 INFO DAGScheduler: Missing parents: List()
+17/09/07 15:25:21 INFO DAGScheduler: Submitting ResultStage 5 (MapPartitionsRDD[25] at collect at <console>:224), which has no missing parents
+17/09/07 15:25:21 INFO MemoryStore: Block broadcast_5 stored as values in memory (estimated size 11.0 KB, free 366.3 MB)
+17/09/07 15:25:21 INFO MemoryStore: Block broadcast_5_piece0 stored as bytes in memory (estimated size 5.7 KB, free 366.3 MB)
+17/09/07 15:25:21 INFO BlockManagerInfo: Added broadcast_5_piece0 in memory on 10.0.1.18:58183 (size: 5.7 KB, free: 366.3 MB)
+17/09/07 15:25:21 INFO SparkContext: Created broadcast 5 from broadcast at DAGScheduler.scala:996
+17/09/07 15:25:21 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 5 (MapPartitionsRDD[25] at collect at <console>:224)
+17/09/07 15:25:21 INFO TaskSchedulerImpl: Adding task set 5.0 with 1 tasks
+17/09/07 15:25:21 INFO TaskSetManager: Starting task 0.0 in stage 5.0 (TID 5, localhost, executor driver, partition 0, PROCESS_LOCAL, 6689 bytes)
+17/09/07 15:25:21 INFO Executor: Running task 0.0 in stage 5.0 (TID 5)
+17/09/07 15:25:21 INFO BlockManager: Found block rdd_10_0 locally
+17/09/07 15:25:21 INFO CodeGenerator: Code generated in 19.435767 ms
+17/09/07 15:25:21 INFO Executor: Finished task 0.0 in stage 5.0 (TID 5). 1521 bytes result sent to driver
+17/09/07 15:25:21 INFO TaskSetManager: Finished task 0.0 in stage 5.0 (TID 5) in 33 ms on localhost (executor driver) (1/1)
+17/09/07 15:25:21 INFO TaskSchedulerImpl: Removed TaskSet 5.0, whose tasks have all completed, from pool 
+17/09/07 15:25:21 INFO DAGScheduler: ResultStage 5 (collect at <console>:224) finished in 0.033 s
+17/09/07 15:25:21 INFO DAGScheduler: Job 3 finished: collect at <console>:224, took 0.038424 s
+17/09/07 15:25:21 INFO CodeGenerator: Code generated in 8.409379 ms
+17/09/07 15:25:22 INFO BlockManagerInfo: Removed broadcast_5_piece0 on 10.0.1.18:58183 in memory (size: 5.7 KB, free: 366.3 MB)
+17/09/07 15:25:22 INFO SparkUI: Stopped Spark web UI at http://10.0.1.18:4040
+17/09/07 15:25:22 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 15:25:22 INFO MemoryStore: MemoryStore cleared
+17/09/07 15:25:22 INFO BlockManager: BlockManager stopped
+17/09/07 15:25:22 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 15:25:22 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 15:25:22 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 15:25:22 INFO SparkContext: SparkContext already stopped.
+17/09/07 15:25:22 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 15:25:22 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-94132068-c8a3-4b47-a06f-9923af9493c0
+17/09/07 16:30:43 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 16:30:43 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 16:30:43 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 16:30:43 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 16:30:43 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 16:30:43 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 16:30:43 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 16:30:44 INFO Utils: Successfully started service 'sparkDriver' on port 61546.
+17/09/07 16:30:44 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 16:30:44 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 16:30:44 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 16:30:44 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 16:30:44 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-da09db24-6c17-4444-a2a5-edc13522c2e6
+17/09/07 16:30:44 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 16:30:44 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 16:30:44 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/09/07 16:30:44 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/09/07 16:30:44 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/09/07 16:30:44 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:61546/jars/sparklyr-2.1-2.11.jar with timestamp 1504827044590
+17/09/07 16:30:44 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 16:30:44 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 61549.
+17/09/07 16:30:44 INFO NettyBlockTransferService: Server created on 127.0.0.1:61549
+17/09/07 16:30:44 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 16:30:44 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 61549, None)
+17/09/07 16:30:44 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:61549 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 61549, None)
+17/09/07 16:30:44 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 61549, None)
+17/09/07 16:30:44 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 61549, None)
+17/09/07 16:30:44 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 16:30:44 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/09/07 16:30:44 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 16:30:44 INFO MemoryStore: MemoryStore cleared
+17/09/07 16:30:44 INFO BlockManager: BlockManager stopped
+17/09/07 16:30:44 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 16:30:44 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 16:30:44 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 16:30:44 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 16:30:44 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-58afef4e-1122-4b87-823c-ff67d491181c
+17/09/07 16:33:20 INFO RSCDriver: Connecting to: 10.0.1.18:61781
+17/09/07 16:33:20 INFO RSCDriver: Starting RPC server...
+17/09/07 16:33:25 WARN RSCConf: Your hostname, 10.0.1.18, resolves to a loopback address, but we couldn't find any external IP address!
+17/09/07 16:33:25 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+17/09/07 16:33:26 INFO RSCDriver: Received job request a067b0d8-3cd3-4d01-a43f-626afd760918
+17/09/07 16:33:26 INFO RSCDriver: SparkContext not yet up, queueing job request.
+17/09/07 16:33:28 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 16:33:28 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 16:33:33 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 16:33:33 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 16:33:33 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 16:33:33 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 16:33:33 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 16:33:34 INFO Utils: Successfully started service 'sparkDriver' on port 61801.
+17/09/07 16:33:34 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 16:33:34 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 16:33:34 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 16:33:34 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 16:33:34 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-2a12f29b-d29d-4e00-95d3-53dd8a41c034
+17/09/07 16:33:34 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 16:33:34 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 16:33:34 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/07 16:33:34 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://10.0.1.18:4040
+17/09/07 16:33:34 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://10.0.1.18:61801/jars/livy-api-0.3.0.jar with timestamp 1504827214319
+17/09/07 16:33:34 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://10.0.1.18:61801/jars/livy-rsc-0.3.0.jar with timestamp 1504827214320
+17/09/07 16:33:34 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://10.0.1.18:61801/jars/netty-all-4.0.29.Final.jar with timestamp 1504827214320
+17/09/07 16:33:34 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://10.0.1.18:61801/jars/commons-codec-1.9.jar with timestamp 1504827214320
+17/09/07 16:33:34 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://10.0.1.18:61801/jars/livy-core_2.11-0.3.0.jar with timestamp 1504827214320
+17/09/07 16:33:34 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://10.0.1.18:61801/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504827214320
+17/09/07 16:33:34 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 16:33:34 INFO Executor: Using REPL class URI: spark://10.0.1.18:61801/classes
+17/09/07 16:33:34 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 61806.
+17/09/07 16:33:34 INFO NettyBlockTransferService: Server created on 10.0.1.18:61806
+17/09/07 16:33:34 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 16:33:34 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.1.18, 61806, None)
+17/09/07 16:33:34 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.1.18:61806 with 366.3 MB RAM, BlockManagerId(driver, 10.0.1.18, 61806, None)
+17/09/07 16:33:34 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.1.18, 61806, None)
+17/09/07 16:33:34 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 10.0.1.18, 61806, None)
+17/09/07 16:33:34 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse'.
+17/09/07 16:33:34 INFO SparkInterpreter: Created Spark session.
+17/09/07 16:34:25 WARN SparkSession$Builder: Using an existing SparkSession; some configuration may not take effect.
+17/09/07 16:34:27 INFO SparkSqlParser: Parsing command: SHOW TABLES
+17/09/07 16:34:36 INFO CodeGenerator: Code generated in 174.176665 ms
+17/09/07 16:34:36 INFO SparkContext: Starting job: collect at <console>:86
+17/09/07 16:34:36 INFO DAGScheduler: Got job 0 (collect at <console>:86) with 1 output partitions
+17/09/07 16:34:36 INFO DAGScheduler: Final stage: ResultStage 0 (collect at <console>:86)
+17/09/07 16:34:36 INFO DAGScheduler: Parents of final stage: List()
+17/09/07 16:34:36 INFO DAGScheduler: Missing parents: List()
+17/09/07 16:34:36 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[5] at map at <console>:83), which has no missing parents
+17/09/07 16:34:36 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 8.8 KB, free 366.3 MB)
+17/09/07 16:34:36 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 4.6 KB, free 366.3 MB)
+17/09/07 16:34:36 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on 10.0.1.18:61806 (size: 4.6 KB, free: 366.3 MB)
+17/09/07 16:34:36 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:996
+17/09/07 16:34:36 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[5] at map at <console>:83)
+17/09/07 16:34:36 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks
+17/09/07 16:34:36 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, executor driver, partition 0, PROCESS_LOCAL, 6462 bytes)
+17/09/07 16:34:36 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+17/09/07 16:34:36 INFO Executor: Fetching spark://10.0.1.18:61801/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504827214320
+17/09/07 16:34:36 INFO TransportClientFactory: Successfully created connection to /10.0.1.18:61801 after 8 ms (0 ms spent in bootstraps)
+17/09/07 16:34:36 INFO Utils: Fetching spark://10.0.1.18:61801/jars/livy-repl_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/fetchFileTemp5564193414114068231.tmp
+17/09/07 16:34:36 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/livy-repl_2.11-0.3.0.jar to class loader
+17/09/07 16:34:36 INFO Executor: Fetching spark://10.0.1.18:61801/jars/livy-core_2.11-0.3.0.jar with timestamp 1504827214320
+17/09/07 16:34:36 INFO Utils: Fetching spark://10.0.1.18:61801/jars/livy-core_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/fetchFileTemp7622472706339745558.tmp
+17/09/07 16:34:36 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/livy-core_2.11-0.3.0.jar to class loader
+17/09/07 16:34:36 INFO Executor: Fetching spark://10.0.1.18:61801/jars/livy-api-0.3.0.jar with timestamp 1504827214319
+17/09/07 16:34:36 INFO Utils: Fetching spark://10.0.1.18:61801/jars/livy-api-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/fetchFileTemp6869872374981959620.tmp
+17/09/07 16:34:36 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/livy-api-0.3.0.jar to class loader
+17/09/07 16:34:36 INFO Executor: Fetching spark://10.0.1.18:61801/jars/netty-all-4.0.29.Final.jar with timestamp 1504827214320
+17/09/07 16:34:36 INFO Utils: Fetching spark://10.0.1.18:61801/jars/netty-all-4.0.29.Final.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/fetchFileTemp4033275260175474003.tmp
+17/09/07 16:34:36 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/netty-all-4.0.29.Final.jar to class loader
+17/09/07 16:34:36 INFO Executor: Fetching spark://10.0.1.18:61801/jars/livy-rsc-0.3.0.jar with timestamp 1504827214320
+17/09/07 16:34:36 INFO Utils: Fetching spark://10.0.1.18:61801/jars/livy-rsc-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/fetchFileTemp4081403820426370540.tmp
+17/09/07 16:34:36 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/livy-rsc-0.3.0.jar to class loader
+17/09/07 16:34:36 INFO Executor: Fetching spark://10.0.1.18:61801/jars/commons-codec-1.9.jar with timestamp 1504827214320
+17/09/07 16:34:36 INFO Utils: Fetching spark://10.0.1.18:61801/jars/commons-codec-1.9.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/fetchFileTemp3182848053095372717.tmp
+17/09/07 16:34:36 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699/userFiles-e42aef2a-d3ea-4daa-bb74-3ab40c6efa96/commons-codec-1.9.jar to class loader
+17/09/07 16:34:37 INFO CodeGenerator: Code generated in 17.202812 ms
+17/09/07 16:34:37 INFO CodeGenerator: Code generated in 13.861073 ms
+17/09/07 16:34:37 INFO Executor: Finished task 0.0 in stage 0.0 (TID 0). 1304 bytes result sent to driver
+17/09/07 16:34:37 INFO TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 324 ms on localhost (executor driver) (1/1)
+17/09/07 16:34:37 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+17/09/07 16:34:37 INFO DAGScheduler: ResultStage 0 (collect at <console>:86) finished in 0.339 s
+17/09/07 16:34:37 INFO DAGScheduler: Job 0 finished: collect at <console>:86, took 0.491699 s
+17/09/07 16:34:40 INFO BlockManagerInfo: Removed broadcast_0_piece0 on 10.0.1.18:61806 in memory (size: 4.6 KB, free: 366.3 MB)
+17/09/07 16:34:40 INFO ContextCleaner: Cleaned accumulator 1
+17/09/07 16:34:40 INFO ContextCleaner: Cleaned accumulator 0
+17/09/07 16:34:44 INFO SparkSqlParser: Parsing command: df
+17/09/07 16:34:45 INFO SparkSqlParser: Parsing command: CACHE TABLE `df`
+17/09/07 16:34:46 INFO SparkSqlParser: Parsing command: `df`
+17/09/07 16:34:46 INFO CodeGenerator: Code generated in 15.040723 ms
+17/09/07 16:34:46 INFO CodeGenerator: Code generated in 11.447411 ms
+17/09/07 16:34:46 INFO SparkContext: Starting job: sql at NativeMethodAccessorImpl.java:0
+17/09/07 16:34:46 INFO DAGScheduler: Registering RDD 13 (sql at NativeMethodAccessorImpl.java:0)
+17/09/07 16:34:46 INFO DAGScheduler: Got job 1 (sql at NativeMethodAccessorImpl.java:0) with 1 output partitions
+17/09/07 16:34:46 INFO DAGScheduler: Final stage: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0)
+17/09/07 16:34:46 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 1)
+17/09/07 16:34:46 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 1)
+17/09/07 16:34:46 INFO DAGScheduler: Submitting ShuffleMapStage 1 (MapPartitionsRDD[13] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+17/09/07 16:34:46 INFO MemoryStore: Block broadcast_1 stored as values in memory (estimated size 15.3 KB, free 366.3 MB)
+17/09/07 16:34:46 INFO MemoryStore: Block broadcast_1_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+17/09/07 16:34:46 INFO BlockManagerInfo: Added broadcast_1_piece0 in memory on 10.0.1.18:61806 (size: 7.6 KB, free: 366.3 MB)
+17/09/07 16:34:46 INFO SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:996
+17/09/07 16:34:46 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 1 (MapPartitionsRDD[13] at sql at NativeMethodAccessorImpl.java:0)
+17/09/07 16:34:46 INFO TaskSchedulerImpl: Adding task set 1.0 with 1 tasks
+17/09/07 16:34:46 INFO TaskSetManager: Starting task 0.0 in stage 1.0 (TID 1, localhost, executor driver, partition 0, PROCESS_LOCAL, 6686 bytes)
+17/09/07 16:34:46 INFO Executor: Running task 0.0 in stage 1.0 (TID 1)
+17/09/07 16:34:46 INFO CodeGenerator: Code generated in 12.741336 ms
+17/09/07 16:34:46 INFO CodeGenerator: Code generated in 49.609913 ms
+17/09/07 16:34:46 INFO MemoryStore: Block rdd_10_0 stored as values in memory (estimated size 464.0 B, free 366.3 MB)
+17/09/07 16:34:46 INFO BlockManagerInfo: Added rdd_10_0 in memory on 10.0.1.18:61806 (size: 464.0 B, free: 366.3 MB)
+17/09/07 16:34:46 INFO CodeGenerator: Code generated in 6.70801 ms
+17/09/07 16:34:46 INFO CodeGenerator: Code generated in 20.240227 ms
+17/09/07 16:34:46 INFO Executor: Finished task 0.0 in stage 1.0 (TID 1). 2747 bytes result sent to driver
+17/09/07 16:34:46 INFO TaskSetManager: Finished task 0.0 in stage 1.0 (TID 1) in 188 ms on localhost (executor driver) (1/1)
+17/09/07 16:34:46 INFO TaskSchedulerImpl: Removed TaskSet 1.0, whose tasks have all completed, from pool 
+17/09/07 16:34:46 INFO DAGScheduler: ShuffleMapStage 1 (sql at NativeMethodAccessorImpl.java:0) finished in 0.188 s
+17/09/07 16:34:46 INFO DAGScheduler: looking for newly runnable stages
+17/09/07 16:34:46 INFO DAGScheduler: running: Set()
+17/09/07 16:34:46 INFO DAGScheduler: waiting: Set(ResultStage 2)
+17/09/07 16:34:46 INFO DAGScheduler: failed: Set()
+17/09/07 16:34:46 INFO DAGScheduler: Submitting ResultStage 2 (MapPartitionsRDD[16] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+17/09/07 16:34:46 INFO MemoryStore: Block broadcast_2 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+17/09/07 16:34:46 INFO MemoryStore: Block broadcast_2_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+17/09/07 16:34:46 INFO BlockManagerInfo: Added broadcast_2_piece0 in memory on 10.0.1.18:61806 (size: 3.7 KB, free: 366.3 MB)
+17/09/07 16:34:46 INFO SparkContext: Created broadcast 2 from broadcast at DAGScheduler.scala:996
+17/09/07 16:34:46 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 2 (MapPartitionsRDD[16] at sql at NativeMethodAccessorImpl.java:0)
+17/09/07 16:34:46 INFO TaskSchedulerImpl: Adding task set 2.0 with 1 tasks
+17/09/07 16:34:46 INFO TaskSetManager: Starting task 0.0 in stage 2.0 (TID 2, localhost, executor driver, partition 0, ANY, 6374 bytes)
+17/09/07 16:34:46 INFO Executor: Running task 0.0 in stage 2.0 (TID 2)
+17/09/07 16:34:46 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+17/09/07 16:34:46 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 4 ms
+17/09/07 16:34:46 INFO Executor: Finished task 0.0 in stage 2.0 (TID 2). 2042 bytes result sent to driver
+17/09/07 16:34:46 INFO TaskSetManager: Finished task 0.0 in stage 2.0 (TID 2) in 29 ms on localhost (executor driver) (1/1)
+17/09/07 16:34:46 INFO TaskSchedulerImpl: Removed TaskSet 2.0, whose tasks have all completed, from pool 
+17/09/07 16:34:46 INFO DAGScheduler: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0) finished in 0.029 s
+17/09/07 16:34:46 INFO DAGScheduler: Job 1 finished: sql at NativeMethodAccessorImpl.java:0, took 0.255033 s
+17/09/07 16:34:46 INFO CodeGenerator: Code generated in 7.576827 ms
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 52
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 53
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 54
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 55
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 56
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 57
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 58
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 59
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 60
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 61
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 62
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 63
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned accumulator 64
+17/09/07 16:34:48 INFO ContextCleaner: Cleaned shuffle 0
+17/09/07 16:34:48 INFO BlockManagerInfo: Removed broadcast_1_piece0 on 10.0.1.18:61806 in memory (size: 7.6 KB, free: 366.3 MB)
+17/09/07 16:34:48 INFO BlockManagerInfo: Removed broadcast_2_piece0 on 10.0.1.18:61806 in memory (size: 3.7 KB, free: 366.3 MB)
+17/09/07 16:34:48 INFO SparkSqlParser: Parsing command: SELECT count(*) FROM  `df`
+17/09/07 16:34:49 INFO SparkContext: Starting job: collect at <console>:224
+17/09/07 16:34:49 INFO DAGScheduler: Registering RDD 20 (collect at <console>:224)
+17/09/07 16:34:49 INFO DAGScheduler: Got job 2 (collect at <console>:224) with 1 output partitions
+17/09/07 16:34:49 INFO DAGScheduler: Final stage: ResultStage 4 (collect at <console>:224)
+17/09/07 16:34:49 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 3)
+17/09/07 16:34:49 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 3)
+17/09/07 16:34:49 INFO DAGScheduler: Submitting ShuffleMapStage 3 (MapPartitionsRDD[20] at collect at <console>:224), which has no missing parents
+17/09/07 16:34:49 INFO MemoryStore: Block broadcast_3 stored as values in memory (estimated size 15.3 KB, free 366.3 MB)
+17/09/07 16:34:49 INFO MemoryStore: Block broadcast_3_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+17/09/07 16:34:49 INFO BlockManagerInfo: Added broadcast_3_piece0 in memory on 10.0.1.18:61806 (size: 7.6 KB, free: 366.3 MB)
+17/09/07 16:34:49 INFO SparkContext: Created broadcast 3 from broadcast at DAGScheduler.scala:996
+17/09/07 16:34:49 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 3 (MapPartitionsRDD[20] at collect at <console>:224)
+17/09/07 16:34:49 INFO TaskSchedulerImpl: Adding task set 3.0 with 1 tasks
+17/09/07 16:34:49 INFO TaskSetManager: Starting task 0.0 in stage 3.0 (TID 3, localhost, executor driver, partition 0, PROCESS_LOCAL, 6678 bytes)
+17/09/07 16:34:49 INFO Executor: Running task 0.0 in stage 3.0 (TID 3)
+17/09/07 16:34:49 INFO BlockManager: Found block rdd_10_0 locally
+17/09/07 16:34:49 INFO Executor: Finished task 0.0 in stage 3.0 (TID 3). 2098 bytes result sent to driver
+17/09/07 16:34:49 INFO TaskSetManager: Finished task 0.0 in stage 3.0 (TID 3) in 12 ms on localhost (executor driver) (1/1)
+17/09/07 16:34:49 INFO TaskSchedulerImpl: Removed TaskSet 3.0, whose tasks have all completed, from pool 
+17/09/07 16:34:49 INFO DAGScheduler: ShuffleMapStage 3 (collect at <console>:224) finished in 0.012 s
+17/09/07 16:34:49 INFO DAGScheduler: looking for newly runnable stages
+17/09/07 16:34:49 INFO DAGScheduler: running: Set()
+17/09/07 16:34:49 INFO DAGScheduler: waiting: Set(ResultStage 4)
+17/09/07 16:34:49 INFO DAGScheduler: failed: Set()
+17/09/07 16:34:49 INFO DAGScheduler: Submitting ResultStage 4 (MapPartitionsRDD[23] at collect at <console>:224), which has no missing parents
+17/09/07 16:34:49 INFO MemoryStore: Block broadcast_4 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+17/09/07 16:34:49 INFO MemoryStore: Block broadcast_4_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+17/09/07 16:34:49 INFO BlockManagerInfo: Added broadcast_4_piece0 in memory on 10.0.1.18:61806 (size: 3.7 KB, free: 366.3 MB)
+17/09/07 16:34:49 INFO SparkContext: Created broadcast 4 from broadcast at DAGScheduler.scala:996
+17/09/07 16:34:49 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 4 (MapPartitionsRDD[23] at collect at <console>:224)
+17/09/07 16:34:49 INFO TaskSchedulerImpl: Adding task set 4.0 with 1 tasks
+17/09/07 16:34:49 INFO TaskSetManager: Starting task 0.0 in stage 4.0 (TID 4, localhost, executor driver, partition 0, ANY, 6366 bytes)
+17/09/07 16:34:49 INFO Executor: Running task 0.0 in stage 4.0 (TID 4)
+17/09/07 16:34:49 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+17/09/07 16:34:49 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 0 ms
+17/09/07 16:34:49 INFO Executor: Finished task 0.0 in stage 4.0 (TID 4). 2042 bytes result sent to driver
+17/09/07 16:34:49 INFO TaskSetManager: Finished task 0.0 in stage 4.0 (TID 4) in 6 ms on localhost (executor driver) (1/1)
+17/09/07 16:34:49 INFO TaskSchedulerImpl: Removed TaskSet 4.0, whose tasks have all completed, from pool 
+17/09/07 16:34:49 INFO DAGScheduler: ResultStage 4 (collect at <console>:224) finished in 0.006 s
+17/09/07 16:34:49 INFO DAGScheduler: Job 2 finished: collect at <console>:224, took 0.029670 s
+17/09/07 16:34:49 INFO ContextCleaner: Cleaned accumulator 161
+17/09/07 16:34:49 INFO BlockManagerInfo: Removed broadcast_3_piece0 on 10.0.1.18:61806 in memory (size: 7.6 KB, free: 366.3 MB)
+17/09/07 16:34:49 INFO BlockManagerInfo: Removed broadcast_4_piece0 on 10.0.1.18:61806 in memory (size: 3.7 KB, free: 366.3 MB)
+17/09/07 16:34:50 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df` AS `zzz749`
+WHERE (0 = 1)
+17/09/07 16:34:53 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df`
+17/09/07 16:34:54 INFO SparkContext: Starting job: collect at <console>:224
+17/09/07 16:34:54 INFO DAGScheduler: Got job 3 (collect at <console>:224) with 1 output partitions
+17/09/07 16:34:54 INFO DAGScheduler: Final stage: ResultStage 5 (collect at <console>:224)
+17/09/07 16:34:54 INFO DAGScheduler: Parents of final stage: List()
+17/09/07 16:34:54 INFO DAGScheduler: Missing parents: List()
+17/09/07 16:34:54 INFO DAGScheduler: Submitting ResultStage 5 (MapPartitionsRDD[25] at collect at <console>:224), which has no missing parents
+17/09/07 16:34:54 INFO MemoryStore: Block broadcast_5 stored as values in memory (estimated size 11.0 KB, free 366.3 MB)
+17/09/07 16:34:54 INFO MemoryStore: Block broadcast_5_piece0 stored as bytes in memory (estimated size 5.7 KB, free 366.3 MB)
+17/09/07 16:34:54 INFO BlockManagerInfo: Added broadcast_5_piece0 in memory on 10.0.1.18:61806 (size: 5.7 KB, free: 366.3 MB)
+17/09/07 16:34:54 INFO SparkContext: Created broadcast 5 from broadcast at DAGScheduler.scala:996
+17/09/07 16:34:54 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 5 (MapPartitionsRDD[25] at collect at <console>:224)
+17/09/07 16:34:54 INFO TaskSchedulerImpl: Adding task set 5.0 with 1 tasks
+17/09/07 16:34:54 INFO TaskSetManager: Starting task 0.0 in stage 5.0 (TID 5, localhost, executor driver, partition 0, PROCESS_LOCAL, 6689 bytes)
+17/09/07 16:34:54 INFO Executor: Running task 0.0 in stage 5.0 (TID 5)
+17/09/07 16:34:54 INFO BlockManager: Found block rdd_10_0 locally
+17/09/07 16:34:54 INFO CodeGenerator: Code generated in 20.757992 ms
+17/09/07 16:34:54 INFO Executor: Finished task 0.0 in stage 5.0 (TID 5). 1521 bytes result sent to driver
+17/09/07 16:34:54 INFO TaskSetManager: Finished task 0.0 in stage 5.0 (TID 5) in 35 ms on localhost (executor driver) (1/1)
+17/09/07 16:34:54 INFO TaskSchedulerImpl: Removed TaskSet 5.0, whose tasks have all completed, from pool 
+17/09/07 16:34:54 INFO DAGScheduler: ResultStage 5 (collect at <console>:224) finished in 0.036 s
+17/09/07 16:34:54 INFO DAGScheduler: Job 3 finished: collect at <console>:224, took 0.041582 s
+17/09/07 16:34:54 INFO CodeGenerator: Code generated in 7.401453 ms
+17/09/07 16:34:54 INFO BlockManagerInfo: Removed broadcast_5_piece0 on 10.0.1.18:61806 in memory (size: 5.7 KB, free: 366.3 MB)
+17/09/07 16:34:56 INFO SparkUI: Stopped Spark web UI at http://10.0.1.18:4040
+17/09/07 16:34:56 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 16:34:56 INFO MemoryStore: MemoryStore cleared
+17/09/07 16:34:56 INFO BlockManager: BlockManager stopped
+17/09/07 16:34:56 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 16:34:56 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 16:34:56 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 16:34:56 INFO SparkContext: SparkContext already stopped.
+17/09/07 16:34:56 WARN DefaultPromise: An exception was thrown by com.cloudera.livy.rsc.Utils$2.operationComplete()
+java.util.concurrent.RejectedExecutionException: event executor terminated
+	at io.netty.util.concurrent.SingleThreadEventExecutor.reject(SingleThreadEventExecutor.java:805)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.offerTask(SingleThreadEventExecutor.java:345)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.addTask(SingleThreadEventExecutor.java:338)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.execute(SingleThreadEventExecutor.java:748)
+	at io.netty.util.concurrent.AbstractScheduledEventExecutor.schedule(AbstractScheduledEventExecutor.java:190)
+	at io.netty.util.concurrent.AbstractScheduledEventExecutor.schedule(AbstractScheduledEventExecutor.java:134)
+	at io.netty.util.concurrent.AbstractEventExecutorGroup.schedule(AbstractEventExecutorGroup.java:49)
+	at com.cloudera.livy.rsc.driver.RSCDriver.setupIdleTimeout(RSCDriver.java:239)
+	at com.cloudera.livy.rsc.driver.RSCDriver.access$100(RSCDriver.java:71)
+	at com.cloudera.livy.rsc.driver.RSCDriver$2.onSuccess(RSCDriver.java:221)
+	at com.cloudera.livy.rsc.driver.RSCDriver$2.onSuccess(RSCDriver.java:217)
+	at com.cloudera.livy.rsc.Utils$2.operationComplete(Utils.java:108)
+	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:514)
+	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:488)
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:427)
+	at io.netty.util.concurrent.DefaultPromise.trySuccess(DefaultPromise.java:111)
+	at io.netty.channel.DefaultChannelPromise.trySuccess(DefaultChannelPromise.java:82)
+	at io.netty.channel.AbstractChannel$CloseFuture.setClosed(AbstractChannel.java:1004)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.doClose0(AbstractChannel.java:633)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:611)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:554)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.close(DefaultChannelPipeline.java:1236)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeClose(AbstractChannelHandlerContext.java:629)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:613)
+	at io.netty.channel.ChannelDuplexHandler.close(ChannelDuplexHandler.java:73)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeClose(AbstractChannelHandlerContext.java:629)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:613)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:470)
+	at io.netty.channel.DefaultChannelPipeline.close(DefaultChannelPipeline.java:949)
+	at io.netty.channel.AbstractChannel.close(AbstractChannel.java:194)
+	at com.cloudera.livy.rsc.rpc.Rpc.close(Rpc.java:307)
+	at com.cloudera.livy.rsc.driver.RSCDriver.shutdownServer(RSCDriver.java:312)
+	at com.cloudera.livy.rsc.driver.RSCDriver.shutdown(RSCDriver.java:134)
+	at com.cloudera.livy.rsc.driver.RSCDriver.handle(RSCDriver.java:399)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at com.cloudera.livy.rsc.rpc.RpcDispatcher.handleCall(RpcDispatcher.java:130)
+	at com.cloudera.livy.rsc.rpc.RpcDispatcher.channelRead0(RpcDispatcher.java:77)
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:105)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelRead(ChannelInboundHandlerAdapter.java:86)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:293)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:267)
+	at io.netty.handler.codec.ByteToMessageCodec.channelRead(ByteToMessageCodec.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1294)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:911)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:131)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:652)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:575)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:489)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:451)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:140)
+	at java.lang.Thread.run(Thread.java:745)
+17/09/07 16:34:56 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 16:34:56 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb9ec00b-a102-4e60-b065-ebf9ea99b699
+17/09/07 16:45:41 INFO RSCDriver: Connecting to: 10.0.1.18:62151
+17/09/07 16:45:41 INFO RSCDriver: Starting RPC server...
+17/09/07 16:45:46 WARN RSCConf: Your hostname, 10.0.1.18, resolves to a loopback address, but we couldn't find any external IP address!
+17/09/07 16:45:46 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+17/09/07 16:45:46 INFO RSCDriver: Received job request 88c5faaa-3523-45cb-a7cd-4e649e407d42
+17/09/07 16:45:46 INFO RSCDriver: SparkContext not yet up, queueing job request.
+17/09/07 16:45:49 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 16:45:49 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 16:45:54 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 16:45:54 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 16:45:54 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 16:45:54 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 16:45:54 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 16:45:54 INFO Utils: Successfully started service 'sparkDriver' on port 62175.
+17/09/07 16:45:54 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 16:45:54 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 16:45:54 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 16:45:54 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 16:45:54 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-d8b5b758-3637-4285-b475-3c9be7bdd6bc
+17/09/07 16:45:54 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 16:45:54 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 16:45:54 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/07 16:45:54 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://10.0.1.18:4040
+17/09/07 16:45:54 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://10.0.1.18:62175/jars/livy-api-0.3.0.jar with timestamp 1504827954815
+17/09/07 16:45:54 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://10.0.1.18:62175/jars/livy-rsc-0.3.0.jar with timestamp 1504827954815
+17/09/07 16:45:54 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://10.0.1.18:62175/jars/netty-all-4.0.29.Final.jar with timestamp 1504827954816
+17/09/07 16:45:54 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://10.0.1.18:62175/jars/commons-codec-1.9.jar with timestamp 1504827954816
+17/09/07 16:45:54 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://10.0.1.18:62175/jars/livy-core_2.11-0.3.0.jar with timestamp 1504827954816
+17/09/07 16:45:54 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://10.0.1.18:62175/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504827954816
+17/09/07 16:45:54 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 16:45:54 INFO Executor: Using REPL class URI: spark://10.0.1.18:62175/classes
+17/09/07 16:45:54 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 62176.
+17/09/07 16:45:54 INFO NettyBlockTransferService: Server created on 10.0.1.18:62176
+17/09/07 16:45:54 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 16:45:54 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.1.18, 62176, None)
+17/09/07 16:45:54 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.1.18:62176 with 366.3 MB RAM, BlockManagerId(driver, 10.0.1.18, 62176, None)
+17/09/07 16:45:54 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.1.18, 62176, None)
+17/09/07 16:45:54 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 10.0.1.18, 62176, None)
+17/09/07 16:45:55 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/'.
+17/09/07 16:45:55 INFO SparkInterpreter: Created Spark session.
+17/09/07 16:46:45 WARN SparkSession$Builder: Using an existing SparkSession; some configuration may not take effect.
+17/09/07 17:22:05 INFO SparkUI: Stopped Spark web UI at http://10.0.1.18:4040
+17/09/07 17:22:05 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 17:22:05 INFO MemoryStore: MemoryStore cleared
+17/09/07 17:22:05 INFO BlockManager: BlockManager stopped
+17/09/07 17:22:05 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 17:22:05 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 17:22:05 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 17:22:05 INFO SparkContext: SparkContext already stopped.
+17/09/07 17:22:05 WARN DefaultPromise: An exception was thrown by com.cloudera.livy.rsc.Utils$2.operationComplete()
+java.util.concurrent.RejectedExecutionException: event executor terminated
+	at io.netty.util.concurrent.SingleThreadEventExecutor.reject(SingleThreadEventExecutor.java:805)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.offerTask(SingleThreadEventExecutor.java:345)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.addTask(SingleThreadEventExecutor.java:338)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.execute(SingleThreadEventExecutor.java:748)
+	at io.netty.util.concurrent.AbstractScheduledEventExecutor.schedule(AbstractScheduledEventExecutor.java:190)
+	at io.netty.util.concurrent.AbstractScheduledEventExecutor.schedule(AbstractScheduledEventExecutor.java:134)
+	at io.netty.util.concurrent.AbstractEventExecutorGroup.schedule(AbstractEventExecutorGroup.java:49)
+	at com.cloudera.livy.rsc.driver.RSCDriver.setupIdleTimeout(RSCDriver.java:239)
+	at com.cloudera.livy.rsc.driver.RSCDriver.access$100(RSCDriver.java:71)
+	at com.cloudera.livy.rsc.driver.RSCDriver$2.onSuccess(RSCDriver.java:221)
+	at com.cloudera.livy.rsc.driver.RSCDriver$2.onSuccess(RSCDriver.java:217)
+	at com.cloudera.livy.rsc.Utils$2.operationComplete(Utils.java:108)
+	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:514)
+	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:488)
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:427)
+	at io.netty.util.concurrent.DefaultPromise.trySuccess(DefaultPromise.java:111)
+	at io.netty.channel.DefaultChannelPromise.trySuccess(DefaultChannelPromise.java:82)
+	at io.netty.channel.AbstractChannel$CloseFuture.setClosed(AbstractChannel.java:1004)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.doClose0(AbstractChannel.java:633)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:611)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:554)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.close(DefaultChannelPipeline.java:1236)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeClose(AbstractChannelHandlerContext.java:629)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:613)
+	at io.netty.channel.ChannelDuplexHandler.close(ChannelDuplexHandler.java:73)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeClose(AbstractChannelHandlerContext.java:629)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:613)
+	at io.netty.channel.AbstractChannelHandlerContext.close(AbstractChannelHandlerContext.java:470)
+	at io.netty.channel.DefaultChannelPipeline.close(DefaultChannelPipeline.java:949)
+	at io.netty.channel.AbstractChannel.close(AbstractChannel.java:194)
+	at com.cloudera.livy.rsc.rpc.Rpc.close(Rpc.java:307)
+	at com.cloudera.livy.rsc.driver.RSCDriver.shutdownServer(RSCDriver.java:312)
+	at com.cloudera.livy.rsc.driver.RSCDriver.shutdown(RSCDriver.java:134)
+	at com.cloudera.livy.rsc.driver.RSCDriver.handle(RSCDriver.java:399)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at com.cloudera.livy.rsc.rpc.RpcDispatcher.handleCall(RpcDispatcher.java:130)
+	at com.cloudera.livy.rsc.rpc.RpcDispatcher.channelRead0(RpcDispatcher.java:77)
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:105)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelRead(ChannelInboundHandlerAdapter.java:86)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:293)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:267)
+	at io.netty.handler.codec.ByteToMessageCodec.channelRead(ByteToMessageCodec.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:346)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1294)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:353)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:911)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:131)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:652)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:575)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:489)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:451)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:140)
+	at java.lang.Thread.run(Thread.java:745)
+17/09/07 17:22:05 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 17:22:05 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-91121ef2-2f35-4be4-a4a7-5ac7eb77e942
+17/09/07 17:22:50 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 17:22:51 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 17:22:51 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 17:22:51 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 17:22:51 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 17:22:51 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 17:22:51 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 17:22:51 INFO Utils: Successfully started service 'sparkDriver' on port 63548.
+17/09/07 17:22:51 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 17:22:51 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 17:22:51 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 17:22:51 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 17:22:51 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-b312d6d2-1a85-4b76-a15a-aed74eca1573
+17/09/07 17:22:51 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 17:22:51 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 17:22:51 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/09/07 17:22:51 WARN Utils: Service 'SparkUI' could not bind on port 4041. Attempting port 4042.
+17/09/07 17:22:51 INFO Utils: Successfully started service 'SparkUI' on port 4042.
+17/09/07 17:22:51 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4042
+17/09/07 17:22:51 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:63548/jars/sparklyr-2.1-2.11.jar with timestamp 1504830171650
+17/09/07 17:22:51 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 17:22:51 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 63549.
+17/09/07 17:22:51 INFO NettyBlockTransferService: Server created on 127.0.0.1:63549
+17/09/07 17:22:51 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 17:22:51 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 63549, None)
+17/09/07 17:22:51 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:63549 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 63549, None)
+17/09/07 17:22:51 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 63549, None)
+17/09/07 17:22:51 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 63549, None)
+17/09/07 17:22:51 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 17:22:51 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4042
+17/09/07 17:22:51 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 17:22:51 INFO MemoryStore: MemoryStore cleared
+17/09/07 17:22:51 INFO BlockManager: BlockManager stopped
+17/09/07 17:22:51 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 17:22:51 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 17:22:51 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 17:22:51 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 17:22:51 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-b6034bae-0a2a-4aee-920e-39aecf3dae4b
+17/09/07 17:25:25 INFO RSCDriver: Connecting to: 10.0.1.18:63917
+17/09/07 17:25:25 INFO RSCDriver: Starting RPC server...
+17/09/07 17:25:30 WARN RSCConf: Your hostname, 10.0.1.18, resolves to a loopback address, but we couldn't find any external IP address!
+17/09/07 17:25:30 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+17/09/07 17:25:30 INFO RSCDriver: Received job request 7e8855ec-4f81-44e6-99c2-0edf74ecfa6c
+17/09/07 17:25:30 INFO RSCDriver: SparkContext not yet up, queueing job request.
+17/09/07 17:25:33 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 17:25:33 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 17:25:38 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 17:25:38 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 17:25:38 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 17:25:38 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 17:25:38 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 17:25:38 INFO Utils: Successfully started service 'sparkDriver' on port 63962.
+17/09/07 17:25:38 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 17:25:38 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 17:25:38 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 17:25:38 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 17:25:38 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-f284ac0e-2b12-4fba-989b-7f49fbfa15ce
+17/09/07 17:25:38 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 17:25:38 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 17:25:39 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/07 17:25:39 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://10.0.1.18:4040
+17/09/07 17:25:39 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://10.0.1.18:63962/jars/livy-api-0.3.0.jar with timestamp 1504830339207
+17/09/07 17:25:39 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://10.0.1.18:63962/jars/livy-rsc-0.3.0.jar with timestamp 1504830339208
+17/09/07 17:25:39 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://10.0.1.18:63962/jars/netty-all-4.0.29.Final.jar with timestamp 1504830339208
+17/09/07 17:25:39 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://10.0.1.18:63962/jars/commons-codec-1.9.jar with timestamp 1504830339208
+17/09/07 17:25:39 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://10.0.1.18:63962/jars/livy-core_2.11-0.3.0.jar with timestamp 1504830339209
+17/09/07 17:25:39 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://10.0.1.18:63962/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504830339209
+17/09/07 17:25:39 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 17:25:39 INFO Executor: Using REPL class URI: spark://10.0.1.18:63962/classes
+17/09/07 17:25:39 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 63964.
+17/09/07 17:25:39 INFO NettyBlockTransferService: Server created on 10.0.1.18:63964
+17/09/07 17:25:39 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 17:25:39 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.1.18, 63964, None)
+17/09/07 17:25:39 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.1.18:63964 with 366.3 MB RAM, BlockManagerId(driver, 10.0.1.18, 63964, None)
+17/09/07 17:25:39 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.1.18, 63964, None)
+17/09/07 17:25:39 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 10.0.1.18, 63964, None)
+17/09/07 17:25:39 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/'.
+17/09/07 17:25:39 INFO SparkInterpreter: Created Spark session.
+17/09/07 17:26:27 WARN SparkSession$Builder: Using an existing SparkSession; some configuration may not take effect.
+17/09/07 17:26:30 INFO SparkSqlParser: Parsing command: SHOW TABLES
+17/09/07 17:26:41 INFO CodeGenerator: Code generated in 169.982925 ms
+17/09/07 17:26:41 INFO SparkContext: Starting job: collect at <console>:86
+17/09/07 17:26:41 INFO DAGScheduler: Got job 0 (collect at <console>:86) with 1 output partitions
+17/09/07 17:26:41 INFO DAGScheduler: Final stage: ResultStage 0 (collect at <console>:86)
+17/09/07 17:26:41 INFO DAGScheduler: Parents of final stage: List()
+17/09/07 17:26:41 INFO DAGScheduler: Missing parents: List()
+17/09/07 17:26:41 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[5] at map at <console>:83), which has no missing parents
+17/09/07 17:26:41 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 8.8 KB, free 366.3 MB)
+17/09/07 17:26:41 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 4.6 KB, free 366.3 MB)
+17/09/07 17:26:41 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on 10.0.1.18:63964 (size: 4.6 KB, free: 366.3 MB)
+17/09/07 17:26:41 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:996
+17/09/07 17:26:41 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[5] at map at <console>:83)
+17/09/07 17:26:41 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks
+17/09/07 17:26:41 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, executor driver, partition 0, PROCESS_LOCAL, 6462 bytes)
+17/09/07 17:26:41 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+17/09/07 17:26:41 INFO Executor: Fetching spark://10.0.1.18:63962/jars/commons-codec-1.9.jar with timestamp 1504830339208
+17/09/07 17:26:41 INFO TransportClientFactory: Successfully created connection to /10.0.1.18:63962 after 7 ms (0 ms spent in bootstraps)
+17/09/07 17:26:41 INFO Utils: Fetching spark://10.0.1.18:63962/jars/commons-codec-1.9.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/fetchFileTemp8711950215517970602.tmp
+17/09/07 17:26:41 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/commons-codec-1.9.jar to class loader
+17/09/07 17:26:41 INFO Executor: Fetching spark://10.0.1.18:63962/jars/livy-repl_2.11-0.3.0.jar with timestamp 1504830339209
+17/09/07 17:26:41 INFO Utils: Fetching spark://10.0.1.18:63962/jars/livy-repl_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/fetchFileTemp8858699756113389638.tmp
+17/09/07 17:26:41 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/livy-repl_2.11-0.3.0.jar to class loader
+17/09/07 17:26:41 INFO Executor: Fetching spark://10.0.1.18:63962/jars/livy-api-0.3.0.jar with timestamp 1504830339207
+17/09/07 17:26:41 INFO Utils: Fetching spark://10.0.1.18:63962/jars/livy-api-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/fetchFileTemp3023079766037052536.tmp
+17/09/07 17:26:41 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/livy-api-0.3.0.jar to class loader
+17/09/07 17:26:41 INFO Executor: Fetching spark://10.0.1.18:63962/jars/livy-core_2.11-0.3.0.jar with timestamp 1504830339209
+17/09/07 17:26:41 INFO Utils: Fetching spark://10.0.1.18:63962/jars/livy-core_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/fetchFileTemp1465456486016199030.tmp
+17/09/07 17:26:41 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/livy-core_2.11-0.3.0.jar to class loader
+17/09/07 17:26:41 INFO Executor: Fetching spark://10.0.1.18:63962/jars/netty-all-4.0.29.Final.jar with timestamp 1504830339208
+17/09/07 17:26:41 INFO Utils: Fetching spark://10.0.1.18:63962/jars/netty-all-4.0.29.Final.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/fetchFileTemp5778172140612732677.tmp
+17/09/07 17:26:41 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/netty-all-4.0.29.Final.jar to class loader
+17/09/07 17:26:41 INFO Executor: Fetching spark://10.0.1.18:63962/jars/livy-rsc-0.3.0.jar with timestamp 1504830339208
+17/09/07 17:26:41 INFO Utils: Fetching spark://10.0.1.18:63962/jars/livy-rsc-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/fetchFileTemp8319933076989919660.tmp
+17/09/07 17:26:41 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949/userFiles-79387f86-9450-4b3f-870f-07d2b98b5c43/livy-rsc-0.3.0.jar to class loader
+17/09/07 17:26:41 INFO CodeGenerator: Code generated in 16.578573 ms
+17/09/07 17:26:41 INFO CodeGenerator: Code generated in 12.305192 ms
+17/09/07 17:26:42 INFO Executor: Finished task 0.0 in stage 0.0 (TID 0). 1231 bytes result sent to driver
+17/09/07 17:26:42 INFO TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 325 ms on localhost (executor driver) (1/1)
+17/09/07 17:26:42 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+17/09/07 17:26:42 INFO DAGScheduler: ResultStage 0 (collect at <console>:86) finished in 0.340 s
+17/09/07 17:26:42 INFO DAGScheduler: Job 0 finished: collect at <console>:86, took 0.498908 s
+17/09/07 17:26:42 INFO ContextCleaner: Cleaned accumulator 1
+17/09/07 17:26:42 INFO BlockManagerInfo: Removed broadcast_0_piece0 on 10.0.1.18:63964 in memory (size: 4.6 KB, free: 366.3 MB)
+17/09/07 17:26:42 INFO ContextCleaner: Cleaned accumulator 0
+17/09/07 17:26:49 INFO SparkSqlParser: Parsing command: df
+17/09/07 17:26:51 INFO SparkSqlParser: Parsing command: CACHE TABLE `df`
+17/09/07 17:26:51 INFO SparkSqlParser: Parsing command: `df`
+17/09/07 17:26:51 INFO CodeGenerator: Code generated in 16.725016 ms
+17/09/07 17:26:51 INFO CodeGenerator: Code generated in 12.098075 ms
+17/09/07 17:26:51 INFO SparkContext: Starting job: sql at NativeMethodAccessorImpl.java:0
+17/09/07 17:26:51 INFO DAGScheduler: Registering RDD 13 (sql at NativeMethodAccessorImpl.java:0)
+17/09/07 17:26:51 INFO DAGScheduler: Got job 1 (sql at NativeMethodAccessorImpl.java:0) with 1 output partitions
+17/09/07 17:26:51 INFO DAGScheduler: Final stage: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0)
+17/09/07 17:26:51 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 1)
+17/09/07 17:26:51 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 1)
+17/09/07 17:26:51 INFO DAGScheduler: Submitting ShuffleMapStage 1 (MapPartitionsRDD[13] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+17/09/07 17:26:51 INFO MemoryStore: Block broadcast_1 stored as values in memory (estimated size 15.3 KB, free 366.3 MB)
+17/09/07 17:26:51 INFO MemoryStore: Block broadcast_1_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+17/09/07 17:26:51 INFO BlockManagerInfo: Added broadcast_1_piece0 in memory on 10.0.1.18:63964 (size: 7.6 KB, free: 366.3 MB)
+17/09/07 17:26:51 INFO SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:996
+17/09/07 17:26:51 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 1 (MapPartitionsRDD[13] at sql at NativeMethodAccessorImpl.java:0)
+17/09/07 17:26:51 INFO TaskSchedulerImpl: Adding task set 1.0 with 1 tasks
+17/09/07 17:26:51 INFO TaskSetManager: Starting task 0.0 in stage 1.0 (TID 1, localhost, executor driver, partition 0, PROCESS_LOCAL, 6686 bytes)
+17/09/07 17:26:51 INFO Executor: Running task 0.0 in stage 1.0 (TID 1)
+17/09/07 17:26:51 INFO CodeGenerator: Code generated in 16.739076 ms
+17/09/07 17:26:51 INFO CodeGenerator: Code generated in 46.798928 ms
+17/09/07 17:26:51 INFO MemoryStore: Block rdd_10_0 stored as values in memory (estimated size 464.0 B, free 366.3 MB)
+17/09/07 17:26:51 INFO BlockManagerInfo: Added rdd_10_0 in memory on 10.0.1.18:63964 (size: 464.0 B, free: 366.3 MB)
+17/09/07 17:26:51 INFO CodeGenerator: Code generated in 7.835008 ms
+17/09/07 17:26:51 INFO CodeGenerator: Code generated in 20.170525 ms
+17/09/07 17:26:51 INFO Executor: Finished task 0.0 in stage 1.0 (TID 1). 2747 bytes result sent to driver
+17/09/07 17:26:51 INFO TaskSetManager: Finished task 0.0 in stage 1.0 (TID 1) in 217 ms on localhost (executor driver) (1/1)
+17/09/07 17:26:51 INFO TaskSchedulerImpl: Removed TaskSet 1.0, whose tasks have all completed, from pool 
+17/09/07 17:26:51 INFO DAGScheduler: ShuffleMapStage 1 (sql at NativeMethodAccessorImpl.java:0) finished in 0.218 s
+17/09/07 17:26:51 INFO DAGScheduler: looking for newly runnable stages
+17/09/07 17:26:51 INFO DAGScheduler: running: Set()
+17/09/07 17:26:51 INFO DAGScheduler: waiting: Set(ResultStage 2)
+17/09/07 17:26:51 INFO DAGScheduler: failed: Set()
+17/09/07 17:26:51 INFO DAGScheduler: Submitting ResultStage 2 (MapPartitionsRDD[16] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+17/09/07 17:26:51 INFO MemoryStore: Block broadcast_2 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+17/09/07 17:26:51 INFO MemoryStore: Block broadcast_2_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+17/09/07 17:26:51 INFO BlockManagerInfo: Added broadcast_2_piece0 in memory on 10.0.1.18:63964 (size: 3.7 KB, free: 366.3 MB)
+17/09/07 17:26:51 INFO SparkContext: Created broadcast 2 from broadcast at DAGScheduler.scala:996
+17/09/07 17:26:51 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 2 (MapPartitionsRDD[16] at sql at NativeMethodAccessorImpl.java:0)
+17/09/07 17:26:51 INFO TaskSchedulerImpl: Adding task set 2.0 with 1 tasks
+17/09/07 17:26:51 INFO TaskSetManager: Starting task 0.0 in stage 2.0 (TID 2, localhost, executor driver, partition 0, ANY, 6374 bytes)
+17/09/07 17:26:51 INFO Executor: Running task 0.0 in stage 2.0 (TID 2)
+17/09/07 17:26:51 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+17/09/07 17:26:51 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 4 ms
+17/09/07 17:26:51 INFO Executor: Finished task 0.0 in stage 2.0 (TID 2). 2042 bytes result sent to driver
+17/09/07 17:26:51 INFO TaskSetManager: Finished task 0.0 in stage 2.0 (TID 2) in 36 ms on localhost (executor driver) (1/1)
+17/09/07 17:26:51 INFO TaskSchedulerImpl: Removed TaskSet 2.0, whose tasks have all completed, from pool 
+17/09/07 17:26:51 INFO DAGScheduler: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0) finished in 0.036 s
+17/09/07 17:26:51 INFO DAGScheduler: Job 1 finished: sql at NativeMethodAccessorImpl.java:0, took 0.294149 s
+17/09/07 17:26:51 INFO CodeGenerator: Code generated in 7.845499 ms
+17/09/07 17:26:53 INFO BlockManagerInfo: Removed broadcast_2_piece0 on 10.0.1.18:63964 in memory (size: 3.7 KB, free: 366.3 MB)
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 52
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 53
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 54
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 55
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 56
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 57
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 58
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 59
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 60
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 61
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 62
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 63
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned accumulator 64
+17/09/07 17:26:53 INFO ContextCleaner: Cleaned shuffle 0
+17/09/07 17:26:53 INFO BlockManagerInfo: Removed broadcast_1_piece0 on 10.0.1.18:63964 in memory (size: 7.6 KB, free: 366.3 MB)
+17/09/07 17:26:53 INFO SparkSqlParser: Parsing command: SELECT count(*) FROM  `df`
+17/09/07 17:26:54 INFO SparkContext: Starting job: collect at <console>:224
+17/09/07 17:26:54 INFO DAGScheduler: Registering RDD 20 (collect at <console>:224)
+17/09/07 17:26:54 INFO DAGScheduler: Got job 2 (collect at <console>:224) with 1 output partitions
+17/09/07 17:26:54 INFO DAGScheduler: Final stage: ResultStage 4 (collect at <console>:224)
+17/09/07 17:26:54 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 3)
+17/09/07 17:26:54 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 3)
+17/09/07 17:26:54 INFO DAGScheduler: Submitting ShuffleMapStage 3 (MapPartitionsRDD[20] at collect at <console>:224), which has no missing parents
+17/09/07 17:26:54 INFO MemoryStore: Block broadcast_3 stored as values in memory (estimated size 15.3 KB, free 366.3 MB)
+17/09/07 17:26:54 INFO MemoryStore: Block broadcast_3_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+17/09/07 17:26:54 INFO BlockManagerInfo: Added broadcast_3_piece0 in memory on 10.0.1.18:63964 (size: 7.6 KB, free: 366.3 MB)
+17/09/07 17:26:54 INFO SparkContext: Created broadcast 3 from broadcast at DAGScheduler.scala:996
+17/09/07 17:26:54 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 3 (MapPartitionsRDD[20] at collect at <console>:224)
+17/09/07 17:26:54 INFO TaskSchedulerImpl: Adding task set 3.0 with 1 tasks
+17/09/07 17:26:54 INFO TaskSetManager: Starting task 0.0 in stage 3.0 (TID 3, localhost, executor driver, partition 0, PROCESS_LOCAL, 6678 bytes)
+17/09/07 17:26:54 INFO Executor: Running task 0.0 in stage 3.0 (TID 3)
+17/09/07 17:26:54 INFO BlockManager: Found block rdd_10_0 locally
+17/09/07 17:26:54 INFO Executor: Finished task 0.0 in stage 3.0 (TID 3). 2098 bytes result sent to driver
+17/09/07 17:26:54 INFO TaskSetManager: Finished task 0.0 in stage 3.0 (TID 3) in 13 ms on localhost (executor driver) (1/1)
+17/09/07 17:26:54 INFO TaskSchedulerImpl: Removed TaskSet 3.0, whose tasks have all completed, from pool 
+17/09/07 17:26:54 INFO DAGScheduler: ShuffleMapStage 3 (collect at <console>:224) finished in 0.013 s
+17/09/07 17:26:54 INFO DAGScheduler: looking for newly runnable stages
+17/09/07 17:26:54 INFO DAGScheduler: running: Set()
+17/09/07 17:26:54 INFO DAGScheduler: waiting: Set(ResultStage 4)
+17/09/07 17:26:54 INFO DAGScheduler: failed: Set()
+17/09/07 17:26:54 INFO DAGScheduler: Submitting ResultStage 4 (MapPartitionsRDD[23] at collect at <console>:224), which has no missing parents
+17/09/07 17:26:54 INFO MemoryStore: Block broadcast_4 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+17/09/07 17:26:54 INFO MemoryStore: Block broadcast_4_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+17/09/07 17:26:54 INFO BlockManagerInfo: Added broadcast_4_piece0 in memory on 10.0.1.18:63964 (size: 3.7 KB, free: 366.3 MB)
+17/09/07 17:26:54 INFO SparkContext: Created broadcast 4 from broadcast at DAGScheduler.scala:996
+17/09/07 17:26:54 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 4 (MapPartitionsRDD[23] at collect at <console>:224)
+17/09/07 17:26:54 INFO TaskSchedulerImpl: Adding task set 4.0 with 1 tasks
+17/09/07 17:26:54 INFO TaskSetManager: Starting task 0.0 in stage 4.0 (TID 4, localhost, executor driver, partition 0, ANY, 6366 bytes)
+17/09/07 17:26:54 INFO Executor: Running task 0.0 in stage 4.0 (TID 4)
+17/09/07 17:26:54 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+17/09/07 17:26:54 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 0 ms
+17/09/07 17:26:54 INFO Executor: Finished task 0.0 in stage 4.0 (TID 4). 2042 bytes result sent to driver
+17/09/07 17:26:54 INFO TaskSetManager: Finished task 0.0 in stage 4.0 (TID 4) in 5 ms on localhost (executor driver) (1/1)
+17/09/07 17:26:54 INFO TaskSchedulerImpl: Removed TaskSet 4.0, whose tasks have all completed, from pool 
+17/09/07 17:26:54 INFO DAGScheduler: ResultStage 4 (collect at <console>:224) finished in 0.005 s
+17/09/07 17:26:54 INFO DAGScheduler: Job 2 finished: collect at <console>:224, took 0.031275 s
+17/09/07 17:26:55 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df` AS `zzz749`
+WHERE (0 = 1)
+17/09/07 17:26:56 INFO BlockManagerInfo: Removed broadcast_4_piece0 on 10.0.1.18:63964 in memory (size: 3.7 KB, free: 366.3 MB)
+17/09/07 17:26:56 INFO ContextCleaner: Cleaned accumulator 161
+17/09/07 17:26:56 INFO BlockManagerInfo: Removed broadcast_3_piece0 on 10.0.1.18:63964 in memory (size: 7.6 KB, free: 366.3 MB)
+17/09/07 17:26:58 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df`
+17/09/07 17:26:59 INFO SparkContext: Starting job: collect at <console>:224
+17/09/07 17:26:59 INFO DAGScheduler: Got job 3 (collect at <console>:224) with 1 output partitions
+17/09/07 17:26:59 INFO DAGScheduler: Final stage: ResultStage 5 (collect at <console>:224)
+17/09/07 17:26:59 INFO DAGScheduler: Parents of final stage: List()
+17/09/07 17:26:59 INFO DAGScheduler: Missing parents: List()
+17/09/07 17:26:59 INFO DAGScheduler: Submitting ResultStage 5 (MapPartitionsRDD[25] at collect at <console>:224), which has no missing parents
+17/09/07 17:26:59 INFO MemoryStore: Block broadcast_5 stored as values in memory (estimated size 11.0 KB, free 366.3 MB)
+17/09/07 17:26:59 INFO MemoryStore: Block broadcast_5_piece0 stored as bytes in memory (estimated size 5.7 KB, free 366.3 MB)
+17/09/07 17:26:59 INFO BlockManagerInfo: Added broadcast_5_piece0 in memory on 10.0.1.18:63964 (size: 5.7 KB, free: 366.3 MB)
+17/09/07 17:26:59 INFO SparkContext: Created broadcast 5 from broadcast at DAGScheduler.scala:996
+17/09/07 17:26:59 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 5 (MapPartitionsRDD[25] at collect at <console>:224)
+17/09/07 17:26:59 INFO TaskSchedulerImpl: Adding task set 5.0 with 1 tasks
+17/09/07 17:26:59 INFO TaskSetManager: Starting task 0.0 in stage 5.0 (TID 5, localhost, executor driver, partition 0, PROCESS_LOCAL, 6689 bytes)
+17/09/07 17:26:59 INFO Executor: Running task 0.0 in stage 5.0 (TID 5)
+17/09/07 17:26:59 INFO BlockManager: Found block rdd_10_0 locally
+17/09/07 17:26:59 INFO CodeGenerator: Code generated in 19.918332 ms
+17/09/07 17:26:59 INFO Executor: Finished task 0.0 in stage 5.0 (TID 5). 1521 bytes result sent to driver
+17/09/07 17:26:59 INFO TaskSetManager: Finished task 0.0 in stage 5.0 (TID 5) in 32 ms on localhost (executor driver) (1/1)
+17/09/07 17:26:59 INFO TaskSchedulerImpl: Removed TaskSet 5.0, whose tasks have all completed, from pool 
+17/09/07 17:26:59 INFO DAGScheduler: ResultStage 5 (collect at <console>:224) finished in 0.033 s
+17/09/07 17:26:59 INFO DAGScheduler: Job 3 finished: collect at <console>:224, took 0.037690 s
+17/09/07 17:26:59 INFO CodeGenerator: Code generated in 7.929955 ms
+17/09/07 17:27:01 INFO SparkUI: Stopped Spark web UI at http://10.0.1.18:4040
+17/09/07 17:27:01 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 17:27:01 INFO MemoryStore: MemoryStore cleared
+17/09/07 17:27:01 INFO BlockManager: BlockManager stopped
+17/09/07 17:27:01 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 17:27:01 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 17:27:01 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 17:27:01 INFO SparkContext: SparkContext already stopped.
+17/09/07 17:27:01 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 17:27:01 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-d31d43a6-7ac8-4222-8705-1f68ed048949
+17/09/07 19:49:17 INFO SparkContext: Running Spark version 2.1.0
+17/09/07 19:49:18 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/07 19:49:18 INFO SecurityManager: Changing view acls to: javierluraschi
+17/09/07 19:49:18 INFO SecurityManager: Changing modify acls to: javierluraschi
+17/09/07 19:49:18 INFO SecurityManager: Changing view acls groups to: 
+17/09/07 19:49:18 INFO SecurityManager: Changing modify acls groups to: 
+17/09/07 19:49:18 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+17/09/07 19:49:18 INFO Utils: Successfully started service 'sparkDriver' on port 50055.
+17/09/07 19:49:18 INFO SparkEnv: Registering MapOutputTracker
+17/09/07 19:49:18 INFO SparkEnv: Registering BlockManagerMaster
+17/09/07 19:49:18 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/07 19:49:18 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/07 19:49:18 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-2e1772e7-dab1-4859-b793-26582ec4861c
+17/09/07 19:49:18 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/09/07 19:49:18 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/07 19:49:18 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/09/07 19:49:18 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/09/07 19:49:18 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4041
+17/09/07 19:49:18 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.1-2.11.jar at spark://127.0.0.1:50055/jars/sparklyr-2.1-2.11.jar with timestamp 1504838958808
+17/09/07 19:49:18 INFO Executor: Starting executor ID driver on host localhost
+17/09/07 19:49:18 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 50056.
+17/09/07 19:49:18 INFO NettyBlockTransferService: Server created on 127.0.0.1:50056
+17/09/07 19:49:18 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/07 19:49:18 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 50056, None)
+17/09/07 19:49:18 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:50056 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 50056, None)
+17/09/07 19:49:18 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 50056, None)
+17/09/07 19:49:18 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 50056, None)
+17/09/07 19:49:19 INFO SparkContext: Invoking stop() from shutdown hook
+17/09/07 19:49:19 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4041
+17/09/07 19:49:19 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/09/07 19:49:19 INFO MemoryStore: MemoryStore cleared
+17/09/07 19:49:19 INFO BlockManager: BlockManager stopped
+17/09/07 19:49:19 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/09/07 19:49:19 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/09/07 19:49:19 INFO SparkContext: Successfully stopped SparkContext
+17/09/07 19:49:19 INFO ShutdownHookManager: Shutdown hook called
+17/09/07 19:49:19 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-3abd9d45-9a1a-47da-9029-0f14296f3cb6

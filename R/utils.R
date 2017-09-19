@@ -8,7 +8,7 @@ get_java <- function(throws = FALSE) {
     java <- file.path(java_home, "bin", "java")
     if (identical(.Platform$OS.type, "windows")) {
       java <- paste0(java, ".exe")
-    }     
+    }
     if (!file.exists(java)) {
       if (throws) {
         stop("Java is required to connect to Spark. ",
@@ -27,6 +27,46 @@ is_java_available <- function() {
   nzchar(get_java())
 }
 
+validate_java_version_line <- function(master, version) {
+  if (length(version) < 1)
+    stop("Java version not detected. Please download and install Java from ",
+         java_install_url())
+
+  # find line with version info
+  versionLine <- version[grepl("version", version)]
+  if (length(versionLine) != 1)
+    stop("Java version detected but couldn't parse version from ", paste(version, collapse = " - "))
+
+  # transform to usable R version string
+  splat <- strsplit(versionLine, "\\s+", perl = TRUE)[[1]]
+
+  splatVersion <- splat[grepl("9|[0-9]+\\.[0-9]+\\.[0-9]+", splat)]
+  if (length(splatVersion) != 1)
+    stop("Java version detected but couldn't parse version from: ", versionLine)
+
+  parsedVersion <- regex_replace(
+    splatVersion,
+    "^\"|\"$" = "",
+    "_" = ".",
+    "[^0-9.]+" = ""
+  )
+
+  if (!is.character(parsedVersion) || nchar(parsedVersion) < 1)
+    stop("Java version detected but couldn't parse version from: ", versionLine)
+
+  # ensure Java 1.7 or higher
+  if (compareVersion(parsedVersion, "1.7") < 0)
+    stop("Java version", parsedVersion, " detected but 1.7+ is required. Please download and install Java from ",
+         java_install_url())
+
+  if (compareVersion(parsedVersion, "1.9") >= 0 && spark_master_is_local(master)  && !getOption("sparklyr.java9", FALSE)) {
+    stop(
+      "Java 9 is currently unsupported in Spark distributions unless you manually install Hadoop 2.8 ",
+      "and manually configure Spark. Please consider uninstalling Java 9 and reinstalling Java 8. ",
+      "To override this failure set 'options(sparklyr.java9 = TRUE)'.")
+  }
+}
+
 validate_java_version <- function(master, spark_home) {
   # if someone sets SPARK_HOME and we are not in local more, assume Java
   # is available since some systems.
@@ -42,22 +82,7 @@ validate_java_version <- function(master, spark_home) {
 
   # query its version
   version <- system2(java, "-version", stderr = TRUE, stdout = TRUE)
-  if (length(version) < 1)
-    stop("Java version not detected. Please download and install Java from ",
-         java_install_url())
-
-  # transform to usable R version string
-  splat <- strsplit(version[[1]], "\\s+", perl = TRUE)[[1]]
-  parsedVersion <- regex_replace(
-    splat[[length(splat)]],
-    "^\"|\"$" = "",
-    "_" = "."
-  )
-
-  # ensure Java 1.7 or higher
-  if (compareVersion(parsedVersion, "1.7") < 0)
-    stop("Java version", parsedVersion, " detected but 1.7+ is required. Please download and install Java from ",
-         java_install_url())
+  validate_java_version_line(master, version)
 
   TRUE
 }
@@ -66,7 +91,7 @@ java_install_url <- function() {
   "https://www.java.com/en/"
 }
 
-starts_with <- function(lhs, rhs) {
+utils_starts_with <- function(lhs, rhs) {
   if (nchar(lhs) < nchar(rhs))
     return(FALSE)
   identical(substring(lhs, 1, nchar(rhs)), rhs)
@@ -74,7 +99,7 @@ starts_with <- function(lhs, rhs) {
 
 aliased_path <- function(path) {
   home <- path.expand("~/")
-  if (starts_with(path, home))
+  if (utils_starts_with(path, home))
     path <- file.path("~", substring(path, nchar(home) + 1))
   path
 }

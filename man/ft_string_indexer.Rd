@@ -4,8 +4,7 @@
 \alias{ft_string_indexer}
 \title{Feature Transformation -- StringIndexer}
 \usage{
-ft_string_indexer(x, input.col = NULL, output.col = NULL, params = NULL,
-  ...)
+ft_string_indexer(x, input.col, output.col, params = NULL, ...)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
@@ -41,7 +40,7 @@ Other feature transformation routines: \code{\link{ft_binarizer}},
   \code{\link{ft_one_hot_encoder}},
   \code{\link{ft_quantile_discretizer}},
   \code{\link{ft_regex_tokenizer}},
-  \code{\link{ft_sql_transformer}},
+  \code{\link{ft_stop_words_remover}},
   \code{\link{ft_tokenizer}},
   \code{\link{ft_vector_assembler}},
   \code{\link{sdf_mutate}}

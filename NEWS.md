@@ -1,7 +1,113 @@
-# Sparklyr 0.6.2
+# Sparklyr 0.6.3
 
-- Fixed error in `connection_spark_shinyapp()` preventing users with
-  no Spark installation from using connection app.
+- Enabled support for Java 9 for clusters configured with 
+  Hadoop 2.8. Java 9 blocked on 'master=local' unless
+  'options(sparklyr.java9 = TRUE)' is set.
+
+- Fixed issue in `spark_connect()` where using `set.seed()`
+  before connection would cause session ids to be duplicates
+  and connections to be reused.
+
+- Fixed issue in `spark_connect()` blocking gateway port when
+  connection was never started to the backend, for isntasnce,
+  while interrupting the r session while connecting.
+  
+- Performance improvement for quering field names from tables
+  impacting tables and `dplyr` queries, most noticeable in
+  `na.omit` with several columns.
+
+- Fix to `spark_apply()` when closure returns a `data.frame`
+  that contains no rows and has one or more columns.
+
+- Fix to `spark_apply()` while using `tryCatch()` within
+  closure and increased callstack printed to logs when
+  error triggers within closure.
+
+- Added support for the `SPARKLYR_LOG_FILE` environment 
+  variable to specify the file used for log output.
+  
+- Fixed regression for `union_all()` affecting Spark 1.6.X.
+
+- Added support for `na.omit.cache` option that when set to
+  `FALSE` will prevent `na.omit` from caching results when
+  rows are dropped.
+
+- Added support in `spark_connect()` for `yarn-cluster` with
+  hight-availability enabled.
+  
+- Added support for `spark_connect()` with `master="yarn-cluster"`
+  to query YARN resource manager API and retrieve the correct
+  container host name.
+
+- Fixed issue in `invoke()` calls while using integer arrays
+  that contain `NA` which can be commonly experienced
+  while using `spark_apply()`.
+
+- Added `topics.description` under `ml_lda()` result.
+
+- Added support for `ft_stop_words_remover()` to strip out
+  stop words from tokens.
+
+- Feature transformers (`ft_*` functions) now explicitly
+  require `input.col` and `output.col` to be specified.
+
+- Added support for `spark_apply_log()` to enable logging in
+  worker nodes while using `spark_apply()`.
+
+- Fix to `spark_apply()` for `SparkUncaughtExceptionHandler`
+  exception while running over large jobs that may overlap
+  during an, now unnecesary, unregister operation.
+
+- Fix race-condition first time `spark_apply()` is run when more
+  than one partition runs in a worker and both processes try to
+  unpack the packages bundle at the same time.
+
+- `spark_apply()` now adds generic column names when needed and 
+  validates `f` is a `function`.
+
+- Improved documentation and error cases for `metric` argument in
+  `ml_classification_eval()` and `ml_binary_classification_eval()`.
+
+- Fix to `spark_install()` to use the `/logs` subfolder to store local
+  `log4j` logs.
+
+- Fix to `spark_apply()` when R is used from a worker node since worker
+  node already contains packages but still might be triggering different
+  R session.
+
+- Fix connection from closing when `invoke()` attempts to use a class
+  with a method that contains a reference to an undefined class.
+
+- Implemented all tuning options from Spark ML for `ml_random_forest()`, `ml_gradient_boosted_trees()`, and `ml_decision_tree()`.
+
+- Avoid tasks failing under `spark_apply()` and multiple  concurrent
+  partitions running while selecting backend port.
+
+- Added support for numeric arguments for `n` in `lead()` for dplyr.
+
+- Added unsupported error message to `sample_n()` and `sample_frac()`
+  when Spark is not 2.0 or higher.
+
+- Fixed `SIGPIPE` error under `spark_connect()` immediately after
+  a `spark_disconnect()` operation.
+
+- Added support for `sparklyr.apply.env.` under `spark_config()` to
+  allow `spark_apply()` to initializae environment varaibles.
+
+- Added support for `spark_read_text()` and `spark_write_text()` to
+  read from and to plain text files.
+
+- Addesd support for RStudio project templates to create an 
+  "R Package using sparklyr".
+  
+- Fix `compute()` to trigger refresh of the connections view.
+
+- Added a `k` argument to `ml_pca()` to enable specification of number of principal
+  components to extract. Also implemented `sdf_project()` to project datasets using
+  the results of `ml_pca()` models.
+
+- Added support for additional livy session creation parameters using
+  the `livy_config()` function.
 
 # Sparklyr 0.6.1
 
@@ -16,6 +122,8 @@
   nor memory.
 
 - Added support for Spark 1.6.3 under `spark_install()`.
+
+- Added support for Spark 1.6.3 under `spark_install()`
 
 - `spark_apply()` now logs the current callstack when it fails.
 

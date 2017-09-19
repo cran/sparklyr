@@ -385,6 +385,12 @@ object Sources {
     "  backend <- sc$backend\n" +
     "  writeBin(con, backend)\n" +
     "\n" +
+    "  if (identical(object, \"Handler\") &&\n" +
+    "      (identical(method, \"terminateBackend\") || identical(method, \"stopBackend\"))) {\n" +
+    "    # by the time we read response, backend might be already down.\n" +
+    "    return(NULL)\n" +
+    "  }\n" +
+    "\n" +
     "  returnStatus <- readInt(backend)\n" +
     "\n" +
     "  if (length(returnStatus) == 0) {\n" +
@@ -670,7 +676,7 @@ object Sources {
     "\n" +
     "      # Check that there are no NAs in character arrays since they are unsupported in scala\n" +
     "      hasCharNAs <- any(sapply(object, function(elem) {\n" +
-    "        (is.factor(elem) || is.character(elem)) && is.na(elem)\n" +
+    "        (is.factor(elem) || is.character(elem) || is.integer(elem)) && is.na(elem)\n" +
     "      }))\n" +
     "\n" +
     "      if (hasCharNAs) {\n" +
@@ -930,24 +936,19 @@ object Sources {
     "  if (nchar(bundlePath) > 0) {\n" +
     "    worker_log(\"using bundle \", bundlePath)\n" +
     "\n" +
-    "    if (file.exists(bundlePath)) {\n" +
-    "      worker_log(\"found local bundle exists, skipping extraction\")\n" +
+    "    bundleName <- basename(bundlePath)\n" +
+    "\n" +
+    "    workerRootDir <- worker_invoke_static(sc, \"org.apache.spark.SparkFiles\", \"getRootDirectory\")\n" +
+    "    sparkBundlePath <- file.path(workerRootDir, bundleName)\n" +
+    "\n" +
+    "    if (!file.exists(sparkBundlePath)) {\n" +
+    "      stop(\"failed to find bundle under SparkFiles root directory\")\n" +
     "    }\n" +
-    "    else {\n" +
-    "      bundleName <- basename(bundlePath)\n" +
     "\n" +
-    "      workerRootDir <- worker_invoke_static(sc, \"org.apache.spark.SparkFiles\", \"getRootDirectory\")\n" +
-    "      sparkBundlePath <- file.path(workerRootDir, bundleName)\n" +
+    "    unbundlePath <- worker_spark_apply_unbundle(sparkBundlePath, workerRootDir)\n" +
     "\n" +
-    "      if (!file.exists(sparkBundlePath)) {\n" +
-    "        stop(\"failed to find bundle under SparkFiles root directory\")\n" +
-    "      }\n" +
-    "\n" +
-    "      unbundlePath <- worker_spark_apply_unbundle(sparkBundlePath, workerRootDir)\n" +
-    "\n" +
-    "      .libPaths(unbundlePath)\n" +
-    "      worker_log(\"updated .libPaths with bundle packages\")\n" +
-    "    }\n" +
+    "    .libPaths(unbundlePath)\n" +
+    "    worker_log(\"updated .libPaths with bundle packages\")\n" +
     "  }\n" +
     "\n" +
     "  grouped_by <- worker_invoke(context, \"getGroupBy\")\n" +
@@ -1025,7 +1026,7 @@ object Sources {
     "    all_results <- rbind(all_results, result)\n" +
     "  }\n" +
     "\n" +
-    "  if (!is.null(all_results)) {\n" +
+    "  if (!is.null(all_results) && nrow(all_results) > 0) {\n" +
     "    worker_log(\"updating \", nrow(all_results), \" rows\")\n" +
     "    all_data <- lapply(1:nrow(all_results), function(i) as.list(all_results[i,]))\n" +
     "\n" +
@@ -1055,12 +1056,24 @@ object Sources {
     "#' @export\n" +
     "worker_spark_apply_unbundle <- function(bundle_path, base_path) {\n" +
     "  extractPath <- file.path(base_path, core_spark_apply_unbundle_path())\n" +
+    "  lockFile <- file.path(extractPath, \"sparklyr.lock\")\n" +
     "\n" +
     "  if (!dir.exists(extractPath)) dir.create(extractPath, recursive = TRUE)\n" +
     "\n" +
     "  if (length(dir(extractPath)) == 0) {\n" +
     "    worker_log(\"found that the unbundle path is empty, extracting:\", extractPath)\n" +
+    "\n" +
+    "    writeLines(\"\", lockFile)\n" +
     "    system2(\"tar\", c(\"-xf\", bundle_path, \"-C\", extractPath))\n" +
+    "    unlink(lockFile)\n" +
+    "  }\n" +
+    "\n" +
+    "  if (file.exists(lockFile)) {\n" +
+    "    worker_log(\"found that lock file exists, waiting\")\n" +
+    "    while (file.exists(lockFile)) {\n" +
+    "      Sys.sleep(1000)\n" +
+    "    }\n" +
+    "    worker_log(\"completed lock file wait\")\n" +
     "  }\n" +
     "\n" +
     "  extractPath\n" +
@@ -1167,12 +1180,14 @@ object Sources {
     "  assign('sessionId', sessionId, envir = worker_log_env)\n" +
     "}\n" +
     "\n" +
-    "worker_log_format <- function(message, level = \"INFO\") {\n" +
+    "worker_log_format <- function(message, level = \"INFO\", component = \"RScript\") {\n" +
     "  paste(\n" +
     "    format(Sys.time(), \"%y/%m/%d %H:%M:%S\"),\n" +
     "    \" \",\n" +
     "    level,\n" +
-    "    \" sparklyr: RScript (\",\n" +
+    "    \" sparklyr: \",\n" +
+    "    component,\n" +
+    "    \" (\",\n" +
     "    worker_log_env$sessionId,\n" +
     "    \") \",\n" +
     "    message,\n" +
@@ -1199,27 +1214,30 @@ object Sources {
     "worker_log_error <- function(...) {\n" +
     "  worker_log_level(..., level = \"ERROR\")\n" +
     "}\n" +
+    ".worker_globals <- new.env(parent = emptyenv())\n" +
+    "\n" +
     "spark_worker_main <- function(\n" +
     "  sessionId,\n" +
     "  backendPort = 8880,\n" +
-    "  configRaw = worker_config_serialize(list())) {\n" +
+    "  configRaw = NULL) {\n" +
     "\n" +
     "  spark_worker_hooks()\n" +
     "\n" +
-    "  config <- worker_config_deserialize(configRaw)\n" +
-    "\n" +
-    "  if (config$debug) {\n" +
-    "    worker_log(\"exiting to wait for debugging session to attach\")\n" +
-    "\n" +
-    "    # sleep for 1 day to allow long debugging sessions\n" +
-    "    Sys.sleep(60*60*24)\n" +
-    "    return()\n" +
-    "  }\n" +
-    "\n" +
-    "  worker_log_session(sessionId)\n" +
-    "  worker_log(\"is starting\")\n" +
-    "\n" +
     "  tryCatch({\n" +
+    "    if (is.null(configRaw)) configRaw <- worker_config_serialize(list())\n" +
+    "\n" +
+    "    config <- worker_config_deserialize(configRaw)\n" +
+    "\n" +
+    "    if (config$debug) {\n" +
+    "      worker_log(\"exiting to wait for debugging session to attach\")\n" +
+    "\n" +
+    "      # sleep for 1 day to allow long debugging sessions\n" +
+    "      Sys.sleep(60*60*24)\n" +
+    "      return()\n" +
+    "    }\n" +
+    "\n" +
+    "    worker_log_session(sessionId)\n" +
+    "    worker_log(\"is starting\")\n" +
     "\n" +
     "    sc <- spark_worker_connect(sessionId, backendPort, config)\n" +
     "    worker_log(\"is connected\")\n" +
@@ -1227,7 +1245,11 @@ object Sources {
     "    spark_worker_apply(sc)\n" +
     "\n" +
     "  }, error = function(e) {\n" +
-    "    stop(\"terminated unexpectedly: \", e$message)\n" +
+    "    worker_log_error(\"terminated unexpectedly: \", e$message)\n" +
+    "    if (exists(\".stopLastError\", envir = .GlobalEnv)) {\n" +
+    "      worker_log_error(\"collected callstack: \\n\", get(\".stopLastError\", envir = .worker_globals))\n" +
+    "    }\n" +
+    "    quit(status = -1)\n" +
     "  })\n" +
     "\n" +
     "  worker_log(\"finished\")\n" +
@@ -1237,18 +1259,18 @@ object Sources {
     "  unlock <- get(\"unlockBinding\")\n" +
     "  lock <- get(\"lockBinding\")\n" +
     "\n" +
+    "  originalStop <- stop\n" +
     "  unlock(\"stop\",  as.environment(\"package:base\"))\n" +
     "  assign(\"stop\", function(...) {\n" +
-    "    worker_log_error(...)\n" +
-    "\n" +
     "    frame_names <- list()\n" +
     "    frame_start <- max(1, sys.nframe() - 5)\n" +
     "    for (i in frame_start:sys.nframe()) {\n" +
     "      current_call <- sys.call(i)\n" +
     "      frame_names[[1 + i - frame_start]] <- paste(i, \": \", paste(head(deparse(current_call), 5), collapse = \"\\n\"), sep = \"\")\n" +
     "    }\n" +
-    "    worker_log_error(\"collected callstack: \\n\", paste(rev(frame_names), collapse = \"\\n\"))\n" +
-    "    quit(status = -1)\n" +
+    "\n" +
+    "    assign(\".stopLastError\", paste(rev(frame_names), collapse = \"\\n\"), envir = .worker_globals)\n" +
+    "    originalStop(...)\n" +
     "  }, as.environment(\"package:base\"))\n" +
     "  lock(\"stop\",  as.environment(\"package:base\"))\n" +
     "}\n" +

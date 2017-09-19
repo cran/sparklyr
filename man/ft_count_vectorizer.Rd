@@ -4,8 +4,8 @@
 \alias{ft_count_vectorizer}
 \title{Feature Tranformation -- CountVectorizer}
 \usage{
-ft_count_vectorizer(x, input.col = NULL, output.col = NULL, min.df = NULL,
-  min.tf = NULL, vocab.size = NULL, vocabulary.only = FALSE, ...)
+ft_count_vectorizer(x, input.col, output.col, min.df = NULL, min.tf = NULL,
+  vocab.size = NULL, vocabulary.only = FALSE, ...)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
@@ -50,7 +50,7 @@ Other feature transformation routines: \code{\link{ft_binarizer}},
   \code{\link{ft_one_hot_encoder}},
   \code{\link{ft_quantile_discretizer}},
   \code{\link{ft_regex_tokenizer}},
-  \code{\link{ft_sql_transformer}},
+  \code{\link{ft_stop_words_remover}},
   \code{\link{ft_string_indexer}},
   \code{\link{ft_tokenizer}},
   \code{\link{ft_vector_assembler}},

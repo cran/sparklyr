@@ -9,8 +9,8 @@
 #'
 #' @export
 ft_vector_assembler <- function(x,
-                                input.col = NULL,
-                                output.col = NULL,
+                                input.col,
+                                output.col,
                                 ...)
 {
   ml_backwards_compatibility_api()
@@ -37,8 +37,8 @@ ft_vector_assembler <- function(x,
 #'
 #' @export
 ft_string_indexer <- function(x,
-                              input.col = NULL,
-                              output.col = NULL,
+                              input.col,
+                              output.col,
                               params = NULL,
                               ...)
 {
@@ -71,7 +71,8 @@ ft_string_indexer <- function(x,
 #'
 #' Apply thresholding to a column, such that values less than or equal to the
 #' \code{threshold} are assigned the value 0.0, and values greater than the
-#' threshold are assigned the value 1.0.
+#' threshold are assigned the value 1.0. Column output is numeric for
+#' compatibility with other modeling functions.
 #'
 #' @template roxlate-ml-transformation
 #'
@@ -79,8 +80,8 @@ ft_string_indexer <- function(x,
 #'
 #' @export
 ft_binarizer <- function(x,
-                         input.col = NULL,
-                         output.col = NULL,
+                         input.col,
+                         output.col,
                          threshold = 0.5,
                          ...)
 {
@@ -104,8 +105,8 @@ ft_binarizer <- function(x,
 #'
 #' @export
 ft_discrete_cosine_transform <- function(x,
-                                         input.col = NULL,
-                                         output.col = NULL,
+                                         input.col,
+                                         output.col,
                                          inverse = FALSE,
                                          ...)
 {
@@ -128,8 +129,8 @@ ft_discrete_cosine_transform <- function(x,
 #'
 #' @export
 ft_index_to_string <- function(x,
-                               input.col = NULL,
-                               output.col = NULL,
+                               input.col,
+                               output.col,
                                ...)
 {
   ml_backwards_compatibility_api()
@@ -192,8 +193,8 @@ ft_index_to_string <- function(x,
 #'
 #' @export
 ft_bucketizer <- function(x,
-                          input.col = NULL,
-                          output.col = NULL,
+                          input.col,
+                          output.col,
                           splits,
                           ...)
 {
@@ -219,8 +220,8 @@ ft_bucketizer <- function(x,
 #'
 #' @export
 ft_elementwise_product <- function(x,
-                                   input.col = NULL,
-                                   output.col = NULL,
+                                   input.col,
+                                   output.col,
                                    scaling.col,
                                    ...)
 {
@@ -238,18 +239,12 @@ ft_elementwise_product <- function(x,
 #' Transform a data set using SQL. Use the \code{__THIS__}
 #' placeholder as a proxy for the active table.
 #'
-#' Although this function accepts the \code{input.col} and \code{output.col}
-#' arguments, they are ignored -- this interface is done purely for
-#' compatibility with \code{\link{sdf_mutate}}.
-#'
-#' @template roxlate-ml-transformation
-#'
+#' @param x An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.
 #' @param sql A SQL statement.
+#' @param ... Optional arguments; currently unused.
 #'
 #' @export
 ft_sql_transformer <- function(x,
-                               input.col = NULL,
-                               output.col = NULL,
                                sql,
                                ...)
 {
@@ -278,8 +273,8 @@ ft_sql_transformer <- function(x,
 #'
 #' @export
 ft_quantile_discretizer <- function(x,
-                                    input.col = NULL,
-                                    output.col = NULL,
+                                    input.col,
+                                    output.col,
                                     n.buckets = 5L,
                                     ...)
 {
@@ -298,15 +293,16 @@ ft_quantile_discretizer <- function(x,
 #' One-hot encoding maps a column of label indices to a column of binary
 #' vectors, with at most a single one-value. This encoding allows algorithms
 #' which expect continuous features, such as Logistic Regression, to use
-#' categorical features.
+#' categorical features. Typically, used with  \code{ft_string_indexer()} to
+#' index a column first.
 #'
 #' @template roxlate-ml-transformation
 #' @param drop.last Boolean; drop the last category?
 #'
 #' @export
 ft_one_hot_encoder <- function(x,
-                               input.col = NULL,
-                               output.col = NULL,
+                               input.col,
+                               output.col,
                                drop.last = TRUE,
                                ...)
 {
@@ -328,8 +324,8 @@ ft_one_hot_encoder <- function(x,
 #'
 #' @export
 ft_tokenizer <- function(x,
-                         input.col = NULL,
-                         output.col = NULL,
+                         input.col,
+                         output.col,
                          ...)
 {
   ml_backwards_compatibility_api()
@@ -352,8 +348,8 @@ ft_tokenizer <- function(x,
 #'
 #' @export
 ft_regex_tokenizer <- function(x,
-                               input.col = NULL,
-                               output.col = NULL,
+                               input.col,
+                               output.col,
                                pattern,
                                ...)
 {
@@ -379,8 +375,8 @@ ft_regex_tokenizer <- function(x,
 # #'
 # #' @export
 # ft_hashing_tf <- function(x,
-#                           input.col = NULL,
-#                           output.col = NULL,
+#                           input.col,
+#                           output.col,
 #                           n.features = NULL,
 #                           binary = FALSE,
 #                           ...)
@@ -418,8 +414,8 @@ ft_regex_tokenizer <- function(x,
 #'
 #' @export
 ft_count_vectorizer <- function(x,
-                                input.col = NULL,
-                                output.col = NULL,
+                                input.col,
+                                output.col,
                                 min.df = NULL,
                                 min.tf = NULL,
                                 vocab.size = NULL,
@@ -439,4 +435,24 @@ ft_count_vectorizer <- function(x,
   only.model = vocabulary.only)
 
   if (vocabulary.only) as.character(invoke(result, "vocabulary")) else result
+}
+
+#' Feature Tranformation -- StopWordsRemover
+#'
+#' A feature transformer that drops all the stop words from the input sequence.
+#'
+#' @template roxlate-ml-transformation
+#'
+#' @export
+ft_stop_words_remover <- function(x,
+                                  input.col,
+                                  output.col,
+                                  ...)
+{
+  ml_backwards_compatibility_api()
+  class <- "org.apache.spark.ml.feature.StopWordsRemover"
+  invoke_simple_transformer(x, class, list(
+    setInputCol  = ensure_scalar_character(input.col),
+    setOutputCol = ensure_scalar_character(output.col)
+  ))
 }

@@ -31,11 +31,13 @@ livy_validate_http_response <- function(message, req) {
 #' @export
 #'
 #' @importFrom jsonlite base64_enc
+#' @importFrom jsonlite unbox
 #'
 #' @param config Optional base configuration
 #' @param username The username to use in the Authorization header
 #' @param password The password to use in the Authorization header
 #' @param custom_headers List of custom headers to append to http requests. Defaults to \code{list("X-Requested-By" = "sparklyr")}.
+#' @param ... additional Livy session parameters
 #'
 #' @details
 #'
@@ -46,9 +48,26 @@ livy_validate_http_response <- function(message, req) {
 #' The default value of \code{"custom_headers"} is set to \code{list("X-Requested-By" = "sparklyr")}
 #' in order to facilitate connection to Livy servers with CSRF protection enabled.
 #'
+#' Additional parameters for Livy sessions are:
+#' \describe{
+#'   \item{\code{proxy_user}}{User to impersonate when starting the session}
+#'   \item{\code{jars}}{jars to be used in this session}
+#'   \item{\code{py_files}}{Python files to be used in this session}
+#'   \item{\code{files}}{files to be used in this session}
+#'   \item{\code{driver_memory}}{Amount of memory to use for the driver process}
+#'   \item{\code{driver_cores}}{Number of cores to use for the driver process}
+#'   \item{\code{executor_memory}}{Amount of memory to use per executor process}
+#'   \item{\code{executor_cores}}{Number of cores to use for each executor}
+#'   \item{\code{num_executors}}{Number of executors to launch for this session}
+#'   \item{\code{archives}}{Archives to be used in this session}
+#'   \item{\code{queue}}{The name of the YARN queue to which submitted}
+#'   \item{\code{queue}}{The name of this session}
+#'   \item{\code{heartbeat_timeout}}{Timeout in seconds to which session be orphaned}
+#' }
+#'
 #' @return Named list with configuration data
 livy_config <- function(config = spark_config(), username = NULL, password = NULL,
-                        custom_headers = list("X-Requested-By" = "sparklyr")) {
+                        custom_headers = list("X-Requested-By" = "sparklyr"), ...) {
   if (!is.null(username) || !is.null(password)) {
     secret <- base64_enc(paste(username, password, sep = ":"))
 
@@ -66,6 +85,44 @@ livy_config <- function(config = spark_config(), username = NULL, password = NUL
     for (l in names(custom_headers)) {
       config[["sparklyr.livy.headers"]] <- c(
         config[["sparklyr.livy.headers"]], custom_headers[l])
+    }
+  }
+
+  #Params need to be restrictued or livy will complain about unknown parameters
+  allowed_params <- c("proxy_user", "jars", "py_files", "files", "driver_memory", "driver_cores", "executor_memory",
+    "executor_cores", "num_executors", "archives", "queue", "name", "heartbeat_timeout")
+
+  additional_params <- list(...)
+
+  if(length(additional_params) > 0) {
+    valid_params <- names(additional_params) %in% allowed_params
+    if(!all(valid_params)){
+      stop(paste0(names(additional_params[!valid_params]), sep = ", "), " are not valid session parameters. Valid parameters are: ", paste0(allowed_params, sep = ", "))
+    }
+    singleValues = c("proxy_user", "driver_memory", "driver_cores", "executor_memory", "executor_cores", "num_executors", "queue", "name", "heartbeat_timeout")
+    singleValues <- singleValues[singleValues %in% names(additional_params)]
+    additional_params[singleValues] <- lapply(additional_params[singleValues], unbox)
+
+    #snake_case to camelCase mapping
+    params_map <- c(
+      proxy_user = "proxyUser",
+      jars = "jars",
+      py_files = "pyFiles",
+      files = "files",
+      driver_memory = "driverMemory",
+      driver_cores = "driverCores",
+      executor_memory = "executorMemory",
+      executor_cores = "executorCores",
+      num_executors = "numExecutors",
+      archives = "archives",
+      queue = "queue",
+      name = "name",
+      heartbeat_timeout = "heartbeatTimeoutInSecond"
+    )
+
+    for(l in names(additional_params)){
+      #Parse the params names from snake_case to camelCase
+      config[[paste0("livy.", params_map[[l]])]] <- additional_params[[l]]
     }
   }
   config
@@ -123,10 +180,8 @@ livy_config_get_prefix <- function(master, config, prefix, not_prefix) {
 
 #' @importFrom jsonlite toJSON
 livy_config_get <- function(master, config) {
-  livyConfig <- livy_config_get_prefix(master, config, "livy.", NULL)
   sparkConfig <- livy_config_get_prefix(master, config, "spark.", c("spark.sql."))
-
-  c(livyConfig, sparkConfig)
+  c(sparkConfig)
 }
 
 #' @importFrom httr POST
@@ -136,6 +191,9 @@ livy_create_session <- function(master, config) {
     kind = unbox("spark"),
     conf = livy_config_get(master, config)
   )
+
+  session_params <- connection_config(list(master = master, config = config), "livy.", NULL)
+  if(length(session_params) > 0) data <- append(data, session_params)
 
   req <- POST(paste(master, "sessions", sep = "/"),
               livy_get_httr_headers(config, list(
@@ -180,54 +238,6 @@ livy_get_session <- function(sc) {
   assert_that(session$id == sc$sessionId)
 
   session
-}
-
-livy_code_quote_parameters <- function(params) {
-  if (length(params) == 0) {
-    ""
-  } else {
-    params <- lapply(params, function(param) {
-      paramClass <- class(param)
-      if (is.character(param)) {
-        # substitute illegal characters
-        param <- gsub("\n", "\" + sys.props(\"line.separator\") + \"", param)
-
-        paste("\"", param, "\"", sep = "")
-      }
-      else if ("livy_jobj" %in% paramClass) {
-        paste(param$varName, "._2", sep = "")
-      }
-      else if (is.numeric(param)) {
-        paste(
-          "new java.lang.Integer(",
-          param,
-          ")",
-          sep = ""
-        )
-      }
-      else if (is.logical(param)) {
-        paste(
-          "new java.lang.Boolean(",
-          if (isTRUE(param)) "true" else "false",
-          ")",
-          sep = ""
-        )
-      }
-      else if (is.list(param)) {
-        paste(
-          "Array(",
-          livy_code_quote_parameters(param),
-          ")",
-          sep = ""
-        )
-      }
-      else {
-        stop("Unsupported parameter ", param, " of class ", paste(paramClass, collapse = ", "), " detected")
-      }
-    })
-
-    paste(params, collapse = ",")
-  }
 }
 
 livy_code_new_return_var <- function(sc) {
@@ -707,10 +717,11 @@ livy_load_scala_sources <- function(sc) {
     "tracker.scala",
     "serializer.scala",
     "stream.scala",
+    "repartition.scala",
     "livyutils.scala"
   )
 
-  livySourcesFiles <- file.path(find.package("sparklyr"), "livy") %>%
+  livySourcesFiles <- system.file("livy", package = "sparklyr") %>%
     list.files(pattern = "scala$", full.names = TRUE, recursive = TRUE)
 
   sourceOrder <- livySourcesFiles %>%

@@ -115,6 +115,14 @@ sql_translate_env.spark_connection <- function(con) {
           order = order
         )
       },
+      lead = function(x, n = 1L, default = NA, order = NULL) {
+        dbplyr::base_win$lead(
+          x = x,
+          n = as.integer(n),
+          default = default,
+          order = order
+        )
+      },
       count = function() dbplyr::win_over(
         dbplyr::sql("count(*)"),
         partition = dbplyr::win_current_group()
@@ -155,4 +163,43 @@ sql_translate_env.spark_connection <- function(con) {
     )
 
   )
+}
+
+#' @export
+#' @importFrom dplyr sql_set_op
+#' @importFrom dbplyr build_sql
+#' @importFrom dbplyr sql
+#' @keywords internal
+sql_set_op.spark_connection <- function(con, x, y, method) {
+  if (spark_version(con) < "2.0.0") {
+    # Spark 1.6 does not allow parentheses
+    build_sql(
+      x,
+      "\n", sql(method), "\n",
+      y
+    )
+  } else {
+    class(con) <- class(con)[class(con) != "spark_connection"]
+    sql_set_op(con, x, y, method)
+  }
+}
+
+#' @export
+#' @importFrom dplyr db_query_fields
+#' @importFrom dplyr sql_select
+#' @importFrom dplyr sql_subquery
+#' @keywords internal
+db_query_fields.spark_connection <- function(con, sql, ...) {
+  sqlFields <- sql_select(
+    con,
+    sql("*"),
+    sql_subquery(con, sql),
+    where = sql("0 = 1")
+  )
+
+  hive_context(con) %>%
+    invoke("sql", as.character(sqlFields)) %>%
+    invoke("schema") %>%
+    invoke("fieldNames") %>%
+    as.character()
 }

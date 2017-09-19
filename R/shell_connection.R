@@ -32,18 +32,14 @@ shell_connection <- function(master,
     }
   }
 
-  # for yarn-cluster we will try to read the yarn config and adjust gateway appropiately
+  # for yarn-cluster set deploy mode as shell arguments
   if (spark_master_is_yarn_cluster(master)) {
-    if (is.null(config[["sparklyr.gateway.address"]])) {
-      config[["sparklyr.gateway.address"]] <- spark_yarn_cluster_get_gateway()
-    }
-
     if (is.null(config[["sparklyr.shell.deploy-mode"]])) {
-      config[["sparklyr.shell.deploy-mode"]] <- "cluster"
+      shell_args <- c(shell_args, "--deploy-mode", "cluster")
     }
 
     if (is.null(config[["sparklyr.shell.master"]])) {
-      config[["sparklyr.shell.master"]] <- "yarn"
+      shell_args <- c(shell_args, "--master", "yarn")
     }
   }
 
@@ -92,6 +88,10 @@ spark_session_id <- function(app_name, master) {
 
   hashed <- digest(object = paste(app_name, master, sep = ""), algo = "crc32")
   hex_to_int(hashed) %% .Machine$integer.max
+}
+
+spark_session_random <- function() {
+  floor(openssl::rand_num(1) * 100000)
 }
 
 abort_shell <- function(message, spark_submit_path, shell_args, output_file, error_file) {
@@ -155,7 +155,7 @@ start_shell <- function(master,
   sessionId <- if (isService)
       spark_session_id(app_name, master)
   else
-    floor(stats::runif(1, min = 0, max = 10000))
+      spark_session_random()
 
   # attempt to connect into an existing gateway
   gatewayInfo <- spark_connect_gateway(gatewayAddress = gatewayAddress,
@@ -275,13 +275,15 @@ start_shell <- function(master,
     }
 
     # create temp file for stdout and stderr
-    output_file <- tempfile(fileext = "_spark.log")
-    error_file <- tempfile(fileext = "_spark.err")
+    output_file <- Sys.getenv("SPARKLYR_LOG_FILE", tempfile(fileext = "_spark.log"))
+    error_file <- Sys.getenv("SPARKLYR_LOG_FILE", tempfile(fileext = "_spark.err"))
 
     console_log <- spark_config_exists(config, "sparklyr.log.console", FALSE)
 
     stdout_param <- if (console_log) "" else output_file
-    stderr_param <-if (console_log) "" else output_file
+    stderr_param <- if (console_log) "" else output_file
+
+    start_time <- floor(as.numeric(Sys.time()) * 1000)
 
     # start the shell (w/ specified additional environment variables)
     env <- unlist(as.list(environment))
@@ -292,6 +294,11 @@ start_shell <- function(master,
         stderr = stderr_param,
         wait = FALSE)
     })
+
+    # for yarn-cluster
+    if (spark_master_is_yarn_cluster(master) && is.null(config[["sparklyr.gateway.address"]])) {
+      gatewayAddress <- config[["sparklyr.gateway.address"]] <- spark_yarn_cluster_get_gateway(config, start_time)
+    }
 
     tryCatch({
       # connect and wait for the service to start
@@ -305,6 +312,15 @@ start_shell <- function(master,
         paste(
           "Failed while connecting to sparklyr to port (",
           gatewayPort,
+          if (spark_master_is_yarn_cluster(master)) {
+            paste0(
+              ") and address (",
+              config[["sparklyr.gateway.address"]]
+            )
+          }
+          else {
+            ""
+          },
           ") for sessionid (",
           sessionId,
           "): ",
@@ -322,7 +338,7 @@ start_shell <- function(master,
   tryCatch({
     # set timeout for socket connection
     timeout <- spark_config_value(config, "sparklyr.backend.timeout", 30 * 24 * 60 * 60)
-    backend <- socketConnection(host = "localhost",
+    backend <- socketConnection(host = gatewayAddress,
                                 port = gatewayInfo$backendPort,
                                 server = FALSE,
                                 blocking = TRUE,

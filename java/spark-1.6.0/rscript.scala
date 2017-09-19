@@ -22,7 +22,12 @@ class Rscript(logger: Logger) {
     tempFile.getAbsolutePath()
   }
 
-  def init(sessionId: Int, backendPort: Int, config: String) = {
+  def init(
+    sessionId: Int,
+    backendPort: Int,
+    config: String,
+    customEnv: Map[String, String]) = {
+
     val sparkConf = SparkEnv.get.conf
     val command: String = sparkConf.get("spark.r.command", "Rscript")
 
@@ -41,6 +46,12 @@ class Rscript(logger: Logger) {
       config
     ))
 
+    val processEnv = processBuilder.environment();
+    for ((k, v) <- customEnv) {
+      logger.log("is adding env var " + k + " and value " + v)
+      processEnv.put(k, v)
+    }
+
     processBuilder.redirectErrorStream(true);
     processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
@@ -53,7 +64,7 @@ class Rscript(logger: Logger) {
     } else {
       logger.logError("failed to complete R process")
 
-      throw new Exception(s"sparklyr worker rscript failure, check worker logs for details.")
+      throw new Exception("sparklyr worker rscript failure with status " + status + ", check worker logs for details.")
     }
   }
 }

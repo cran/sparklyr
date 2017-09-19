@@ -1,5 +1,13 @@
 testthat_spark_connection <- function(version = NULL) {
+  if (exists(".testthat_livy_connection", envir = .GlobalEnv)) {
+    spark_disconnect_all()
+    Sys.sleep(3)
+    livy_service_stop()
+    remove(".testthat_livy_connection", envir = .GlobalEnv)
+  }
+
   if (nrow(spark_installed_versions()) == 0) {
+    options(sparkinstall.verbose = TRUE)
     spark_install("2.1.0")
   }
 
@@ -14,6 +22,11 @@ testthat_spark_connection <- function(version = NULL) {
 
   if (!connected) {
     config <- spark_config()
+
+    options(sparklyr.sanitize.column.names.verbose = TRUE)
+    options(sparklyr.verbose = TRUE)
+    options(sparklyr.na.omit.verbose = TRUE)
+    options(sparklyr.na.action.verbose = TRUE)
 
     version <- version %||% Sys.getenv("SPARK_VERSION", unset = "2.1.0")
     setwd(tempdir())
@@ -44,12 +57,14 @@ skip_unless_verbose <- function(message = NULL) {
 
 test_requires <- function(...) {
 
-  for (pkg in list(...)) {
-    if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
-      fmt <- "test requires '%s' but '%s' is not installed"
-      skip(sprintf(fmt, pkg, pkg))
+  suppressPackageStartupMessages({
+    for (pkg in list(...)) {
+      if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+        fmt <- "test requires '%s' but '%s' is not installed"
+        skip(sprintf(fmt, pkg, pkg))
+      }
     }
-  }
+  })
 
   invisible(TRUE)
 }
@@ -84,4 +99,42 @@ sdf_query_plan <- function(x) {
     invoke("toString") %>%
     strsplit("\n") %>%
     unlist()
+}
+
+testthat_livy_connection <- function(version = NULL) {
+  if (exists(".testthat_spark_connection", envir = .GlobalEnv)) {
+    spark_disconnect_all()
+    remove(".testthat_spark_connection", envir = .GlobalEnv)
+    Sys.sleep(3)
+  }
+
+  if (nrow(spark_installed_versions()) == 0) {
+    spark_install("2.1.0")
+  }
+
+  if (nrow(livy_installed_versions()) == 0) {
+    livy_install("0.3.0", spark_version = "2.1.0")
+  }
+
+  expect_gt(nrow(livy_installed_versions()), 0)
+
+  # generate connection if none yet exists
+  connected <- FALSE
+  if (exists(".testthat_livy_connection", envir = .GlobalEnv)) {
+    sc <- get(".testthat_livy_connection", envir = .GlobalEnv)
+    connected <- TRUE
+  }
+
+  if (!connected) {
+    livy_service_start(
+      version = "0.3.0",
+      spark_version = "2.1.0",
+      stdout = FALSE,
+      stderr = FALSE)
+
+    sc <- spark_connect(master = "http://localhost:8998", method = "livy")
+    assign(".testthat_livy_connection", sc, envir = .GlobalEnv)
+  }
+
+  get(".testthat_livy_connection", envir = .GlobalEnv)
 }

@@ -4,8 +4,7 @@
 \alias{ft_elementwise_product}
 \title{Feature Transformation -- ElementwiseProduct}
 \usage{
-ft_elementwise_product(x, input.col = NULL, output.col = NULL, scaling.col,
-  ...)
+ft_elementwise_product(x, input.col, output.col, scaling.col, ...)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
@@ -37,7 +36,7 @@ Other feature transformation routines: \code{\link{ft_binarizer}},
   \code{\link{ft_one_hot_encoder}},
   \code{\link{ft_quantile_discretizer}},
   \code{\link{ft_regex_tokenizer}},
-  \code{\link{ft_sql_transformer}},
+  \code{\link{ft_stop_words_remover}},
   \code{\link{ft_string_indexer}},
   \code{\link{ft_tokenizer}},
   \code{\link{ft_vector_assembler}},

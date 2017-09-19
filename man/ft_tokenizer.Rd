@@ -4,7 +4,7 @@
 \alias{ft_tokenizer}
 \title{Feature Tranformation -- Tokenizer}
 \usage{
-ft_tokenizer(x, input.col = NULL, output.col = NULL, ...)
+ft_tokenizer(x, input.col, output.col, ...)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
@@ -33,7 +33,7 @@ Other feature transformation routines: \code{\link{ft_binarizer}},
   \code{\link{ft_one_hot_encoder}},
   \code{\link{ft_quantile_discretizer}},
   \code{\link{ft_regex_tokenizer}},
-  \code{\link{ft_sql_transformer}},
+  \code{\link{ft_stop_words_remover}},
   \code{\link{ft_string_indexer}},
   \code{\link{ft_vector_assembler}},
   \code{\link{sdf_mutate}}

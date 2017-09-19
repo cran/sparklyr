@@ -4,8 +4,7 @@
 \alias{ft_one_hot_encoder}
 \title{Feature Transformation -- OneHotEncoder}
 \usage{
-ft_one_hot_encoder(x, input.col = NULL, output.col = NULL,
-  drop.last = TRUE, ...)
+ft_one_hot_encoder(x, input.col, output.col, drop.last = TRUE, ...)
 }
 \arguments{
 \item{x}{An object (usually a \code{spark_tbl}) coercable to a Spark DataFrame.}
@@ -22,7 +21,8 @@ ft_one_hot_encoder(x, input.col = NULL, output.col = NULL,
 One-hot encoding maps a column of label indices to a column of binary
 vectors, with at most a single one-value. This encoding allows algorithms
 which expect continuous features, such as Logistic Regression, to use
-categorical features.
+categorical features. Typically, used with  \code{ft_string_indexer()} to
+index a column first.
 }
 \seealso{
 See \url{http://spark.apache.org/docs/latest/ml-features.html} for
@@ -37,7 +37,7 @@ Other feature transformation routines: \code{\link{ft_binarizer}},
   \code{\link{ft_index_to_string}},
   \code{\link{ft_quantile_discretizer}},
   \code{\link{ft_regex_tokenizer}},
-  \code{\link{ft_sql_transformer}},
+  \code{\link{ft_stop_words_remover}},
   \code{\link{ft_string_indexer}},
   \code{\link{ft_tokenizer}},
   \code{\link{ft_vector_assembler}},
