@@ -107,8 +107,8 @@ spark_connect <- function(master = "local",
   }))
 
   # clean spark_apply per-connection cache
-  if (file.exists(core_spark_apply_bundle_path()))
-    unlink(core_spark_apply_bundle_path())
+  if (dir.exists(spark_apply_bundle_path()))
+    unlink(spark_apply_bundle_path(), recursive = TRUE)
 
   # connect using the specified method
 
@@ -205,7 +205,7 @@ spark_connect <- function(master = "local",
 #' @export
 spark_log.spark_connection <- function(sc, n = 100, filter = NULL, ...) {
   if (.Platform$OS.type == "windows") {
-    log <- file("log4j.spark.log")
+    log <- file("logs/log4j.spark.log")
     lines <- readr::read_lines(log)
 
     tryCatch(function() {
