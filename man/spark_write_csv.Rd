@@ -12,7 +12,7 @@ spark_write_csv(x, path, header = TRUE, delimiter = ",", quote = "\\"",
 \item{x}{A Spark DataFrame or dplyr operation}
 
 \item{path}{The path to the file. Needs to be accessible from the cluster.
-Supports the \samp{"hdfs://"}, \samp{"s3n://"} and \samp{"file://"} protocols.}
+Supports the \samp{"hdfs://"}, \samp{"s3a://"} and \samp{"file://"} protocols.}
 
 \item{header}{Should the first row of data be used as a header? Defaults to \code{TRUE}.}
 
@@ -20,7 +20,7 @@ Supports the \samp{"hdfs://"}, \samp{"s3n://"} and \samp{"file://"} protocols.}
 
 \item{quote}{The character used as a quote, defaults to \code{"hdfs://"}.}
 
-\item{escape}{The chatacter used to escape other characters, defaults to \code{\\}.}
+\item{escape}{The character used to escape other characters, defaults to \code{\\}.}
 
 \item{charset}{The character set, defaults to \code{"UTF-8"}.}
 
@@ -28,9 +28,14 @@ Supports the \samp{"hdfs://"}, \samp{"s3n://"} and \samp{"file://"} protocols.}
 
 \item{options}{A list of strings with additional options.}
 
-\item{mode}{Specifies the behavior when data or table already exists.}
+\item{mode}{A \code{character} element. Specifies the behavior when data or
+  table already exists. Supported values include: 'error', 'append', 'overwrite' and
+  ignore. Notice that 'overwrite' will also change the column structure.
 
-\item{partition_by}{Partitions the output by the given columns on the file system.}
+  For more details see also \url{http://spark.apache.org/docs/latest/sql-programming-guide.html#save-modes}
+  for your version of Spark.}
+
+\item{partition_by}{A \code{character} vector. Partitions the output by the given columns on the file system.}
 
 \item{...}{Optional arguments; currently unused.}
 }
@@ -42,6 +47,7 @@ Other Spark serialization routines: \code{\link{spark_load_table}},
   \code{\link{spark_read_csv}},
   \code{\link{spark_read_jdbc}},
   \code{\link{spark_read_json}},
+  \code{\link{spark_read_libsvm}},
   \code{\link{spark_read_parquet}},
   \code{\link{spark_read_source}},
   \code{\link{spark_read_table}},
@@ -54,4 +60,3 @@ Other Spark serialization routines: \code{\link{spark_load_table}},
   \code{\link{spark_write_table}},
   \code{\link{spark_write_text}}
 }
-\concept{Spark serialization routines}

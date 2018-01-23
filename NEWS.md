@@ -1,15 +1,80 @@
+# Sparklyr 0.7 (UNRELEASED)
+
+- Added support for Spark 2.2.1.
+
+- Switched `copy_to` serializer to use Scala implementation, this change can be
+  reverted by setting the `sparklyr.copy.serializer` option to `csv_file`.
+
+- Added support for `spark_web()` for Livy and Databricks connections when
+  using Spark 2.X.
+
+- Fixed `SIGPIPE` error under `spark_connect()` immediately after
+  a `spark_disconnect()` operation.
+
+- `spark_web()` is is more reliable under Spark 2.X by making use of a new API
+  to programmatically find the right address.
+
+- Added support in `dbWriteTable()` for `temporary = FALSE` to allow persisting
+  table across connections. Changed default value for `temporary` to `TRUE` to match
+  `DBI` specification, for compatibility, default value can be reverted back to 
+  `FALSE` using the `sparklyr.dbwritetable.temp` option.
+
+- `ncol()` now returns the number of columns instead of `NA`, and `nrow()` now
+  returns `NA_real_`.
+
+- Added support to collect `VectorUDT` column types with nested arrays.
+
+- Fixed issue in which connecting to Livy would fail due to long user names
+  or long passwords.
+
+- Fixed error in the Spark connection dialog for clusters using a proxy.
+
+- Improved support for Spark 2.X under Cloudera clusters by prioritizing
+use of `spark2-submit` over `spark-submit`.
+
+- Livy new connection dialog now prompts for password using
+`rstudioapi::askForPassword()`.
+
+- Added `schema` parameter to `spark_read_parquet()` that enables reading
+a subset of the schema to increase performance.
+
+- Implemented `sdf_describe()` to easily compute summary statistics for
+data frames.
+
+- Fixed data frames with dates in `spark_apply()` retrieved as `Date` instead
+  of doubles.
+
+- Added support to use `invoke()` with arrays of POSIXlt and POSIXct.
+
+- Added support for `context` parameter in `spark_apply()` to allow callers to
+  pass additional contextual information to the `f()` closure.
+
+- Implemented workaround to support in `spark_write_table()` for
+  `mode = 'append'`.
+
+- Various ML improvements, including support for pipelines, additional algorithms,
+  hyper-parameter tuning, and better model persistence.
+
+- Added `spark_read_libsvm()` for reading libsvm files.
+
+- Added support for separating struct columns in `sdf_separate_column()`.
+
+- Fixed collection of `short`, `float` and `byte` to properly return NAs.
+
+- Added `sparklyr.collect.datechars` option to enable collecting `DateType` and
+  `TimestampTime` as `characters` to support compatibility with previos versions.
+
+- Fixed collection of `DateType` and `TimestampTime` from `character` to 
+  proper `Date` and `POSIXct` types.
 
 # Sparklyr 0.6.4
-
-- Added support for `spark_apply_bundle()` to support `spark_apply()` under
-  `yarn-cluster` mode.
 
 - Added support for HTTPS for `yarn-cluster` which is activated by setting
   `yarn.http.policy` to `HTTPS_ONLY` in `yarn-site.xml`.
 
 - Added support for `sparklyr.yarn.cluster.accepted.timeout` under `yarn-cluster`
   to allow users to wait for resources under cluster with high waiting times.
-
+  
 - Fix to `spark_apply()` when package distribution deadlock triggers in 
   environments where multiple executors run under the same node.
 
@@ -19,7 +84,7 @@
 - Added support in`yarn-cluster` for `sparklyr.yarn.cluster.lookup.prefix`,
   `sparklyr.yarn.cluster.lookup.username` and `sparklyr.yarn.cluster.lookup.byname`
   to control the new application lookup behavior.
-
+  
 # Sparklyr 0.6.3
 
 - Enabled support for Java 9 for clusters configured with 
@@ -100,7 +165,8 @@
 - Fix connection from closing when `invoke()` attempts to use a class
   with a method that contains a reference to an undefined class.
 
-- Implemented all tuning options from Spark ML for `ml_random_forest()`, `ml_gradient_boosted_trees()`, and `ml_decision_tree()`.
+- Implemented all tuning options from Spark ML for `ml_random_forest()`,
+  `ml_gradient_boosted_trees()`, and `ml_decision_tree()`.
 
 - Avoid tasks failing under `spark_apply()` and multiple  concurrent
   partitions running while selecting backend port.
@@ -124,12 +190,17 @@
   
 - Fix `compute()` to trigger refresh of the connections view.
 
-- Added a `k` argument to `ml_pca()` to enable specification of number of principal
-  components to extract. Also implemented `sdf_project()` to project datasets using
-  the results of `ml_pca()` models.
+- Added a `k` argument to `ml_pca()` to enable specification of number of
+  principal components to extract. Also implemented `sdf_project()` to project
+  datasets using the results of `ml_pca()` models.
 
 - Added support for additional livy session creation parameters using
   the `livy_config()` function.
+
+# Sparklyr 0.6.2
+
+- Fix connection_spark_shinyapp() under RStudio 1.1 to avoid error while
+  listing Spark installation options for the first time.
 
 # Sparklyr 0.6.1
 
@@ -446,7 +517,8 @@
 
 - Fix to `spark_connect` affecting Windows users and Spark 1.6.x.
 
-- Fix to Livy connections which would cause connections to fail while connection is on 'waiting' state.
+- Fix to Livy connections which would cause connections to fail while connection
+  is on 'waiting' state.
 
 # Sparklyr 0.5.0
 

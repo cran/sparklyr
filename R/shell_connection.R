@@ -178,11 +178,11 @@ start_shell <- function(master,
 
       app_jar <- spark_default_app_jar(versionSparkHome)
       if (typeof(app_jar) != "character" || nchar(app_jar) == 0) {
-        stop("sparklyr does not currently support Spark version: ", versionSparkHome)
+        stop("sparklyr does not support Spark version: ", versionSparkHome)
       }
 
       if (compareVersion(versionSparkHome, "1.6") < 0) {
-        warning("sparklyr does not currently support Spark version: ", versionSparkHome)
+        warning("sparklyr does not support Spark version: ", versionSparkHome)
       }
 
       app_jar <- shQuote(normalizePath(app_jar, mustWork = FALSE), type = shQuoteType)
@@ -207,10 +207,20 @@ start_shell <- function(master,
 
     # determine path to spark_submit
     spark_submit <- switch(.Platform$OS.type,
-                           unix = "spark-submit",
-                           windows = "spark-submit2.cmd"
-    )
-    spark_submit_path <- normalizePath(file.path(spark_home, "bin", spark_submit))
+                           unix = c("spark2-submit", "spark-submit"),
+                           windows = "spark-submit2.cmd")
+
+    spark_submit_paths <- unlist(lapply(
+      spark_submit,
+      function(submit_path) {
+        normalizePath(file.path(spark_home, "bin", submit_path), mustWork = FALSE)
+      }))
+
+    if (!any(file.exists(spark_submit_paths))) {
+      stop("Failed to find spark-submit under '", spark_home, "', please verify SPARK_HOME.")
+    }
+
+    spark_submit_path <- spark_submit_paths[[which(file.exists(spark_submit_paths))[[1]]]]
 
     # resolve extensions
     spark_version <- numeric_version(
@@ -235,8 +245,8 @@ start_shell <- function(master,
         length(grep(config[["sparklyr.csv.embedded"]], spark_version)) > 0) {
       jars <- c(
         jars,
-        normalizePath(system.file(file.path("java", "spark-csv_2.11-1.3.0.jar"), package = "sparklyr")),
-        normalizePath(system.file(file.path("java", "commons-csv-1.1.jar"), package = "sparklyr")),
+        normalizePath(system.file(file.path("java", "spark-csv_2.11-1.5.0.jar"), package = "sparklyr")),
+        normalizePath(system.file(file.path("java", "commons-csv-1.5.jar"), package = "sparklyr")),
         normalizePath(system.file(file.path("java", "univocity-parsers-1.5.1.jar"), package = "sparklyr"))
       )
     }
@@ -437,16 +447,16 @@ spark_log.spark_shell_connection <- function(sc, n = 100, filter = NULL, ...) {
 spark_web.spark_shell_connection <- function(sc, ...) {
   lines <- spark_log(sc, n = 200)
 
-  uiLine <- grep("Started SparkUI at ", lines, perl=TRUE, value=TRUE)
+  uiLine <- grep("Started SparkUI at ", lines, perl = TRUE, value = TRUE)
   if (length(uiLine) > 0) {
     matches <- regexpr("http://.*", uiLine)
-    match <-regmatches(uiLine, matches)
+    match <- regmatches(uiLine, matches)
     if (length(match) > 0) {
       return(structure(match, class = "spark_web_url"))
     }
   }
 
-  uiLine <- grep(".*Bound SparkUI to.*", lines, perl=TRUE, value=TRUE)
+  uiLine <- grep(".*Bound SparkUI to.*", lines, perl = TRUE, value = TRUE)
   if (length(uiLine) > 0) {
     matches <- regexec(".*Bound SparkUI to.*and started at (http.*)", uiLine)
     match <- regmatches(uiLine, matches)

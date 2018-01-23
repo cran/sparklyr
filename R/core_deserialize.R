@@ -1,22 +1,3 @@
-# nolint start
-# Type mapping from Java to R
-#
-# void -> NULL
-# Int -> integer
-# String -> character
-# Boolean -> logical
-# Float -> double
-# Double -> double
-# Long -> double
-# Array[Byte] -> raw
-# Date -> Date
-# Time -> POSIXct
-#
-# Array[T] -> list()
-# Object -> jobj
-#
-# nolint end
-
 readObject <- function(con) {
   # Read type first
   type <- readType(con)
@@ -49,6 +30,11 @@ readString <- function(con) {
   string
 }
 
+readDateArray <- function(con, n = 1) {
+  r <- readTime(con, n)
+  if (getOption("sparklyr.collect.datechars", FALSE)) r else as.Date(r)
+}
+
 readInt <- function(con, n = 1) {
   readBin(con, integer(), n = n, endian = "big")
 }
@@ -71,20 +57,29 @@ readDate <- function(con) {
 
 readTime <- function(con, n = 1) {
   t <- readDouble(con, n)
-  as.POSIXct(t, origin = "1970-01-01")
+  timeNA <- as.POSIXct(0, origin = "1970-01-01", tz = "UTC")
+
+  r <- as.POSIXct(t, origin = "1970-01-01", tz = "UTC")
+  if (getOption("sparklyr.collect.datechars", FALSE)) as.character(r) else {
+    r[r == timeNA] <- as.POSIXct(NA)
+    r
+  }
 }
 
 readArray <- function(con) {
   type <- readType(con)
   len <- readInt(con)
 
-  # short-circuit for reading arrays of double, int, logical
   if (type == "d") {
     return(readDouble(con, n = len))
   } else if (type == "i") {
     return(readInt(con, n = len))
   } else if (type == "b") {
     return(readBoolean(con, n = len))
+  } else if (type == "t") {
+    return(readTime(con, n = len))
+  } else if (type == "D") {
+    return(readDateArray(con, n = len))
   }
 
   if (len > 0) {
@@ -151,58 +146,4 @@ readStruct <- function(con) {
 readRaw <- function(con) {
   dataLen <- readInt(con)
   readBin(con, raw(), as.integer(dataLen), endian = "big")
-}
-
-readRawLen <- function(con, dataLen) {
-  readBin(con, raw(), as.integer(dataLen), endian = "big")
-}
-
-readDeserialize <- function(con) {
-  # We have two cases that are possible - In one, the entire partition is
-  # encoded as a byte array, so we have only one value to read. If so just
-  # return firstData
-  dataLen <- readInt(con)
-  firstData <- unserialize(
-    readBin(con, raw(), as.integer(dataLen), endian = "big"))
-
-  # Else, read things into a list
-  dataLen <- readInt(con)
-  if (length(dataLen) > 0 && dataLen > 0) {
-    data <- list(firstData)
-    while (length(dataLen) > 0 && dataLen > 0) {
-      data[[length(data) + 1L]] <- unserialize(
-        readBin(con, raw(), as.integer(dataLen), endian = "big"))
-      dataLen <- readInt(con)
-    }
-    unlist(data, recursive = FALSE)
-  } else {
-    firstData
-  }
-}
-
-readMultipleObjects <- function(inputCon) {
-  # readMultipleObjects will read multiple continuous objects from
-  # a DataOutputStream. There is no preceding field telling the count
-  # of the objects, so the number of objects varies, we try to read
-  # all objects in a loop until the end of the stream.
-  data <- list()
-  while (TRUE) {
-    # If reaching the end of the stream, type returned should be "".
-    type <- readType(inputCon)
-    if (type == "") {
-      break
-    }
-    data[[length(data) + 1L]] <- readTypedObject(inputCon, type)
-  }
-  data # this is a list of named lists now
-}
-
-readRowList <- function(obj) {
-  # readRowList is meant for use inside an lapply. As a result, it is
-  # necessary to open a standalone connection for the row and consume
-  # the numCols bytes inside the read function in order to correctly
-  # deserialize the row.
-  rawObj <- rawConnection(obj, "r+")
-  on.exit(close(rawObj))
-  readObject(rawObj)
 }

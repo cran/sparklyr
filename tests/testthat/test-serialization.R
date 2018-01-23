@@ -84,8 +84,10 @@ test_that("data.frames with many columns survive roundtrip", {
 test_that("data.frames with many columns don't cause Java StackOverflows", {
   skip_on_cran()
 
-  n <- 5000
-  df <- matrix(0, ncol = 5000, nrow = 2) %>% as_data_frame()
+  version <- Sys.getenv("SPARK_VERSION", unset = "2.2.0")
+
+  n <- if (version >= "2.0.0") 500 else 5000
+  df <- matrix(0, ncol = n, nrow = 2) %>% as_data_frame()
   sdf <- copy_to(sc, df, overwrite = TRUE)
 
   # the above failed with a Java StackOverflow with older versions of sparklyr
@@ -96,9 +98,8 @@ test_that("'sdf_predict()', 'predict()' return same results", {
   test_requires("dplyr")
 
   model <- flights_tbl %>%
+    na.omit() %>%
     ml_decision_tree(sched_dep_time ~ dep_time)
-
-  id <- model$model.parameters$id
 
   predictions <- sdf_predict(model)
   n1 <- spark_dataframe(predictions) %>% invoke("count")
@@ -107,13 +108,11 @@ test_that("'sdf_predict()', 'predict()' return same results", {
   expect_equal(n1, n2)
 
   lhs <- predictions %>%
-    arrange(!!model$model.parameters$id) %>%
     sdf_read_column("prediction")
 
   rhs <- predict(model)
 
   expect_identical(lhs, rhs)
-
 })
 
 test_that("copy_to() succeeds when last column contains missing / empty values", {
@@ -130,3 +129,150 @@ test_that("copy_to() succeeds when last column contains missing / empty values",
   expect_equal(sdf_ncol(df_tbl), 2)
 })
 
+test_that("collect() can retrieve all data types correctly", {
+  # https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Types#LanguageManualTypes
+  library(dplyr)
+
+  sdate <- "from_unixtime(unix_timestamp('01-01-2010' , 'dd-MM-yyyy'))"
+  rdate <- as.Date("01-01-2010", "%d-%m-%Y") %>% as.character()
+  rtime <- as.POSIXct(1, origin = "1970-01-01", tz = "UTC") %>% as.character()
+
+  hive_type <- tibble::frame_data(
+    ~stype,     ~svalue,       ~rtype,   ~rvalue,
+    "tinyint",       "1",   "integer",       "1",
+    "smallint",      "1",   "integer",       "1",
+    "integer",       "1",   "integer",       "1",
+    "bigint",        "1",   "numeric",       "1",
+    "float",         "1",   "numeric",       "1",
+    "double",        "1",   "numeric",       "1",
+    "decimal",       "1",   "numeric",       "1",
+    "timestamp",     "1",   "POSIXct",     rtime,
+    "date",        sdate,      "Date",     rdate,
+    "string",          1, "character",       "1",
+    "varchar(10)",     1, "character",       "1",
+    "char(10)",        1, "character",       "1",
+    "boolean",    "true",   "logical",    "TRUE"
+  )
+
+  if (spark_version(sc) < "2.2.0") {
+    hive_type <- hive_type %>% filter(stype != "integer")
+  }
+
+  spark_query <- hive_type %>%
+    mutate(
+      query = paste0("cast(", svalue, " as ", stype, ") as ", gsub("\\(|\\)", "", stype), "_col")
+    ) %>%
+    pull(query) %>%
+    paste(collapse = ", ") %>%
+    paste("SELECT", .)
+
+  spark_types <- DBI::dbGetQuery(sc, spark_query) %>%
+    lapply(function(e) class(e)[[1]]) %>%
+    as.character()
+
+  expect_equal(
+    spark_types,
+    hive_type %>% pull(rtype)
+  )
+
+  spark_results <- DBI::dbGetQuery(sc, spark_query) %>%
+    lapply(as.character)
+  names(spark_results) <- NULL
+  spark_results <- spark_results %>% unlist()
+
+  expect_equal(
+    spark_results,
+    hive_type %>% pull(rvalue)
+  )
+})
+
+test_that("collect() can retrieve NULL data types as NAs", {
+  library(dplyr)
+
+  hive_type <- tibble::frame_data(
+        ~stype,        ~rtype,
+     "tinyint",     "integer",
+    "smallint",     "integer",
+     "integer",     "integer",
+      "bigint",     "numeric",
+       "float",     "numeric",
+      "double",     "numeric",
+     "decimal",     "numeric",
+   "timestamp",     "POSIXct",
+        "date",        "Date",
+      "string",   "character",
+ "varchar(10)",   "character",
+    "char(10)",   "character"
+  )
+
+  if (spark_version(sc) < "2.2.0") {
+    hive_type <- hive_type %>% filter(stype != "integer")
+  }
+
+  spark_query <- hive_type %>%
+    mutate(
+      query = paste0("cast(NULL as ", stype, ") as ", gsub("\\(|\\)", "", stype), "_col")
+    ) %>%
+    pull(query) %>%
+    paste(collapse = ", ") %>%
+    paste("SELECT", .)
+
+  spark_types <- DBI::dbGetQuery(sc, spark_query) %>%
+    lapply(function(e) class(e)[[1]]) %>%
+    as.character()
+
+  expect_equal(
+    spark_types,
+    hive_type %>% pull(rtype)
+  )
+
+  spark_results <- DBI::dbGetQuery(sc, spark_query)
+
+  lapply(names(spark_results), function(e) {
+    expect_true(is.na(spark_results[[e]]), paste(e, "expected to be NA"))
+  })
+})
+
+test_that("invoke() can roundtrip POSIXlt fields", {
+  invoke_static(
+    sc,
+    "sparklyr.Test",
+    "roundtrip",
+    list(
+      as.POSIXlt(Sys.time(), "GMT"),
+      as.POSIXlt(Sys.time(), "GMT")
+    )
+  )
+})
+
+test_that("invoke() can roundtrip collect fields", {
+  invoke_static(
+    sc,
+    "sparklyr.Test",
+    "roundtrip",
+    list(
+      as.POSIXlt(Sys.time(), "GMT"),
+      as.POSIXlt(Sys.time(), "GMT")
+    )
+  )
+})
+
+test_that("collect() can retrieve as.POSIXct fields with timezones", {
+  tz_entries <- list(
+    as.POSIXct("2018-01-01", tz = "UTC"),
+    as.POSIXct("2018-01-01", tz = "GMT"),
+    as.POSIXct("2018-01-01", tz = "America/Los_Angeles"),
+    as.POSIXct("2018-01-01 03:33", tz = "America/Los_Angeles"),
+    as.POSIXct("2018-01-01 03:33", tz = "Europe/Brussels")
+  )
+
+  collected <- sdf_len(sc, 1) %>%
+    spark_apply(function(e, c) c, context = list(tzs = tz_entries)) %>%
+    collect() %>%
+    as.list() %>%
+    unname()
+
+  expect_true(
+    all.equal(tz_entries, collected)
+  )
+})

@@ -95,31 +95,31 @@ object Utils {
     }}
   }
 
+  def collectImplFloat(local: Array[Row], idx: Integer): Array[Double]  = {
+    local.map{row => {
+      val el = row(idx)
+      if (el.isInstanceOf[Float]) el.asInstanceOf[Float].toDouble else scala.Double.NaN
+    }}
+  }
+
+  def collectImplByte(local: Array[Row], idx: Integer): Array[Int] = {
+    local.map{row => {
+      val el = row(idx)
+      if (el.isInstanceOf[Byte]) el.asInstanceOf[Byte].toInt else scala.Int.MinValue
+    }}
+  }
+
+  def collectImplShort(local: Array[Row], idx: Integer): Array[Int] = {
+    local.map{row => {
+      val el = row(idx)
+      if (el.isInstanceOf[Short]) el.asInstanceOf[Short].toInt else scala.Int.MinValue
+    }}
+  }
+
   def collectImplLong(local: Array[Row], idx: Integer) = {
     local.map{row => {
       val el = row(idx)
       if (el.isInstanceOf[Long]) el.asInstanceOf[Long].toDouble else scala.Double.NaN
-    }}
-  }
-
-  def collectImplByte(local: Array[Row], idx: Integer) = {
-    local.map{row => {
-      val el = row(idx)
-      if (el.isInstanceOf[Byte]) el.asInstanceOf[Byte] else scala.Byte.MinValue
-    }}
-  }
-
-  def collectImplFloat(local: Array[Row], idx: Integer) = {
-    local.map{row => {
-      val el = row(idx)
-      if (el.isInstanceOf[Float]) el.asInstanceOf[Float] else scala.Float.MinValue
-    }}
-  }
-
-  def collectImplShort(local: Array[Row], idx: Integer) = {
-    local.map{row => {
-      val el = row(idx)
-      if (el.isInstanceOf[Short]) el.asInstanceOf[Short] else scala.Short.MinValue
     }}
   }
 
@@ -156,8 +156,23 @@ object Utils {
       val el = row(idx)
       el match {
         case null => Array.empty
-        case _    => el.getClass.getDeclaredMethod("toArray").invoke(el)
+        case _: Seq[_] => el.asInstanceOf[Seq[Any]].toArray
+        case _ => el.getClass.getDeclaredMethod("toArray").invoke(el)
       }
+    }}
+  }
+
+  def collectImplTimestamp(local: Array[Row], idx: Integer) = {
+    local.map{row => {
+      val el = row(idx)
+      if (el.isInstanceOf[java.sql.Timestamp]) el.asInstanceOf[java.sql.Timestamp] else new java.sql.Timestamp(0)
+    }}
+  }
+
+  def collectImplDate(local: Array[Row], idx: Integer) = {
+    local.map{row => {
+      val el = row(idx)
+      if (el.isInstanceOf[java.sql.Date]) el.asInstanceOf[java.sql.Date] else new java.sql.Date(0)
     }}
   }
 
@@ -182,9 +197,9 @@ object Utils {
       case "ShortType"            => collectImplShort(local, idx)
       case "Decimal"              => collectImplForceString(local, idx, separator)
 
-      case "TimestampType"        => collectImplForceString(local, idx, separator)
+      case "TimestampType"        => collectImplTimestamp(local, idx)
       case "CalendarIntervalType" => collectImplForceString(local, idx, separator)
-      case "DateType"             => collectImplForceString(local, idx, separator)
+      case "DateType"             => collectImplDate(local, idx)
 
       case ReDecimalType(_)       => collectImplDecimal(local, idx)
       case ReVectorType(_)        => collectImplVector(local, idx)
@@ -254,10 +269,43 @@ object Utils {
     df.select(colexprs: _*)
   }
 
+  def separateColumnStruct(df: DataFrame,
+                          column: String,
+                          names: Array[String],
+                          indices: Array[Int],
+                          intoIsSet: Boolean) =
+  {
+    // extract columns of interest
+    var col = df.apply(column)
+    var colexprs = df.columns.map(df.apply(_))
+
+    val fieldNames: Array[String] = df
+      .select(column)
+      .schema
+      .fields
+      .flatMap(f => f.dataType match { case struct: StructType => struct.fields})
+      .map(_.name)
+
+    val outNames: Array[String] = if (intoIsSet) names else
+      fieldNames
+
+    // append column expressions that separate from
+    // desired column
+    (0 until outNames.length).map{i => {
+      val name = outNames(i)
+      val index = indices(i)
+      colexprs :+= col.getItem(fieldNames(index)).as(name)
+    }}
+
+    // select with these column expressions
+    df.select(colexprs: _*)
+  }
+
   def separateColumn(df: DataFrame,
                      column: String,
                      names: Array[String],
-                     indices: Array[Int]) =
+                     indices: Array[Int],
+                     intoIsSet: Boolean) =
   {
     // extract column of interest
     val col = df.apply(column)
@@ -270,6 +318,7 @@ object Utils {
     typeName match {
       case "array"  => separateColumnArray(df, column, names, indices)
       case "vector" => separateColumnVector(df, column, names, indices)
+      case "struct" => separateColumnStruct(df, column, names, indices, intoIsSet)
       case _        => {
         throw new IllegalArgumentException("unhandled type '" + typeName + "'")
       }
@@ -333,9 +382,10 @@ object Utils {
         val value = r(idx)
 
         column match {
-          case "integer"  => if (Try(value.toInt).isSuccess) value.toInt else null.asInstanceOf[Int]
-          case "double"  => if (Try(value.toDouble).isSuccess) value.toDouble else null.asInstanceOf[Double]
-          case "logical" => if (Try(value.toBoolean).isSuccess) value.toBoolean else null.asInstanceOf[Boolean]
+          case "integer"   => if (Try(value.toInt).isSuccess) value.toInt else null.asInstanceOf[Int]
+          case "double"    => if (Try(value.toDouble).isSuccess) value.toDouble else null.asInstanceOf[Double]
+          case "logical"   => if (Try(value.toBoolean).isSuccess) value.toBoolean else null.asInstanceOf[Boolean]
+          case "timestamp" => if (Try(new java.sql.Timestamp(value.toLong * 1000)).isSuccess) new java.sql.Timestamp(value.toLong * 1000) else null.asInstanceOf[java.sql.Timestamp]
           case _ => value
         }
       })
@@ -351,11 +401,10 @@ object Utils {
    */
 
   def addSequentialIndex(
-    sc: SparkContext,
     df: DataFrame,
     from: Int,
     id: String) : DataFrame = {
-      val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+      val sqlContext = df.sqlContext
       sqlContext.createDataFrame(
         df.rdd.zipWithIndex.map {
           case (row: Row, i: Long) => Row.fromSeq(row.toSeq :+ (i.toDouble + from.toDouble))
@@ -389,6 +438,13 @@ object Utils {
   def unboxString(x: Option[String]) = x match {
     case Some(s) => s
     case None => ""
+  }
+
+  def getAncestry(obj: AnyRef, simpleName: Boolean = true): Array[String] = {
+    def supers(cl: Class[_]): List[Class[_]] = {
+      if (cl == null) Nil else cl :: supers(cl.getSuperclass)
+    }
+  supers(obj.getClass).map(if (simpleName) _.getSimpleName else _.getName).toArray
   }
 }
 

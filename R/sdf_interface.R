@@ -341,7 +341,6 @@ sdf_with_sequential_id <- function(x, id = "id", from = 1L) {
   transformed <- invoke_static(sc,
                                "sparklyr.Utils",
                                "addSequentialIndex",
-                               spark_context(sc),
                                sdf,
                                from,
                                id)
@@ -364,7 +363,7 @@ sdf_with_sequential_id <- function(x, id = "id", from = 1L) {
 sdf_last_index <- function(x, id = "id") {
 
   sdf <- x %>%
-    dplyr::transmute(!!! sym(id) := as.numeric(!!! sym(id))) %>%
+    dplyr::transmute(!!sym(id) := as.numeric(!!sym(id))) %>%
     spark_dataframe()
   sc <- spark_connection(sdf)
   ensure_scalar_character(id)
@@ -539,5 +538,25 @@ sdf_coalesce <- function(x, partitions) {
 
   sdf %>%
     invoke("coalesce", partitions) %>%
+    sdf_register()
+}
+
+#' Compute summary statistics for columns of a data frame
+#'
+#' @param x An object coercible to a Spark DataFrame
+#' @param cols Columns to compute statistics for, given as a character vector
+#' @export
+sdf_describe <- function(x, cols = colnames(x)) {
+  in_df <- cols %in% colnames(x)
+  if (any(!in_df)) {
+    msg <- paste0("The following columns are not in the data frame: ",
+                  paste0(cols[which(!in_df)], collapse = ", "))
+    stop(msg)
+  }
+  cols <- lapply(cols, ensure_scalar_character)
+
+  x %>%
+    spark_dataframe() %>%
+    invoke("describe", cols) %>%
     sdf_register()
 }

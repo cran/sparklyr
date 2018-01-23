@@ -1,0 +1,545 @@
+18/01/18 17:08:40 INFO SparkContext: Running Spark version 2.2.0
+18/01/18 17:08:40 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+18/01/18 17:08:40 INFO SparkContext: Submitted application: other
+18/01/18 17:08:40 INFO SecurityManager: Changing view acls to: javierluraschi
+18/01/18 17:08:40 INFO SecurityManager: Changing modify acls to: javierluraschi
+18/01/18 17:08:40 INFO SecurityManager: Changing view acls groups to: 
+18/01/18 17:08:40 INFO SecurityManager: Changing modify acls groups to: 
+18/01/18 17:08:40 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+18/01/18 17:08:40 INFO Utils: Successfully started service 'sparkDriver' on port 61702.
+18/01/18 17:08:40 INFO SparkEnv: Registering MapOutputTracker
+18/01/18 17:08:40 INFO SparkEnv: Registering BlockManagerMaster
+18/01/18 17:08:40 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+18/01/18 17:08:40 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+18/01/18 17:08:40 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-54fda0a2-fcbf-4c4a-afcb-ae8dc0ca2602
+18/01/18 17:08:40 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+18/01/18 17:08:40 INFO SparkEnv: Registering OutputCommitCoordinator
+18/01/18 17:08:41 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+18/01/18 17:08:41 WARN Utils: Service 'SparkUI' could not bind on port 4041. Attempting port 4042.
+18/01/18 17:08:41 INFO Utils: Successfully started service 'SparkUI' on port 4042.
+18/01/18 17:08:41 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4042
+18/01/18 17:08:41 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.2-2.11.jar at spark://127.0.0.1:61702/jars/sparklyr-2.2-2.11.jar with timestamp 1516324121091
+18/01/18 17:08:41 INFO Executor: Starting executor ID driver on host localhost
+18/01/18 17:08:41 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 61711.
+18/01/18 17:08:41 INFO NettyBlockTransferService: Server created on 127.0.0.1:61711
+18/01/18 17:08:41 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+18/01/18 17:08:41 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 61711, None)
+18/01/18 17:08:41 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:61711 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 61711, None)
+18/01/18 17:08:41 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 61711, None)
+18/01/18 17:08:41 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 61711, None)
+18/01/18 17:08:41 INFO SparkContext: Invoking stop() from shutdown hook
+18/01/18 17:08:41 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4042
+18/01/18 17:08:41 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+18/01/18 17:08:41 INFO MemoryStore: MemoryStore cleared
+18/01/18 17:08:41 INFO BlockManager: BlockManager stopped
+18/01/18 17:08:41 INFO BlockManagerMaster: BlockManagerMaster stopped
+18/01/18 17:08:41 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+18/01/18 17:08:41 INFO SparkContext: Successfully stopped SparkContext
+18/01/18 17:08:41 INFO ShutdownHookManager: Shutdown hook called
+18/01/18 17:08:41 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-3af90102-2855-4c20-b5e3-7078a385706b
+18/01/18 17:14:26 INFO RSCDriver: Connecting to: 192.168.154.1:62775
+18/01/18 17:14:26 INFO RSCDriver: Starting RPC server...
+18/01/18 17:14:26 WARN RSCConf: Your hostname, 192.168.154.1, resolves to a loopback address, but we couldn't find any external IP address!
+18/01/18 17:14:26 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+18/01/18 17:14:27 INFO RSCDriver: Received job request 1710d87c-1482-4d31-9c03-a23a3504f4c2
+18/01/18 17:14:27 INFO RSCDriver: SparkContext not yet up, queueing job request.
+18/01/18 17:14:29 INFO SparkContext: Running Spark version 2.2.0
+18/01/18 17:14:30 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+18/01/18 17:14:30 INFO SparkContext: Submitted application: livy-session-0
+18/01/18 17:14:30 INFO SecurityManager: Changing view acls to: javierluraschi
+18/01/18 17:14:30 INFO SecurityManager: Changing modify acls to: javierluraschi
+18/01/18 17:14:30 INFO SecurityManager: Changing view acls groups to: 
+18/01/18 17:14:30 INFO SecurityManager: Changing modify acls groups to: 
+18/01/18 17:14:30 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+18/01/18 17:14:30 INFO Utils: Successfully started service 'sparkDriver' on port 62780.
+18/01/18 17:14:30 INFO SparkEnv: Registering MapOutputTracker
+18/01/18 17:14:30 INFO SparkEnv: Registering BlockManagerMaster
+18/01/18 17:14:30 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+18/01/18 17:14:30 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+18/01/18 17:14:30 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-17dc768d-87c5-48ba-aa10-d5da1bb98905
+18/01/18 17:14:30 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+18/01/18 17:14:30 INFO SparkEnv: Registering OutputCommitCoordinator
+18/01/18 17:14:30 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+18/01/18 17:14:30 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://192.168.154.1:4040
+18/01/18 17:14:30 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://192.168.154.1:62780/jars/livy-rsc-0.3.0.jar with timestamp 1516324470910
+18/01/18 17:14:30 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://192.168.154.1:62780/jars/netty-all-4.0.29.Final.jar with timestamp 1516324470911
+18/01/18 17:14:30 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://192.168.154.1:62780/jars/livy-api-0.3.0.jar with timestamp 1516324470911
+18/01/18 17:14:30 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://192.168.154.1:62780/jars/livy-core_2.11-0.3.0.jar with timestamp 1516324470912
+18/01/18 17:14:30 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://192.168.154.1:62780/jars/livy-repl_2.11-0.3.0.jar with timestamp 1516324470912
+18/01/18 17:14:30 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://192.168.154.1:62780/jars/commons-codec-1.9.jar with timestamp 1516324470912
+18/01/18 17:14:30 INFO Executor: Starting executor ID driver on host localhost
+18/01/18 17:14:30 INFO Executor: Using REPL class URI: spark://192.168.154.1:62780/classes
+18/01/18 17:14:30 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 62781.
+18/01/18 17:14:30 INFO NettyBlockTransferService: Server created on 192.168.154.1:62781
+18/01/18 17:14:30 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+18/01/18 17:14:30 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.154.1, 62781, None)
+18/01/18 17:14:30 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.154.1:62781 with 366.3 MB RAM, BlockManagerId(driver, 192.168.154.1, 62781, None)
+18/01/18 17:14:30 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.154.1, 62781, None)
+18/01/18 17:14:30 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 192.168.154.1, 62781, None)
+18/01/18 17:14:31 INFO SharedState: loading hive config file: file:/Users/javierluraschi/spark/spark-2.2.0-bin-hadoop2.7/conf/hive-site.xml
+18/01/18 17:14:31 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir ('file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/').
+18/01/18 17:14:31 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/'.
+18/01/18 17:14:32 INFO StateStoreCoordinatorRef: Registered StateStoreCoordinator endpoint
+18/01/18 17:14:32 INFO SparkInterpreter: Created Spark session.
+18/01/18 17:15:30 WARN SparkSession$Builder: Using an existing SparkSession; some configuration may not take effect.
+18/01/18 17:15:32 INFO SparkSqlParser: Parsing command: SHOW TABLES
+18/01/18 17:15:42 INFO SparkContext: Starting job: collect at <console>:86
+18/01/18 17:15:42 INFO DAGScheduler: Got job 0 (collect at <console>:86) with 1 output partitions
+18/01/18 17:15:42 INFO DAGScheduler: Final stage: ResultStage 0 (collect at <console>:86)
+18/01/18 17:15:42 INFO DAGScheduler: Parents of final stage: List()
+18/01/18 17:15:42 INFO DAGScheduler: Missing parents: List()
+18/01/18 17:15:42 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[4] at map at <console>:83), which has no missing parents
+18/01/18 17:15:42 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 6.1 KB, free 366.3 MB)
+18/01/18 17:15:42 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 3.4 KB, free 366.3 MB)
+18/01/18 17:15:42 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on 192.168.154.1:62781 (size: 3.4 KB, free: 366.3 MB)
+18/01/18 17:15:42 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:1006
+18/01/18 17:15:42 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[4] at map at <console>:83) (first 15 tasks are for partitions Vector(0))
+18/01/18 17:15:42 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks
+18/01/18 17:15:42 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, executor driver, partition 0, PROCESS_LOCAL, 4852 bytes)
+18/01/18 17:15:42 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+18/01/18 17:15:42 INFO Executor: Fetching spark://192.168.154.1:62780/jars/livy-api-0.3.0.jar with timestamp 1516324470911
+18/01/18 17:15:42 INFO TransportClientFactory: Successfully created connection to /192.168.154.1:62780 after 7 ms (0 ms spent in bootstraps)
+18/01/18 17:15:42 INFO Utils: Fetching spark://192.168.154.1:62780/jars/livy-api-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/fetchFileTemp7886248647812368632.tmp
+18/01/18 17:15:42 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/livy-api-0.3.0.jar to class loader
+18/01/18 17:15:42 INFO Executor: Fetching spark://192.168.154.1:62780/jars/livy-repl_2.11-0.3.0.jar with timestamp 1516324470912
+18/01/18 17:15:42 INFO Utils: Fetching spark://192.168.154.1:62780/jars/livy-repl_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/fetchFileTemp7199257803132861833.tmp
+18/01/18 17:15:42 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/livy-repl_2.11-0.3.0.jar to class loader
+18/01/18 17:15:42 INFO Executor: Fetching spark://192.168.154.1:62780/jars/livy-core_2.11-0.3.0.jar with timestamp 1516324470912
+18/01/18 17:15:42 INFO Utils: Fetching spark://192.168.154.1:62780/jars/livy-core_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/fetchFileTemp5538570194673014503.tmp
+18/01/18 17:15:42 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/livy-core_2.11-0.3.0.jar to class loader
+18/01/18 17:15:42 INFO Executor: Fetching spark://192.168.154.1:62780/jars/netty-all-4.0.29.Final.jar with timestamp 1516324470911
+18/01/18 17:15:42 INFO Utils: Fetching spark://192.168.154.1:62780/jars/netty-all-4.0.29.Final.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/fetchFileTemp8435342894402787980.tmp
+18/01/18 17:15:42 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/netty-all-4.0.29.Final.jar to class loader
+18/01/18 17:15:42 INFO Executor: Fetching spark://192.168.154.1:62780/jars/commons-codec-1.9.jar with timestamp 1516324470912
+18/01/18 17:15:42 INFO Utils: Fetching spark://192.168.154.1:62780/jars/commons-codec-1.9.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/fetchFileTemp4204942118310612173.tmp
+18/01/18 17:15:42 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/commons-codec-1.9.jar to class loader
+18/01/18 17:15:42 INFO Executor: Fetching spark://192.168.154.1:62780/jars/livy-rsc-0.3.0.jar with timestamp 1516324470910
+18/01/18 17:15:42 INFO Utils: Fetching spark://192.168.154.1:62780/jars/livy-rsc-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/fetchFileTemp6820629615897708564.tmp
+18/01/18 17:15:42 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6/userFiles-94742781-6b2e-428b-93ea-8113209e8bc5/livy-rsc-0.3.0.jar to class loader
+18/01/18 17:15:43 INFO CodeGenerator: Code generated in 185.174445 ms
+18/01/18 17:15:43 INFO Executor: Finished task 0.0 in stage 0.0 (TID 0). 1013 bytes result sent to driver
+18/01/18 17:15:43 INFO TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 809 ms on localhost (executor driver) (1/1)
+18/01/18 17:15:43 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+18/01/18 17:15:43 INFO DAGScheduler: ResultStage 0 (collect at <console>:86) finished in 0.825 s
+18/01/18 17:15:43 INFO DAGScheduler: Job 0 finished: collect at <console>:86, took 1.014404 s
+18/01/18 17:15:49 INFO SparkSqlParser: Parsing command: df
+18/01/18 17:15:50 INFO SparkSqlParser: Parsing command: CACHE TABLE `df`
+18/01/18 17:15:50 INFO SparkSqlParser: Parsing command: `df`
+18/01/18 17:15:50 INFO CodeGenerator: Code generated in 20.851528 ms
+18/01/18 17:15:50 INFO CodeGenerator: Code generated in 13.005358 ms
+18/01/18 17:15:50 INFO SparkContext: Starting job: sql at NativeMethodAccessorImpl.java:0
+18/01/18 17:15:50 INFO DAGScheduler: Registering RDD 11 (sql at NativeMethodAccessorImpl.java:0)
+18/01/18 17:15:50 INFO DAGScheduler: Got job 1 (sql at NativeMethodAccessorImpl.java:0) with 1 output partitions
+18/01/18 17:15:50 INFO DAGScheduler: Final stage: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0)
+18/01/18 17:15:50 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 1)
+18/01/18 17:15:50 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 1)
+18/01/18 17:15:50 INFO DAGScheduler: Submitting ShuffleMapStage 1 (MapPartitionsRDD[11] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+18/01/18 17:15:50 INFO MemoryStore: Block broadcast_1 stored as values in memory (estimated size 15.2 KB, free 366.3 MB)
+18/01/18 17:15:50 INFO MemoryStore: Block broadcast_1_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+18/01/18 17:15:50 INFO BlockManagerInfo: Added broadcast_1_piece0 in memory on 192.168.154.1:62781 (size: 7.6 KB, free: 366.3 MB)
+18/01/18 17:15:50 INFO SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:1006
+18/01/18 17:15:50 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 1 (MapPartitionsRDD[11] at sql at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+18/01/18 17:15:50 INFO TaskSchedulerImpl: Adding task set 1.0 with 1 tasks
+18/01/18 17:15:50 INFO TaskSetManager: Starting task 0.0 in stage 1.0 (TID 1, localhost, executor driver, partition 0, PROCESS_LOCAL, 5038 bytes)
+18/01/18 17:15:50 INFO Executor: Running task 0.0 in stage 1.0 (TID 1)
+18/01/18 17:15:50 INFO CodeGenerator: Code generated in 13.959459 ms
+18/01/18 17:15:50 INFO CodeGenerator: Code generated in 46.690227 ms
+18/01/18 17:15:50 INFO MemoryStore: Block rdd_8_0 stored as values in memory (estimated size 464.0 B, free 366.3 MB)
+18/01/18 17:15:50 INFO BlockManagerInfo: Added rdd_8_0 in memory on 192.168.154.1:62781 (size: 464.0 B, free: 366.3 MB)
+18/01/18 17:15:50 INFO CodeGenerator: Code generated in 7.563128 ms
+18/01/18 17:15:50 INFO CodeGenerator: Code generated in 21.820465 ms
+18/01/18 17:15:50 INFO Executor: Finished task 0.0 in stage 1.0 (TID 1). 2332 bytes result sent to driver
+18/01/18 17:15:50 INFO TaskSetManager: Finished task 0.0 in stage 1.0 (TID 1) in 196 ms on localhost (executor driver) (1/1)
+18/01/18 17:15:50 INFO TaskSchedulerImpl: Removed TaskSet 1.0, whose tasks have all completed, from pool 
+18/01/18 17:15:50 INFO DAGScheduler: ShuffleMapStage 1 (sql at NativeMethodAccessorImpl.java:0) finished in 0.198 s
+18/01/18 17:15:50 INFO DAGScheduler: looking for newly runnable stages
+18/01/18 17:15:50 INFO DAGScheduler: running: Set()
+18/01/18 17:15:50 INFO DAGScheduler: waiting: Set(ResultStage 2)
+18/01/18 17:15:50 INFO DAGScheduler: failed: Set()
+18/01/18 17:15:50 INFO DAGScheduler: Submitting ResultStage 2 (MapPartitionsRDD[14] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+18/01/18 17:15:50 INFO MemoryStore: Block broadcast_2 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+18/01/18 17:15:50 INFO MemoryStore: Block broadcast_2_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+18/01/18 17:15:50 INFO BlockManagerInfo: Added broadcast_2_piece0 in memory on 192.168.154.1:62781 (size: 3.7 KB, free: 366.3 MB)
+18/01/18 17:15:50 INFO SparkContext: Created broadcast 2 from broadcast at DAGScheduler.scala:1006
+18/01/18 17:15:50 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 2 (MapPartitionsRDD[14] at sql at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+18/01/18 17:15:50 INFO TaskSchedulerImpl: Adding task set 2.0 with 1 tasks
+18/01/18 17:15:50 INFO TaskSetManager: Starting task 0.0 in stage 2.0 (TID 2, localhost, executor driver, partition 0, ANY, 4726 bytes)
+18/01/18 17:15:50 INFO Executor: Running task 0.0 in stage 2.0 (TID 2)
+18/01/18 17:15:50 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+18/01/18 17:15:50 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 5 ms
+18/01/18 17:15:50 INFO Executor: Finished task 0.0 in stage 2.0 (TID 2). 1581 bytes result sent to driver
+18/01/18 17:15:50 INFO TaskSetManager: Finished task 0.0 in stage 2.0 (TID 2) in 30 ms on localhost (executor driver) (1/1)
+18/01/18 17:15:50 INFO TaskSchedulerImpl: Removed TaskSet 2.0, whose tasks have all completed, from pool 
+18/01/18 17:15:50 INFO DAGScheduler: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0) finished in 0.031 s
+18/01/18 17:15:50 INFO DAGScheduler: Job 1 finished: sql at NativeMethodAccessorImpl.java:0, took 0.270314 s
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 59
+18/01/18 17:15:52 INFO BlockManagerInfo: Removed broadcast_1_piece0 on 192.168.154.1:62781 in memory (size: 7.6 KB, free: 366.3 MB)
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 58
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 52
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 57
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 54
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 61
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 53
+18/01/18 17:15:52 INFO BlockManagerInfo: Removed broadcast_2_piece0 on 192.168.154.1:62781 in memory (size: 3.7 KB, free: 366.3 MB)
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 51
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 63
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 62
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned shuffle 0
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 56
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 55
+18/01/18 17:15:52 INFO ContextCleaner: Cleaned accumulator 60
+18/01/18 17:15:52 INFO SparkSqlParser: Parsing command: SELECT count(*) FROM  `df`
+18/01/18 17:15:53 INFO SparkContext: Starting job: collect at <console>:239
+18/01/18 17:15:53 INFO DAGScheduler: Registering RDD 17 (collect at <console>:239)
+18/01/18 17:15:53 INFO DAGScheduler: Got job 2 (collect at <console>:239) with 1 output partitions
+18/01/18 17:15:53 INFO DAGScheduler: Final stage: ResultStage 4 (collect at <console>:239)
+18/01/18 17:15:53 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 3)
+18/01/18 17:15:53 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 3)
+18/01/18 17:15:53 INFO DAGScheduler: Submitting ShuffleMapStage 3 (MapPartitionsRDD[17] at collect at <console>:239), which has no missing parents
+18/01/18 17:15:53 INFO MemoryStore: Block broadcast_3 stored as values in memory (estimated size 15.2 KB, free 366.3 MB)
+18/01/18 17:15:53 INFO MemoryStore: Block broadcast_3_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+18/01/18 17:15:53 INFO BlockManagerInfo: Added broadcast_3_piece0 in memory on 192.168.154.1:62781 (size: 7.6 KB, free: 366.3 MB)
+18/01/18 17:15:53 INFO SparkContext: Created broadcast 3 from broadcast at DAGScheduler.scala:1006
+18/01/18 17:15:53 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 3 (MapPartitionsRDD[17] at collect at <console>:239) (first 15 tasks are for partitions Vector(0))
+18/01/18 17:15:53 INFO TaskSchedulerImpl: Adding task set 3.0 with 1 tasks
+18/01/18 17:15:53 INFO TaskSetManager: Starting task 0.0 in stage 3.0 (TID 3, localhost, executor driver, partition 0, PROCESS_LOCAL, 5038 bytes)
+18/01/18 17:15:53 INFO Executor: Running task 0.0 in stage 3.0 (TID 3)
+18/01/18 17:15:53 INFO BlockManager: Found block rdd_8_0 locally
+18/01/18 17:15:53 INFO Executor: Finished task 0.0 in stage 3.0 (TID 3). 1737 bytes result sent to driver
+18/01/18 17:15:53 INFO TaskSetManager: Finished task 0.0 in stage 3.0 (TID 3) in 11 ms on localhost (executor driver) (1/1)
+18/01/18 17:15:53 INFO TaskSchedulerImpl: Removed TaskSet 3.0, whose tasks have all completed, from pool 
+18/01/18 17:15:53 INFO DAGScheduler: ShuffleMapStage 3 (collect at <console>:239) finished in 0.012 s
+18/01/18 17:15:53 INFO DAGScheduler: looking for newly runnable stages
+18/01/18 17:15:53 INFO DAGScheduler: running: Set()
+18/01/18 17:15:53 INFO DAGScheduler: waiting: Set(ResultStage 4)
+18/01/18 17:15:53 INFO DAGScheduler: failed: Set()
+18/01/18 17:15:53 INFO DAGScheduler: Submitting ResultStage 4 (MapPartitionsRDD[20] at collect at <console>:239), which has no missing parents
+18/01/18 17:15:53 INFO MemoryStore: Block broadcast_4 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+18/01/18 17:15:53 INFO MemoryStore: Block broadcast_4_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+18/01/18 17:15:53 INFO BlockManagerInfo: Added broadcast_4_piece0 in memory on 192.168.154.1:62781 (size: 3.7 KB, free: 366.3 MB)
+18/01/18 17:15:53 INFO SparkContext: Created broadcast 4 from broadcast at DAGScheduler.scala:1006
+18/01/18 17:15:53 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 4 (MapPartitionsRDD[20] at collect at <console>:239) (first 15 tasks are for partitions Vector(0))
+18/01/18 17:15:53 INFO TaskSchedulerImpl: Adding task set 4.0 with 1 tasks
+18/01/18 17:15:53 INFO TaskSetManager: Starting task 0.0 in stage 4.0 (TID 4, localhost, executor driver, partition 0, ANY, 4726 bytes)
+18/01/18 17:15:53 INFO Executor: Running task 0.0 in stage 4.0 (TID 4)
+18/01/18 17:15:53 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+18/01/18 17:15:53 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 0 ms
+18/01/18 17:15:53 INFO Executor: Finished task 0.0 in stage 4.0 (TID 4). 1581 bytes result sent to driver
+18/01/18 17:15:53 INFO TaskSetManager: Finished task 0.0 in stage 4.0 (TID 4) in 6 ms on localhost (executor driver) (1/1)
+18/01/18 17:15:53 INFO TaskSchedulerImpl: Removed TaskSet 4.0, whose tasks have all completed, from pool 
+18/01/18 17:15:53 INFO DAGScheduler: ResultStage 4 (collect at <console>:239) finished in 0.007 s
+18/01/18 17:15:53 INFO DAGScheduler: Job 2 finished: collect at <console>:239, took 0.032498 s
+18/01/18 17:15:53 INFO CodeGenerator: Code generated in 7.788482 ms
+18/01/18 17:15:55 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df` AS `zzz913`
+WHERE (0 = 1)
+18/01/18 17:15:55 INFO BlockManagerInfo: Removed broadcast_3_piece0 on 192.168.154.1:62781 in memory (size: 7.6 KB, free: 366.3 MB)
+18/01/18 17:15:55 INFO BlockManagerInfo: Removed broadcast_4_piece0 on 192.168.154.1:62781 in memory (size: 3.7 KB, free: 366.3 MB)
+18/01/18 17:15:55 INFO ContextCleaner: Cleaned accumulator 112
+18/01/18 17:15:56 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df`
+18/01/18 17:15:58 INFO SparkContext: Starting job: collect at <console>:239
+18/01/18 17:15:58 INFO DAGScheduler: Got job 3 (collect at <console>:239) with 1 output partitions
+18/01/18 17:15:58 INFO DAGScheduler: Final stage: ResultStage 5 (collect at <console>:239)
+18/01/18 17:15:58 INFO DAGScheduler: Parents of final stage: List()
+18/01/18 17:15:58 INFO DAGScheduler: Missing parents: List()
+18/01/18 17:15:58 INFO DAGScheduler: Submitting ResultStage 5 (MapPartitionsRDD[22] at collect at <console>:239), which has no missing parents
+18/01/18 17:15:58 INFO MemoryStore: Block broadcast_5 stored as values in memory (estimated size 11.0 KB, free 366.3 MB)
+18/01/18 17:15:58 INFO MemoryStore: Block broadcast_5_piece0 stored as bytes in memory (estimated size 5.7 KB, free 366.3 MB)
+18/01/18 17:15:58 INFO BlockManagerInfo: Added broadcast_5_piece0 in memory on 192.168.154.1:62781 (size: 5.7 KB, free: 366.3 MB)
+18/01/18 17:15:58 INFO SparkContext: Created broadcast 5 from broadcast at DAGScheduler.scala:1006
+18/01/18 17:15:58 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 5 (MapPartitionsRDD[22] at collect at <console>:239) (first 15 tasks are for partitions Vector(0))
+18/01/18 17:15:58 INFO TaskSchedulerImpl: Adding task set 5.0 with 1 tasks
+18/01/18 17:15:58 INFO TaskSetManager: Starting task 0.0 in stage 5.0 (TID 5, localhost, executor driver, partition 0, PROCESS_LOCAL, 5049 bytes)
+18/01/18 17:15:58 INFO Executor: Running task 0.0 in stage 5.0 (TID 5)
+18/01/18 17:15:58 INFO BlockManager: Found block rdd_8_0 locally
+18/01/18 17:15:58 INFO CodeGenerator: Code generated in 21.009267 ms
+18/01/18 17:15:58 INFO Executor: Finished task 0.0 in stage 5.0 (TID 5). 1253 bytes result sent to driver
+18/01/18 17:15:58 INFO TaskSetManager: Finished task 0.0 in stage 5.0 (TID 5) in 35 ms on localhost (executor driver) (1/1)
+18/01/18 17:15:58 INFO TaskSchedulerImpl: Removed TaskSet 5.0, whose tasks have all completed, from pool 
+18/01/18 17:15:58 INFO DAGScheduler: ResultStage 5 (collect at <console>:239) finished in 0.035 s
+18/01/18 17:15:58 INFO DAGScheduler: Job 3 finished: collect at <console>:239, took 0.042606 s
+18/01/18 17:15:58 INFO CodeGenerator: Code generated in 8.488093 ms
+18/01/18 17:15:58 INFO BlockManagerInfo: Removed broadcast_5_piece0 on 192.168.154.1:62781 in memory (size: 5.7 KB, free: 366.3 MB)
+18/01/18 17:16:00 INFO SparkUI: Stopped Spark web UI at http://192.168.154.1:4040
+18/01/18 17:16:00 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+18/01/18 17:16:00 INFO MemoryStore: MemoryStore cleared
+18/01/18 17:16:00 INFO BlockManager: BlockManager stopped
+18/01/18 17:16:00 INFO BlockManagerMaster: BlockManagerMaster stopped
+18/01/18 17:16:00 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+18/01/18 17:16:00 INFO SparkContext: Successfully stopped SparkContext
+18/01/18 17:16:00 INFO SparkContext: SparkContext already stopped.
+18/01/18 17:16:00 INFO ShutdownHookManager: Shutdown hook called
+18/01/18 17:16:00 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-64ab7070-8441-435b-8757-37169f25fca6
+18/01/18 21:37:49 INFO SparkContext: Running Spark version 2.2.0
+18/01/18 21:37:49 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+18/01/18 21:37:49 INFO SparkContext: Submitted application: other
+18/01/18 21:37:49 INFO SecurityManager: Changing view acls to: javierluraschi
+18/01/18 21:37:49 INFO SecurityManager: Changing modify acls to: javierluraschi
+18/01/18 21:37:49 INFO SecurityManager: Changing view acls groups to: 
+18/01/18 21:37:49 INFO SecurityManager: Changing modify acls groups to: 
+18/01/18 21:37:49 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+18/01/18 21:37:49 INFO Utils: Successfully started service 'sparkDriver' on port 57094.
+18/01/18 21:37:49 INFO SparkEnv: Registering MapOutputTracker
+18/01/18 21:37:49 INFO SparkEnv: Registering BlockManagerMaster
+18/01/18 21:37:49 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+18/01/18 21:37:49 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+18/01/18 21:37:49 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-32606818-9d5a-46c9-926c-f849ae81615b
+18/01/18 21:37:49 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+18/01/18 21:37:49 INFO SparkEnv: Registering OutputCommitCoordinator
+18/01/18 21:37:49 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+18/01/18 21:37:49 WARN Utils: Service 'SparkUI' could not bind on port 4041. Attempting port 4042.
+18/01/18 21:37:49 INFO Utils: Successfully started service 'SparkUI' on port 4042.
+18/01/18 21:37:49 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4042
+18/01/18 21:37:49 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.2-2.11.jar at spark://127.0.0.1:57094/jars/sparklyr-2.2-2.11.jar with timestamp 1516340269962
+18/01/18 21:37:50 INFO Executor: Starting executor ID driver on host localhost
+18/01/18 21:37:50 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 57095.
+18/01/18 21:37:50 INFO NettyBlockTransferService: Server created on 127.0.0.1:57095
+18/01/18 21:37:50 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+18/01/18 21:37:50 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 57095, None)
+18/01/18 21:37:50 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:57095 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 57095, None)
+18/01/18 21:37:50 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 57095, None)
+18/01/18 21:37:50 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 127.0.0.1, 57095, None)
+18/01/18 21:37:50 INFO SparkContext: Invoking stop() from shutdown hook
+18/01/18 21:37:50 INFO SparkUI: Stopped Spark web UI at http://127.0.0.1:4042
+18/01/18 21:37:50 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+18/01/18 21:37:50 INFO MemoryStore: MemoryStore cleared
+18/01/18 21:37:50 INFO BlockManager: BlockManager stopped
+18/01/18 21:37:50 INFO BlockManagerMaster: BlockManagerMaster stopped
+18/01/18 21:37:50 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+18/01/18 21:37:50 INFO SparkContext: Successfully stopped SparkContext
+18/01/18 21:37:50 INFO ShutdownHookManager: Shutdown hook called
+18/01/18 21:37:50 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-cb4781fd-1cab-4cc3-9578-897e7d8993d5
+18/01/18 21:42:46 INFO RSCDriver: Connecting to: 192.168.0.44:57582
+18/01/18 21:42:46 INFO RSCDriver: Starting RPC server...
+18/01/18 21:42:46 WARN RSCConf: Your hostname, 192.168.0.44, resolves to a loopback address, but we couldn't find any external IP address!
+18/01/18 21:42:46 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
+18/01/18 21:42:47 INFO RSCDriver: Received job request 0e65800f-d58e-40fe-83d2-88b277eb147c
+18/01/18 21:42:47 INFO RSCDriver: SparkContext not yet up, queueing job request.
+18/01/18 21:42:49 INFO SparkContext: Running Spark version 2.2.0
+18/01/18 21:42:50 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+18/01/18 21:42:50 INFO SparkContext: Submitted application: livy-session-1
+18/01/18 21:42:50 INFO SecurityManager: Changing view acls to: javierluraschi
+18/01/18 21:42:50 INFO SecurityManager: Changing modify acls to: javierluraschi
+18/01/18 21:42:50 INFO SecurityManager: Changing view acls groups to: 
+18/01/18 21:42:50 INFO SecurityManager: Changing modify acls groups to: 
+18/01/18 21:42:50 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+18/01/18 21:42:50 INFO Utils: Successfully started service 'sparkDriver' on port 57589.
+18/01/18 21:42:50 INFO SparkEnv: Registering MapOutputTracker
+18/01/18 21:42:50 INFO SparkEnv: Registering BlockManagerMaster
+18/01/18 21:42:50 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+18/01/18 21:42:50 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+18/01/18 21:42:50 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-7ee2c846-e1b7-4121-948d-b96953be96dd
+18/01/18 21:42:50 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+18/01/18 21:42:50 INFO SparkEnv: Registering OutputCommitCoordinator
+18/01/18 21:42:50 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+18/01/18 21:42:50 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://192.168.0.44:4040
+18/01/18 21:42:50 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-rsc-0.3.0.jar at spark://192.168.0.44:57589/jars/livy-rsc-0.3.0.jar with timestamp 1516340570599
+18/01/18 21:42:50 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/netty-all-4.0.29.Final.jar at spark://192.168.0.44:57589/jars/netty-all-4.0.29.Final.jar with timestamp 1516340570600
+18/01/18 21:42:50 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/rsc-jars/livy-api-0.3.0.jar at spark://192.168.0.44:57589/jars/livy-api-0.3.0.jar with timestamp 1516340570600
+18/01/18 21:42:50 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-core_2.11-0.3.0.jar at spark://192.168.0.44:57589/jars/livy-core_2.11-0.3.0.jar with timestamp 1516340570600
+18/01/18 21:42:50 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/livy-repl_2.11-0.3.0.jar at spark://192.168.0.44:57589/jars/livy-repl_2.11-0.3.0.jar with timestamp 1516340570601
+18/01/18 21:42:50 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.3.0/repl_2.11-jars/commons-codec-1.9.jar at spark://192.168.0.44:57589/jars/commons-codec-1.9.jar with timestamp 1516340570601
+18/01/18 21:42:50 INFO Executor: Starting executor ID driver on host localhost
+18/01/18 21:42:50 INFO Executor: Using REPL class URI: spark://192.168.0.44:57589/classes
+18/01/18 21:42:50 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 57590.
+18/01/18 21:42:50 INFO NettyBlockTransferService: Server created on 192.168.0.44:57590
+18/01/18 21:42:50 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+18/01/18 21:42:50 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.0.44, 57590, None)
+18/01/18 21:42:50 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.0.44:57590 with 366.3 MB RAM, BlockManagerId(driver, 192.168.0.44, 57590, None)
+18/01/18 21:42:50 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.0.44, 57590, None)
+18/01/18 21:42:50 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 192.168.0.44, 57590, None)
+18/01/18 21:42:50 INFO SharedState: loading hive config file: file:/Users/javierluraschi/spark/spark-2.2.0-bin-hadoop2.7/conf/hive-site.xml
+18/01/18 21:42:50 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir ('file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/').
+18/01/18 21:42:50 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse/'.
+18/01/18 21:42:52 INFO StateStoreCoordinatorRef: Registered StateStoreCoordinator endpoint
+18/01/18 21:42:52 INFO SparkInterpreter: Created Spark session.
+18/01/18 21:43:42 WARN SparkSession$Builder: Using an existing SparkSession; some configuration may not take effect.
+18/01/18 21:43:45 INFO SparkSqlParser: Parsing command: SHOW TABLES
+18/01/18 21:43:54 INFO SparkContext: Starting job: collect at <console>:86
+18/01/18 21:43:54 INFO DAGScheduler: Got job 0 (collect at <console>:86) with 1 output partitions
+18/01/18 21:43:54 INFO DAGScheduler: Final stage: ResultStage 0 (collect at <console>:86)
+18/01/18 21:43:54 INFO DAGScheduler: Parents of final stage: List()
+18/01/18 21:43:54 INFO DAGScheduler: Missing parents: List()
+18/01/18 21:43:54 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[4] at map at <console>:83), which has no missing parents
+18/01/18 21:43:54 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 6.1 KB, free 366.3 MB)
+18/01/18 21:43:54 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 3.4 KB, free 366.3 MB)
+18/01/18 21:43:54 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on 192.168.0.44:57590 (size: 3.4 KB, free: 366.3 MB)
+18/01/18 21:43:54 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:1006
+18/01/18 21:43:54 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[4] at map at <console>:83) (first 15 tasks are for partitions Vector(0))
+18/01/18 21:43:54 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks
+18/01/18 21:43:54 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, executor driver, partition 0, PROCESS_LOCAL, 4852 bytes)
+18/01/18 21:43:54 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+18/01/18 21:43:54 INFO Executor: Fetching spark://192.168.0.44:57589/jars/commons-codec-1.9.jar with timestamp 1516340570601
+18/01/18 21:43:54 INFO TransportClientFactory: Successfully created connection to /192.168.0.44:57589 after 8 ms (0 ms spent in bootstraps)
+18/01/18 21:43:54 INFO Utils: Fetching spark://192.168.0.44:57589/jars/commons-codec-1.9.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/fetchFileTemp6464606539869307391.tmp
+18/01/18 21:43:55 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/commons-codec-1.9.jar to class loader
+18/01/18 21:43:55 INFO Executor: Fetching spark://192.168.0.44:57589/jars/livy-repl_2.11-0.3.0.jar with timestamp 1516340570601
+18/01/18 21:43:55 INFO Utils: Fetching spark://192.168.0.44:57589/jars/livy-repl_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/fetchFileTemp2484332582448940275.tmp
+18/01/18 21:43:55 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/livy-repl_2.11-0.3.0.jar to class loader
+18/01/18 21:43:55 INFO Executor: Fetching spark://192.168.0.44:57589/jars/livy-api-0.3.0.jar with timestamp 1516340570600
+18/01/18 21:43:55 INFO Utils: Fetching spark://192.168.0.44:57589/jars/livy-api-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/fetchFileTemp2412919291181124798.tmp
+18/01/18 21:43:55 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/livy-api-0.3.0.jar to class loader
+18/01/18 21:43:55 INFO Executor: Fetching spark://192.168.0.44:57589/jars/livy-core_2.11-0.3.0.jar with timestamp 1516340570600
+18/01/18 21:43:55 INFO Utils: Fetching spark://192.168.0.44:57589/jars/livy-core_2.11-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/fetchFileTemp6770833085843246938.tmp
+18/01/18 21:43:55 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/livy-core_2.11-0.3.0.jar to class loader
+18/01/18 21:43:55 INFO Executor: Fetching spark://192.168.0.44:57589/jars/netty-all-4.0.29.Final.jar with timestamp 1516340570600
+18/01/18 21:43:55 INFO Utils: Fetching spark://192.168.0.44:57589/jars/netty-all-4.0.29.Final.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/fetchFileTemp1412118502521941162.tmp
+18/01/18 21:43:55 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/netty-all-4.0.29.Final.jar to class loader
+18/01/18 21:43:55 INFO Executor: Fetching spark://192.168.0.44:57589/jars/livy-rsc-0.3.0.jar with timestamp 1516340570599
+18/01/18 21:43:55 INFO Utils: Fetching spark://192.168.0.44:57589/jars/livy-rsc-0.3.0.jar to /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/fetchFileTemp5492620128325632777.tmp
+18/01/18 21:43:55 INFO Executor: Adding file:/private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45/userFiles-5de10252-3fbd-4f66-85e9-3d4a9ce6f15d/livy-rsc-0.3.0.jar to class loader
+18/01/18 21:43:55 INFO CodeGenerator: Code generated in 187.32687 ms
+18/01/18 21:43:55 INFO Executor: Finished task 0.0 in stage 0.0 (TID 0). 1013 bytes result sent to driver
+18/01/18 21:43:55 INFO TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 797 ms on localhost (executor driver) (1/1)
+18/01/18 21:43:55 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+18/01/18 21:43:55 INFO DAGScheduler: ResultStage 0 (collect at <console>:86) finished in 0.814 s
+18/01/18 21:43:55 INFO DAGScheduler: Job 0 finished: collect at <console>:86, took 1.024582 s
+18/01/18 21:44:01 INFO SparkSqlParser: Parsing command: df
+18/01/18 21:44:02 INFO SparkSqlParser: Parsing command: CACHE TABLE `df`
+18/01/18 21:44:02 INFO SparkSqlParser: Parsing command: `df`
+18/01/18 21:44:02 INFO CodeGenerator: Code generated in 20.340622 ms
+18/01/18 21:44:03 INFO CodeGenerator: Code generated in 13.961641 ms
+18/01/18 21:44:03 INFO SparkContext: Starting job: sql at NativeMethodAccessorImpl.java:0
+18/01/18 21:44:03 INFO DAGScheduler: Registering RDD 11 (sql at NativeMethodAccessorImpl.java:0)
+18/01/18 21:44:03 INFO DAGScheduler: Got job 1 (sql at NativeMethodAccessorImpl.java:0) with 1 output partitions
+18/01/18 21:44:03 INFO DAGScheduler: Final stage: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0)
+18/01/18 21:44:03 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 1)
+18/01/18 21:44:03 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 1)
+18/01/18 21:44:03 INFO DAGScheduler: Submitting ShuffleMapStage 1 (MapPartitionsRDD[11] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+18/01/18 21:44:03 INFO MemoryStore: Block broadcast_1 stored as values in memory (estimated size 15.2 KB, free 366.3 MB)
+18/01/18 21:44:03 INFO MemoryStore: Block broadcast_1_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+18/01/18 21:44:03 INFO BlockManagerInfo: Added broadcast_1_piece0 in memory on 192.168.0.44:57590 (size: 7.6 KB, free: 366.3 MB)
+18/01/18 21:44:03 INFO SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:1006
+18/01/18 21:44:03 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 1 (MapPartitionsRDD[11] at sql at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+18/01/18 21:44:03 INFO TaskSchedulerImpl: Adding task set 1.0 with 1 tasks
+18/01/18 21:44:03 INFO TaskSetManager: Starting task 0.0 in stage 1.0 (TID 1, localhost, executor driver, partition 0, PROCESS_LOCAL, 5038 bytes)
+18/01/18 21:44:03 INFO Executor: Running task 0.0 in stage 1.0 (TID 1)
+18/01/18 21:44:03 INFO CodeGenerator: Code generated in 14.479514 ms
+18/01/18 21:44:03 INFO CodeGenerator: Code generated in 49.186896 ms
+18/01/18 21:44:03 INFO MemoryStore: Block rdd_8_0 stored as values in memory (estimated size 464.0 B, free 366.3 MB)
+18/01/18 21:44:03 INFO BlockManagerInfo: Added rdd_8_0 in memory on 192.168.0.44:57590 (size: 464.0 B, free: 366.3 MB)
+18/01/18 21:44:03 INFO CodeGenerator: Code generated in 6.836541 ms
+18/01/18 21:44:03 INFO CodeGenerator: Code generated in 22.510518 ms
+18/01/18 21:44:03 INFO Executor: Finished task 0.0 in stage 1.0 (TID 1). 2331 bytes result sent to driver
+18/01/18 21:44:03 INFO TaskSetManager: Finished task 0.0 in stage 1.0 (TID 1) in 222 ms on localhost (executor driver) (1/1)
+18/01/18 21:44:03 INFO TaskSchedulerImpl: Removed TaskSet 1.0, whose tasks have all completed, from pool 
+18/01/18 21:44:03 INFO DAGScheduler: ShuffleMapStage 1 (sql at NativeMethodAccessorImpl.java:0) finished in 0.223 s
+18/01/18 21:44:03 INFO DAGScheduler: looking for newly runnable stages
+18/01/18 21:44:03 INFO DAGScheduler: running: Set()
+18/01/18 21:44:03 INFO DAGScheduler: waiting: Set(ResultStage 2)
+18/01/18 21:44:03 INFO DAGScheduler: failed: Set()
+18/01/18 21:44:03 INFO DAGScheduler: Submitting ResultStage 2 (MapPartitionsRDD[14] at sql at NativeMethodAccessorImpl.java:0), which has no missing parents
+18/01/18 21:44:03 INFO MemoryStore: Block broadcast_2 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+18/01/18 21:44:03 INFO MemoryStore: Block broadcast_2_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+18/01/18 21:44:03 INFO BlockManagerInfo: Added broadcast_2_piece0 in memory on 192.168.0.44:57590 (size: 3.7 KB, free: 366.3 MB)
+18/01/18 21:44:03 INFO SparkContext: Created broadcast 2 from broadcast at DAGScheduler.scala:1006
+18/01/18 21:44:03 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 2 (MapPartitionsRDD[14] at sql at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+18/01/18 21:44:03 INFO TaskSchedulerImpl: Adding task set 2.0 with 1 tasks
+18/01/18 21:44:03 INFO TaskSetManager: Starting task 0.0 in stage 2.0 (TID 2, localhost, executor driver, partition 0, ANY, 4726 bytes)
+18/01/18 21:44:03 INFO Executor: Running task 0.0 in stage 2.0 (TID 2)
+18/01/18 21:44:03 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+18/01/18 21:44:03 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 5 ms
+18/01/18 21:44:03 INFO Executor: Finished task 0.0 in stage 2.0 (TID 2). 1624 bytes result sent to driver
+18/01/18 21:44:03 INFO TaskSetManager: Finished task 0.0 in stage 2.0 (TID 2) in 38 ms on localhost (executor driver) (1/1)
+18/01/18 21:44:03 INFO TaskSchedulerImpl: Removed TaskSet 2.0, whose tasks have all completed, from pool 
+18/01/18 21:44:03 INFO DAGScheduler: ResultStage 2 (sql at NativeMethodAccessorImpl.java:0) finished in 0.038 s
+18/01/18 21:44:03 INFO DAGScheduler: Job 1 finished: sql at NativeMethodAccessorImpl.java:0, took 0.307892 s
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 61
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 57
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 51
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 55
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 59
+18/01/18 21:44:04 INFO BlockManagerInfo: Removed broadcast_1_piece0 on 192.168.0.44:57590 in memory (size: 7.6 KB, free: 366.3 MB)
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 62
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 60
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 56
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 58
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 54
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 52
+18/01/18 21:44:04 INFO BlockManagerInfo: Removed broadcast_2_piece0 on 192.168.0.44:57590 in memory (size: 3.7 KB, free: 366.3 MB)
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned shuffle 0
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 53
+18/01/18 21:44:04 INFO ContextCleaner: Cleaned accumulator 63
+18/01/18 21:44:04 INFO SparkSqlParser: Parsing command: SELECT count(*) FROM  `df`
+18/01/18 21:44:06 INFO SparkContext: Starting job: collect at <console>:239
+18/01/18 21:44:06 INFO DAGScheduler: Registering RDD 17 (collect at <console>:239)
+18/01/18 21:44:06 INFO DAGScheduler: Got job 2 (collect at <console>:239) with 1 output partitions
+18/01/18 21:44:06 INFO DAGScheduler: Final stage: ResultStage 4 (collect at <console>:239)
+18/01/18 21:44:06 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 3)
+18/01/18 21:44:06 INFO DAGScheduler: Missing parents: List(ShuffleMapStage 3)
+18/01/18 21:44:06 INFO DAGScheduler: Submitting ShuffleMapStage 3 (MapPartitionsRDD[17] at collect at <console>:239), which has no missing parents
+18/01/18 21:44:06 INFO MemoryStore: Block broadcast_3 stored as values in memory (estimated size 15.2 KB, free 366.3 MB)
+18/01/18 21:44:06 INFO MemoryStore: Block broadcast_3_piece0 stored as bytes in memory (estimated size 7.6 KB, free 366.3 MB)
+18/01/18 21:44:06 INFO BlockManagerInfo: Added broadcast_3_piece0 in memory on 192.168.0.44:57590 (size: 7.6 KB, free: 366.3 MB)
+18/01/18 21:44:06 INFO SparkContext: Created broadcast 3 from broadcast at DAGScheduler.scala:1006
+18/01/18 21:44:06 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 3 (MapPartitionsRDD[17] at collect at <console>:239) (first 15 tasks are for partitions Vector(0))
+18/01/18 21:44:06 INFO TaskSchedulerImpl: Adding task set 3.0 with 1 tasks
+18/01/18 21:44:06 INFO TaskSetManager: Starting task 0.0 in stage 3.0 (TID 3, localhost, executor driver, partition 0, PROCESS_LOCAL, 5038 bytes)
+18/01/18 21:44:06 INFO Executor: Running task 0.0 in stage 3.0 (TID 3)
+18/01/18 21:44:06 INFO BlockManager: Found block rdd_8_0 locally
+18/01/18 21:44:06 INFO Executor: Finished task 0.0 in stage 3.0 (TID 3). 1693 bytes result sent to driver
+18/01/18 21:44:06 INFO TaskSetManager: Finished task 0.0 in stage 3.0 (TID 3) in 14 ms on localhost (executor driver) (1/1)
+18/01/18 21:44:06 INFO TaskSchedulerImpl: Removed TaskSet 3.0, whose tasks have all completed, from pool 
+18/01/18 21:44:06 INFO DAGScheduler: ShuffleMapStage 3 (collect at <console>:239) finished in 0.014 s
+18/01/18 21:44:06 INFO DAGScheduler: looking for newly runnable stages
+18/01/18 21:44:06 INFO DAGScheduler: running: Set()
+18/01/18 21:44:06 INFO DAGScheduler: waiting: Set(ResultStage 4)
+18/01/18 21:44:06 INFO DAGScheduler: failed: Set()
+18/01/18 21:44:06 INFO DAGScheduler: Submitting ResultStage 4 (MapPartitionsRDD[20] at collect at <console>:239), which has no missing parents
+18/01/18 21:44:06 INFO MemoryStore: Block broadcast_4 stored as values in memory (estimated size 7.0 KB, free 366.3 MB)
+18/01/18 21:44:06 INFO MemoryStore: Block broadcast_4_piece0 stored as bytes in memory (estimated size 3.7 KB, free 366.3 MB)
+18/01/18 21:44:06 INFO BlockManagerInfo: Added broadcast_4_piece0 in memory on 192.168.0.44:57590 (size: 3.7 KB, free: 366.3 MB)
+18/01/18 21:44:06 INFO SparkContext: Created broadcast 4 from broadcast at DAGScheduler.scala:1006
+18/01/18 21:44:06 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 4 (MapPartitionsRDD[20] at collect at <console>:239) (first 15 tasks are for partitions Vector(0))
+18/01/18 21:44:06 INFO TaskSchedulerImpl: Adding task set 4.0 with 1 tasks
+18/01/18 21:44:06 INFO TaskSetManager: Starting task 0.0 in stage 4.0 (TID 4, localhost, executor driver, partition 0, ANY, 4726 bytes)
+18/01/18 21:44:06 INFO Executor: Running task 0.0 in stage 4.0 (TID 4)
+18/01/18 21:44:06 INFO ShuffleBlockFetcherIterator: Getting 1 non-empty blocks out of 1 blocks
+18/01/18 21:44:06 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 0 ms
+18/01/18 21:44:06 INFO Executor: Finished task 0.0 in stage 4.0 (TID 4). 1581 bytes result sent to driver
+18/01/18 21:44:06 INFO TaskSetManager: Finished task 0.0 in stage 4.0 (TID 4) in 5 ms on localhost (executor driver) (1/1)
+18/01/18 21:44:06 INFO TaskSchedulerImpl: Removed TaskSet 4.0, whose tasks have all completed, from pool 
+18/01/18 21:44:06 INFO DAGScheduler: ResultStage 4 (collect at <console>:239) finished in 0.006 s
+18/01/18 21:44:06 INFO DAGScheduler: Job 2 finished: collect at <console>:239, took 0.033257 s
+18/01/18 21:44:06 INFO CodeGenerator: Code generated in 7.069724 ms
+18/01/18 21:44:07 INFO BlockManagerInfo: Removed broadcast_3_piece0 on 192.168.0.44:57590 in memory (size: 7.6 KB, free: 366.3 MB)
+18/01/18 21:44:07 INFO BlockManagerInfo: Removed broadcast_4_piece0 on 192.168.0.44:57590 in memory (size: 3.7 KB, free: 366.3 MB)
+18/01/18 21:44:07 INFO ContextCleaner: Cleaned accumulator 112
+18/01/18 21:44:07 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df` AS `zzz913`
+WHERE (0 = 1)
+18/01/18 21:44:09 INFO SparkSqlParser: Parsing command: SELECT *
+FROM `df`
+18/01/18 21:44:10 INFO SparkContext: Starting job: collect at <console>:239
+18/01/18 21:44:10 INFO DAGScheduler: Got job 3 (collect at <console>:239) with 1 output partitions
+18/01/18 21:44:10 INFO DAGScheduler: Final stage: ResultStage 5 (collect at <console>:239)
+18/01/18 21:44:10 INFO DAGScheduler: Parents of final stage: List()
+18/01/18 21:44:10 INFO DAGScheduler: Missing parents: List()
+18/01/18 21:44:10 INFO DAGScheduler: Submitting ResultStage 5 (MapPartitionsRDD[22] at collect at <console>:239), which has no missing parents
+18/01/18 21:44:10 INFO MemoryStore: Block broadcast_5 stored as values in memory (estimated size 11.0 KB, free 366.3 MB)
+18/01/18 21:44:10 INFO MemoryStore: Block broadcast_5_piece0 stored as bytes in memory (estimated size 5.7 KB, free 366.3 MB)
+18/01/18 21:44:10 INFO BlockManagerInfo: Added broadcast_5_piece0 in memory on 192.168.0.44:57590 (size: 5.7 KB, free: 366.3 MB)
+18/01/18 21:44:10 INFO SparkContext: Created broadcast 5 from broadcast at DAGScheduler.scala:1006
+18/01/18 21:44:10 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 5 (MapPartitionsRDD[22] at collect at <console>:239) (first 15 tasks are for partitions Vector(0))
+18/01/18 21:44:10 INFO TaskSchedulerImpl: Adding task set 5.0 with 1 tasks
+18/01/18 21:44:10 INFO TaskSetManager: Starting task 0.0 in stage 5.0 (TID 5, localhost, executor driver, partition 0, PROCESS_LOCAL, 5049 bytes)
+18/01/18 21:44:10 INFO Executor: Running task 0.0 in stage 5.0 (TID 5)
+18/01/18 21:44:10 INFO BlockManager: Found block rdd_8_0 locally
+18/01/18 21:44:10 INFO CodeGenerator: Code generated in 19.224915 ms
+18/01/18 21:44:10 INFO Executor: Finished task 0.0 in stage 5.0 (TID 5). 1253 bytes result sent to driver
+18/01/18 21:44:10 INFO TaskSetManager: Finished task 0.0 in stage 5.0 (TID 5) in 33 ms on localhost (executor driver) (1/1)
+18/01/18 21:44:10 INFO TaskSchedulerImpl: Removed TaskSet 5.0, whose tasks have all completed, from pool 
+18/01/18 21:44:10 INFO DAGScheduler: ResultStage 5 (collect at <console>:239) finished in 0.034 s
+18/01/18 21:44:10 INFO DAGScheduler: Job 3 finished: collect at <console>:239, took 0.041962 s
+18/01/18 21:44:10 INFO CodeGenerator: Code generated in 8.24721 ms
+18/01/18 21:44:12 INFO SparkUI: Stopped Spark web UI at http://192.168.0.44:4040
+18/01/18 21:44:12 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+18/01/18 21:44:12 INFO MemoryStore: MemoryStore cleared
+18/01/18 21:44:12 INFO BlockManager: BlockManager stopped
+18/01/18 21:44:12 INFO BlockManagerMaster: BlockManagerMaster stopped
+18/01/18 21:44:12 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+18/01/18 21:44:12 INFO SparkContext: Successfully stopped SparkContext
+18/01/18 21:44:12 INFO SparkContext: SparkContext already stopped.
+18/01/18 21:44:12 INFO ShutdownHookManager: Shutdown hook called
+18/01/18 21:44:12 INFO ShutdownHookManager: Deleting directory /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/spark-08ba034b-0136-4856-9919-f0dafd50ab45

@@ -13,7 +13,7 @@ spark_load_table(sc, name, path, options = list(), repartition = 0,
 \item{name}{The name to assign to the newly generated table.}
 
 \item{path}{The path to the file. Needs to be accessible from the cluster.
-Supports the \samp{"hdfs://"}, \samp{"s3n://"} and \samp{"file://"} protocols.}
+Supports the \samp{"hdfs://"}, \samp{"s3a://"} and \samp{"file://"} protocols.}
 
 \item{options}{A list of strings with additional options. See \url{http://spark.apache.org/docs/latest/sql-programming-guide.html#configuration}.}
 
@@ -33,6 +33,7 @@ Reads from a Spark Table into a Spark DataFrame.
 Other Spark serialization routines: \code{\link{spark_read_csv}},
   \code{\link{spark_read_jdbc}},
   \code{\link{spark_read_json}},
+  \code{\link{spark_read_libsvm}},
   \code{\link{spark_read_parquet}},
   \code{\link{spark_read_source}},
   \code{\link{spark_read_table}},
@@ -46,4 +47,3 @@ Other Spark serialization routines: \code{\link{spark_read_csv}},
   \code{\link{spark_write_table}},
   \code{\link{spark_write_text}}
 }
-\concept{Spark serialization routines}

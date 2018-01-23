@@ -27,7 +27,7 @@ spark_csv_options <- function(header,
 #' @param sc A \code{spark_connection}.
 #' @param name The name to assign to the newly generated table.
 #' @param path The path to the file. Needs to be accessible from the cluster.
-#'   Supports the \samp{"hdfs://"}, \samp{"s3n://"} and \samp{"file://"} protocols.
+#'   Supports the \samp{"hdfs://"}, \samp{"s3a://"} and \samp{"file://"} protocols.
 #' @param memory Boolean; should the data be loaded eagerly into memory? (That
 #'   is, should the table be cached?)
 #' @param header Boolean; should the first row of data be used as a header?
@@ -47,12 +47,17 @@ spark_csv_options <- function(header,
 #'   already exists?
 #' @param ... Optional arguments; currently unused.
 #'
-#' @details You can read data from HDFS (\code{hdfs://}), S3 (\code{s3n://}),
+#' @details You can read data from HDFS (\code{hdfs://}), S3 (\code{s3a://}),
 #'   as well as the local file system (\code{file://}).
 #'
-#' If you are reading from a secure S3 bucket be sure that the
-#' \code{AWS_ACCESS_KEY_ID} and \code{AWS_SECRET_ACCESS_KEY} environment
-#' variables are both defined.
+#' If you are reading from a secure S3 bucket be sure to set the following in your spark-defaults.conf
+#' \code{spark.hadoop.fs.s3a.access.key}, \code{spark.hadoop.fs.s3a.secret.key} or any of the methods outlined in the aws-sdk
+#' documentation \href{http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html}{Working with AWS credentials}
+#' In order to work with the newer \code{s3a://} protocol also set the values for \code{spark.hadoop.fs.s3a.impl} and \code{spark.hadoop.fs.s3a.endpoint }.
+#' In addition, to support v4 of the S3 api be sure to pass the \code{-Dcom.amazonaws.services.s3.enableV4} driver options
+#' for the config key \code{spark.driver.extraJavaOptions }
+#' For instructions on how to configure \code{s3n://} check the hadoop documentation:
+#' \href{https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#Authentication_properties}{s3n authentication properties}
 #'
 #' When \code{header} is \code{FALSE}, the column names are generated with a
 #' \code{V} prefix; e.g. \code{V1, V2, ...}.
@@ -122,12 +127,17 @@ spark_read_csv <- function(sc,
 #' @param header Should the first row of data be used as a header? Defaults to \code{TRUE}.
 #' @param delimiter The character used to delimit each column, defaults to \code{,}.
 #' @param quote The character used as a quote, defaults to \code{"hdfs://"}.
-#' @param escape The chatacter used to escape other characters, defaults to \code{\\}.
+#' @param escape The character used to escape other characters, defaults to \code{\\}.
 #' @param charset The character set, defaults to \code{"UTF-8"}.
 #' @param null_value The character to use for default values, defaults to \code{NULL}.
 #' @param options A list of strings with additional options.
-#' @param mode Specifies the behavior when data or table already exists.
-#' @param partition_by Partitions the output by the given columns on the file system.
+#' @param mode A \code{character} element. Specifies the behavior when data or
+#'   table already exists. Supported values include: 'error', 'append', 'overwrite' and
+#'   ignore. Notice that 'overwrite' will also change the column structure.
+#'
+#'   For more details see also \url{http://spark.apache.org/docs/latest/sql-programming-guide.html#save-modes}
+#'   for your version of Spark.
+#' @param partition_by A \code{character} vector. Partitions the output by the given columns on the file system.
 #' @param ... Optional arguments; currently unused.
 #'
 #' @family Spark serialization routines
@@ -192,12 +202,19 @@ spark_write_csv.spark_jobj <- function(x,
 #'
 #' @inheritParams spark_read_csv
 #' @param options A list of strings with additional options. See \url{http://spark.apache.org/docs/latest/sql-programming-guide.html#configuration}.
+#' @param schema A (java) read schema. Useful for optimizing read operation on nested data.
 #'
-#' @details You can read data from HDFS (\code{hdfs://}), S3 (\code{s3n://}), as well as
+#' @details You can read data from HDFS (\code{hdfs://}), S3 (\code{s3a://}), as well as
 #'   the local file system (\code{file://}).
 #'
-#' If you are reading from a secure S3 bucket be sure that the \code{AWS_ACCESS_KEY_ID} and
-#'   \code{AWS_SECRET_ACCESS_KEY} environment variables are both defined.
+#' If you are reading from a secure S3 bucket be sure to set the following in your spark-defaults.conf
+#' \code{spark.hadoop.fs.s3a.access.key}, \code{spark.hadoop.fs.s3a.secret.key} or any of the methods outlined in the aws-sdk
+#' documentation \href{http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html}{Working with AWS credentials}
+#' In order to work with the newer \code{s3a://} protocol also set the values for \code{spark.hadoop.fs.s3a.impl} and \code{spark.hadoop.fs.s3a.endpoint }.
+#' In addition, to support v4 of the S3 api be sure to pass the \code{-Dcom.amazonaws.services.s3.enableV4} driver options
+#' for the config key \code{spark.driver.extraJavaOptions }
+#' For instructions on how to configure \code{s3n://} check the hadoop documentation:
+#' \href{https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#Authentication_properties}{s3n authentication properties}
 #'
 #'
 #' @family Spark serialization routines
@@ -211,11 +228,12 @@ spark_read_parquet <- function(sc,
                                memory = TRUE,
                                overwrite = TRUE,
                                columns = NULL,
+                               schema = NULL,
                                ...) {
 
   if (overwrite) spark_remove_table_if_exists(sc, name)
 
-  df <- spark_data_read_generic(sc, list(spark_normalize_path(path)), "parquet", options, columns)
+  df <- spark_data_read_generic(sc, list(spark_normalize_path(path)), "parquet", options, columns, schema)
   spark_partition_register_df(sc, df, name, repartition, memory)
 }
 
@@ -225,9 +243,7 @@ spark_read_parquet <- function(sc,
 #' \href{https://parquet.apache.org/}{Parquet} format.
 #'
 #' @inheritParams spark_write_csv
-#' @param mode Specifies the behavior when data or table already exists.
 #' @param options A list of strings with additional options. See \url{http://spark.apache.org/docs/latest/sql-programming-guide.html#configuration}.
-#' @param partition_by Partitions the output by the given columns on the file system.
 #' @param ... Optional arguments; currently unused.
 #'
 #' @family Spark serialization routines
@@ -271,11 +287,17 @@ spark_write_parquet.spark_jobj <- function(x,
 #'
 #' @inheritParams spark_read_csv
 #'
-#' @details You can read data from HDFS (\code{hdfs://}), S3 (\code{s3n://}), as well as
+#' @details You can read data from HDFS (\code{hdfs://}), S3 (\code{s3a://}), as well as
 #'   the local file system (\code{file://}).
 #'
-#' If you are reading from a secure S3 bucket be sure that the \code{AWS_ACCESS_KEY_ID} and
-#'   \code{AWS_SECRET_ACCESS_KEY} environment variables are both defined.
+#' If you are reading from a secure S3 bucket be sure to set the following in your spark-defaults.conf
+#' \code{spark.hadoop.fs.s3a.access.key}, \code{spark.hadoop.fs.s3a.secret.key} or any of the methods outlined in the aws-sdk
+#' documentation \href{http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html}{Working with AWS credentials}
+#' In order to work with the newer \code{s3a://} protocol also set the values for \code{spark.hadoop.fs.s3a.impl} and \code{spark.hadoop.fs.s3a.endpoint }.
+#' In addition, to support v4 of the S3 api be sure to pass the \code{-Dcom.amazonaws.services.s3.enableV4} driver options
+#' for the config key \code{spark.driver.extraJavaOptions }
+#' For instructions on how to configure \code{s3n://} check the hadoop documentation:
+#' \href{https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#Authentication_properties}{s3n authentication properties}
 #'
 #'
 #' @family Spark serialization routines
@@ -303,8 +325,6 @@ spark_read_json <- function(sc,
 #' Object Notation} format.
 #'
 #' @inheritParams spark_write_csv
-#' @param mode Specifies the behavior when data or table already exists.
-#' @param partition_by Partitions the output by the given columns on the file system.
 #' @param ... Optional arguments; currently unused.
 #'
 #' @family Spark serialization routines
@@ -355,8 +375,9 @@ spark_expect_jobj_class <- function(jobj, expectedClassName) {
   }
 }
 
-spark_data_read_generic <- function(sc, source, fileMethod, readOptions = list(), columns = NULL) {
+spark_data_read_generic <- function(sc, source, fileMethod, readOptions = list(), columns = NULL, schema = NULL) {
   columnsHaveTypes <- length(names(columns)) > 0
+  readSchemaProvided <- !is.null(schema)
 
   options <- invoke(hive_context(sc), "read")
 
@@ -364,8 +385,12 @@ spark_data_read_generic <- function(sc, source, fileMethod, readOptions = list()
     options <<- invoke(options, "option", optionName, readOptions[[optionName]])
   })
 
-  if (columnsHaveTypes) {
+  if (readSchemaProvided) {
+    columnDefs <- schema
+  } else if (columnsHaveTypes) {
     columnDefs <- spark_data_build_types(sc, columns)
+  }
+  if (readSchemaProvided || columnsHaveTypes) {
     options <- invoke(options, "schema", columnDefs)
   }
 
@@ -429,7 +454,9 @@ spark_data_write_generic <- function(df,
     invoke(options, fileMethod, url, path, properties)
   }
   else {
-    invoke(options, fileMethod, path)
+    options <- invoke(options, fileMethod, path)
+    # Need to call save explicitly in case of generic 'format'
+    if(fileMethod == "format") invoke(options, "save")
   }
 
   invisible(TRUE)
@@ -494,8 +521,6 @@ spark_load_table <- function(sc,
 #'
 #' @inheritParams spark_write_csv
 #' @param name The name to assign to the newly generated table.
-#' @param mode Specifies the behavior when data or table already exists.
-#' @param partition_by Partitions the output by the given columns on the file system.
 #' @param ... Optional arguments; currently unused.
 #'
 #' @family Spark serialization routines
@@ -515,7 +540,6 @@ spark_write_table <- function(x,
 #' Saves a Spark DataFrame and as a Spark table.
 #'
 #' @inheritParams spark_write_csv
-#' @param mode Specifies the behavior when data or table already exists.
 #'
 #' @family Spark serialization routines
 #'
@@ -542,7 +566,9 @@ spark_write_table.tbl_spark <- function(x,
       "Upgrade to Spark 2.X or use this function in a non-local Spark cluster.")
   }
 
-  spark_data_write_generic(sqlResult, name, "saveAsTable", mode, options, partition_by)
+  fileMethod <- ifelse(identical(mode, "append"), "insertInto", "saveAsTable")
+
+  spark_data_write_generic(sqlResult, name, fileMethod, mode, options, partition_by)
 }
 
 #' @export
@@ -583,6 +609,30 @@ spark_read_jdbc <- function(sc,
   spark_partition_register_df(sc, df, name, repartition, memory)
 }
 
+#' Read libsvm file into a Spark DataFrame.
+#'
+#' Read libsvm file into a Spark DataFrame.
+#'
+#' @inheritParams spark_read_csv
+#'
+#' @family Spark serialization routines
+#'
+#' @export
+spark_read_libsvm <- function(sc,
+                            name,
+                            path,
+                            repartition = 0,
+                            memory = TRUE,
+                            overwrite = TRUE,
+                            ...) {
+
+  if (overwrite) spark_remove_table_if_exists(sc, name)
+
+  df <- spark_data_read_generic(sc, "libsvm", "format") %>%
+    invoke("load", spark_normalize_path(path))
+  spark_partition_register_df(sc, df, name, repartition, memory)
+}
+
 #' Read from a generic source into a Spark DataFrame.
 #'
 #' Read from a generic source into a Spark DataFrame.
@@ -616,8 +666,6 @@ spark_read_source <- function(sc,
 #'
 #' @inheritParams spark_write_csv
 #' @param name The name to assign to the newly generated table.
-#' @param mode Specifies the behavior when data or table already exists.
-#' @param partition_by Partitions the output by the given columns on the file system.
 #' @param ... Optional arguments; currently unused.
 #'
 #' @family Spark serialization routines
@@ -663,17 +711,13 @@ spark_write_jdbc.spark_jobj <- function(x,
 #' Writes a Spark DataFrame into a generic source.
 #'
 #' @inheritParams spark_write_csv
-#' @param name The name to assign to the newly generated table.
 #' @param source A data source capable of reading data.
-#' @param mode Specifies the behavior when data or table already exists.
-#' @param partition_by Partitions the output by the given columns on the file system.
 #' @param ... Optional arguments; currently unused.
 #'
 #' @family Spark serialization routines
 #'
 #' @export
 spark_write_source <- function(x,
-                               name,
                                source,
                                mode = NULL,
                                options = list(),
@@ -684,26 +728,24 @@ spark_write_source <- function(x,
 
 #' @export
 spark_write_source.tbl_spark <- function(x,
-                                         name,
                                          source,
                                          mode = NULL,
                                          options = list(),
                                          partition_by = NULL,
                                          ...) {
   sqlResult <- spark_sqlresult_from_dplyr(x)
-  spark_data_write_generic(sqlResult, name, source, mode, options, partition_by)
+  spark_data_write_generic(sqlResult, source, "format", mode, options, partition_by)
 }
 
 #' @export
 spark_write_source.spark_jobj <- function(x,
-                                          name,
                                           source,
                                           mode = NULL,
                                           options = list(),
                                           partition_by = NULL,
                                           ...) {
   spark_expect_jobj_class(x, "org.apache.spark.sql.DataFrame")
-  spark_data_write_generic(x, name, source, mode, options, partition_by)
+  spark_data_write_generic(x, source, "format", mode, options, partition_by)
 }
 
 #' Read a Text file into a Spark DataFrame
@@ -712,11 +754,17 @@ spark_write_source.spark_jobj <- function(x,
 #'
 #' @inheritParams spark_read_csv
 #'
-#' @details You can read data from HDFS (\code{hdfs://}), S3 (\code{s3n://}), as well as
+#' @details You can read data from HDFS (\code{hdfs://}), S3 (\code{s3a://}), as well as
 #'   the local file system (\code{file://}).
 #'
-#' If you are reading from a secure S3 bucket be sure that the \code{AWS_ACCESS_KEY_ID} and
-#'   \code{AWS_SECRET_ACCESS_KEY} environment variables are both defined.
+#' If you are reading from a secure S3 bucket be sure to set the following in your spark-defaults.conf
+#' \code{spark.hadoop.fs.s3a.access.key}, \code{spark.hadoop.fs.s3a.secret.key} or any of the methods outlined in the aws-sdk
+#' documentation \href{http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html}{Working with AWS credentials}
+#' In order to work with the newer \code{s3a://} protocol also set the values for \code{spark.hadoop.fs.s3a.impl} and \code{spark.hadoop.fs.s3a.endpoint }.
+#' In addition, to support v4 of the S3 api be sure to pass the \code{-Dcom.amazonaws.services.s3.enableV4} driver options
+#' for the config key \code{spark.driver.extraJavaOptions }
+#' For instructions on how to configure \code{s3n://} check the hadoop documentation:
+#' \href{https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#Authentication_properties}{s3n authentication properties}
 #'
 #' @family Spark serialization routines
 #'
@@ -733,7 +781,7 @@ spark_read_text <- function(sc,
 
   columns = list(line = "character")
 
-  df <- spark_data_read_generic(sc, spark_normalize_path(path), "text", options, columns)
+  df <- spark_data_read_generic(sc, list(spark_normalize_path(path)), "text", options, columns)
   spark_partition_register_df(sc, df, name, repartition, memory)
 }
 
@@ -742,8 +790,6 @@ spark_read_text <- function(sc,
 #' Serialize a Spark DataFrame to the plain text format.
 #'
 #' @inheritParams spark_write_csv
-#' @param mode Specifies the behavior when data or table already exists.
-#' @param partition_by Partitions the output by the given columns on the file system.
 #' @param ... Optional arguments; currently unused.
 #'
 #' @family Spark serialization routines

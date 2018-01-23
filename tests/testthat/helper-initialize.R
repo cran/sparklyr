@@ -1,4 +1,6 @@
-testthat_spark_connection <- function(version = NULL) {
+testthat_spark_connection <- function() {
+  version <- Sys.getenv("SPARK_VERSION", unset = "2.2.0")
+
   if (exists(".testthat_livy_connection", envir = .GlobalEnv)) {
     spark_disconnect_all()
     Sys.sleep(3)
@@ -6,9 +8,10 @@ testthat_spark_connection <- function(version = NULL) {
     remove(".testthat_livy_connection", envir = .GlobalEnv)
   }
 
-  if (nrow(spark_installed_versions()) == 0) {
+  spark_installed <- spark_installed_versions()
+  if (nrow(spark_installed[spark_installed$spark == version, ]) == 0) {
     options(sparkinstall.verbose = TRUE)
-    spark_install("2.1.0")
+    spark_install(version)
   }
 
   expect_gt(nrow(spark_installed_versions()), 0)
@@ -28,7 +31,6 @@ testthat_spark_connection <- function(version = NULL) {
     options(sparklyr.na.omit.verbose = TRUE)
     options(sparklyr.na.action.verbose = TRUE)
 
-    version <- version %||% Sys.getenv("SPARK_VERSION", unset = "2.1.0")
     setwd(tempdir())
     sc <- spark_connect(master = "local", version = version, config = config)
     assign(".testthat_spark_connection", sc, envir = .GlobalEnv)
@@ -101,19 +103,22 @@ sdf_query_plan <- function(x) {
     unlist()
 }
 
-testthat_livy_connection <- function(version = NULL) {
+testthat_livy_connection <- function() {
+  version <- Sys.getenv("SPARK_VERSION", unset = "2.2.0")
+
   if (exists(".testthat_spark_connection", envir = .GlobalEnv)) {
     spark_disconnect_all()
     remove(".testthat_spark_connection", envir = .GlobalEnv)
     Sys.sleep(3)
   }
 
-  if (nrow(spark_installed_versions()) == 0) {
-    spark_install("2.1.0")
+  spark_installed <- spark_installed_versions()
+  if (nrow(spark_installed[spark_installed$spark == version, ]) == 0) {
+    spark_install(version)
   }
 
   if (nrow(livy_installed_versions()) == 0) {
-    livy_install("0.3.0", spark_version = "2.1.0")
+    livy_install("0.3.0", spark_version = version)
   }
 
   expect_gt(nrow(livy_installed_versions()), 0)
@@ -128,7 +133,7 @@ testthat_livy_connection <- function(version = NULL) {
   if (!connected) {
     livy_service_start(
       version = "0.3.0",
-      spark_version = "2.1.0",
+      spark_version = version,
       stdout = FALSE,
       stderr = FALSE)
 
@@ -138,3 +143,35 @@ testthat_livy_connection <- function(version = NULL) {
 
   get(".testthat_livy_connection", envir = .GlobalEnv)
 }
+
+get_default_args <- function(fn, exclude = NULL) {
+  formals(fn) %>%
+    (function(x) x[setdiff(names(x), c(exclude, c("x", "uid", "...", "formula")))])
+}
+
+test_requires_version <- function(min_version, comment = NULL) {
+  sc <- testthat_spark_connection()
+  if (spark_version(sc) < min_version) {
+    msg <- paste0("test requires Spark version ", min_version)
+    if (!is.null(comment))
+      msg <- paste0(msg, ": ", comment)
+    skip(msg)
+  }
+}
+
+param_filter_version <- function(args, min_version, params) {
+  sc <- testthat_spark_connection()
+  if (spark_version(sc) < min_version)
+    args[params] <- NULL
+  args
+}
+
+param_add_version <- function(args, min_version, ...) {
+  sc <- testthat_spark_connection()
+  if (spark_version(sc) >= min_version)
+    c(args, list(...))
+  else
+    args
+}
+
+output_file <- function(filename) file.path("output", filename)

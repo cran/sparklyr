@@ -23,25 +23,6 @@ object Sources {
     "connection_is_open <- function(sc) {\n" +
     "  UseMethod(\"connection_is_open\")\n" +
     "}\n" +
-    "# nolint start\n" +
-    "# Type mapping from Java to R\n" +
-    "#\n" +
-    "# void -> NULL\n" +
-    "# Int -> integer\n" +
-    "# String -> character\n" +
-    "# Boolean -> logical\n" +
-    "# Float -> double\n" +
-    "# Double -> double\n" +
-    "# Long -> double\n" +
-    "# Array[Byte] -> raw\n" +
-    "# Date -> Date\n" +
-    "# Time -> POSIXct\n" +
-    "#\n" +
-    "# Array[T] -> list()\n" +
-    "# Object -> jobj\n" +
-    "#\n" +
-    "# nolint end\n" +
-    "\n" +
     "readObject <- function(con) {\n" +
     "  # Read type first\n" +
     "  type <- readType(con)\n" +
@@ -74,6 +55,11 @@ object Sources {
     "  string\n" +
     "}\n" +
     "\n" +
+    "readDateArray <- function(con, n = 1) {\n" +
+    "  r <- readTime(con, n)\n" +
+    "  if (getOption(\"sparklyr.collect.datechars\", FALSE)) r else as.Date(r)\n" +
+    "}\n" +
+    "\n" +
     "readInt <- function(con, n = 1) {\n" +
     "  readBin(con, integer(), n = n, endian = \"big\")\n" +
     "}\n" +
@@ -96,20 +82,29 @@ object Sources {
     "\n" +
     "readTime <- function(con, n = 1) {\n" +
     "  t <- readDouble(con, n)\n" +
-    "  as.POSIXct(t, origin = \"1970-01-01\")\n" +
+    "  timeNA <- as.POSIXct(0, origin = \"1970-01-01\", tz = \"UTC\")\n" +
+    "\n" +
+    "  r <- as.POSIXct(t, origin = \"1970-01-01\", tz = \"UTC\")\n" +
+    "  if (getOption(\"sparklyr.collect.datechars\", FALSE)) as.character(r) else {\n" +
+    "    r[r == timeNA] <- as.POSIXct(NA)\n" +
+    "    r\n" +
+    "  }\n" +
     "}\n" +
     "\n" +
     "readArray <- function(con) {\n" +
     "  type <- readType(con)\n" +
     "  len <- readInt(con)\n" +
     "\n" +
-    "  # short-circuit for reading arrays of double, int, logical\n" +
     "  if (type == \"d\") {\n" +
     "    return(readDouble(con, n = len))\n" +
     "  } else if (type == \"i\") {\n" +
     "    return(readInt(con, n = len))\n" +
     "  } else if (type == \"b\") {\n" +
     "    return(readBoolean(con, n = len))\n" +
+    "  } else if (type == \"t\") {\n" +
+    "    return(readTime(con, n = len))\n" +
+    "  } else if (type == \"D\") {\n" +
+    "    return(readDateArray(con, n = len))\n" +
     "  }\n" +
     "\n" +
     "  if (len > 0) {\n" +
@@ -176,60 +171,6 @@ object Sources {
     "readRaw <- function(con) {\n" +
     "  dataLen <- readInt(con)\n" +
     "  readBin(con, raw(), as.integer(dataLen), endian = \"big\")\n" +
-    "}\n" +
-    "\n" +
-    "readRawLen <- function(con, dataLen) {\n" +
-    "  readBin(con, raw(), as.integer(dataLen), endian = \"big\")\n" +
-    "}\n" +
-    "\n" +
-    "readDeserialize <- function(con) {\n" +
-    "  # We have two cases that are possible - In one, the entire partition is\n" +
-    "  # encoded as a byte array, so we have only one value to read. If so just\n" +
-    "  # return firstData\n" +
-    "  dataLen <- readInt(con)\n" +
-    "  firstData <- unserialize(\n" +
-    "    readBin(con, raw(), as.integer(dataLen), endian = \"big\"))\n" +
-    "\n" +
-    "  # Else, read things into a list\n" +
-    "  dataLen <- readInt(con)\n" +
-    "  if (length(dataLen) > 0 && dataLen > 0) {\n" +
-    "    data <- list(firstData)\n" +
-    "    while (length(dataLen) > 0 && dataLen > 0) {\n" +
-    "      data[[length(data) + 1L]] <- unserialize(\n" +
-    "        readBin(con, raw(), as.integer(dataLen), endian = \"big\"))\n" +
-    "      dataLen <- readInt(con)\n" +
-    "    }\n" +
-    "    unlist(data, recursive = FALSE)\n" +
-    "  } else {\n" +
-    "    firstData\n" +
-    "  }\n" +
-    "}\n" +
-    "\n" +
-    "readMultipleObjects <- function(inputCon) {\n" +
-    "  # readMultipleObjects will read multiple continuous objects from\n" +
-    "  # a DataOutputStream. There is no preceding field telling the count\n" +
-    "  # of the objects, so the number of objects varies, we try to read\n" +
-    "  # all objects in a loop until the end of the stream.\n" +
-    "  data <- list()\n" +
-    "  while (TRUE) {\n" +
-    "    # If reaching the end of the stream, type returned should be \"\".\n" +
-    "    type <- readType(inputCon)\n" +
-    "    if (type == \"\") {\n" +
-    "      break\n" +
-    "    }\n" +
-    "    data[[length(data) + 1L]] <- readTypedObject(inputCon, type)\n" +
-    "  }\n" +
-    "  data # this is a list of named lists now\n" +
-    "}\n" +
-    "\n" +
-    "readRowList <- function(obj) {\n" +
-    "  # readRowList is meant for use inside an lapply. As a result, it is\n" +
-    "  # necessary to open a standalone connection for the row and consume\n" +
-    "  # the numCols bytes inside the read function in order to correctly\n" +
-    "  # deserialize the row.\n" +
-    "  rawObj <- rawConnection(obj, \"r+\")\n" +
-    "  on.exit(close(rawObj))\n" +
-    "  readObject(rawObj)\n" +
     "}\n" +
     "wait_connect_gateway <- function(gatewayAddress, gatewayPort, config, isStarting) {\n" +
     "  waitSeconds <- if (isStarting)\n" +
@@ -570,7 +511,7 @@ object Sources {
     "  tryCatch({\n" +
     "    class <- invoke(jobj, \"getClass\")\n" +
     "    if (inherits(class, \"spark_jobj\"))\n" +
-    "      class <- invoke(class, \"toString\")\n" +
+    "      class <- invoke(class, \"getName\")\n" +
     "  }, error = function(e) {\n" +
     "  })\n" +
     "  tryCatch({\n" +
@@ -657,7 +598,7 @@ object Sources {
     "# double, numeric -> Double\n" +
     "# raw -> Array[Byte]\n" +
     "# Date -> Date\n" +
-    "# POSIXct,POSIXlt -> Time\n" +
+    "# POSIXct,POSIXlt -> Timestamp\n" +
     "#\n" +
     "# list[T] -> Array[T], where T is one of above mentioned types\n" +
     "# environment -> Map[String, T], where T is a native type\n" +
@@ -942,6 +883,9 @@ object Sources {
     "  closureRaw <- worker_invoke(context, \"getClosure\")\n" +
     "  closure <- unserialize(closureRaw)\n" +
     "\n" +
+    "  funcContextRaw <- worker_invoke(context, \"getContext\")\n" +
+    "  funcContext <- unserialize(funcContextRaw)\n" +
+    "\n" +
     "  closureRLangRaw <- worker_invoke(context, \"getClosureRLang\")\n" +
     "  if (length(closureRLangRaw) > 0) {\n" +
     "    worker_log(\"found rlang closure\")\n" +
@@ -974,6 +918,7 @@ object Sources {
     "      closure_params <- length(formals(closure))\n" +
     "      closure_args <- c(\n" +
     "        list(df),\n" +
+    "        if (!is.null(funcContext)) list(funcContext) else NULL,\n" +
     "        as.list(\n" +
     "          if (nrow(df) > 0)\n" +
     "            lapply(grouped_by, function(group_by_name) df[[group_by_name]][[1]])\n" +

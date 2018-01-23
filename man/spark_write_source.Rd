@@ -4,21 +4,24 @@
 \alias{spark_write_source}
 \title{Writes a Spark DataFrame into a generic source}
 \usage{
-spark_write_source(x, name, source, mode = NULL, options = list(),
+spark_write_source(x, source, mode = NULL, options = list(),
   partition_by = NULL, ...)
 }
 \arguments{
 \item{x}{A Spark DataFrame or dplyr operation}
 
-\item{name}{The name to assign to the newly generated table.}
-
 \item{source}{A data source capable of reading data.}
 
-\item{mode}{Specifies the behavior when data or table already exists.}
+\item{mode}{A \code{character} element. Specifies the behavior when data or
+  table already exists. Supported values include: 'error', 'append', 'overwrite' and
+  ignore. Notice that 'overwrite' will also change the column structure.
+
+  For more details see also \url{http://spark.apache.org/docs/latest/sql-programming-guide.html#save-modes}
+  for your version of Spark.}
 
 \item{options}{A list of strings with additional options.}
 
-\item{partition_by}{Partitions the output by the given columns on the file system.}
+\item{partition_by}{A \code{character} vector. Partitions the output by the given columns on the file system.}
 
 \item{...}{Optional arguments; currently unused.}
 }
@@ -30,6 +33,7 @@ Other Spark serialization routines: \code{\link{spark_load_table}},
   \code{\link{spark_read_csv}},
   \code{\link{spark_read_jdbc}},
   \code{\link{spark_read_json}},
+  \code{\link{spark_read_libsvm}},
   \code{\link{spark_read_parquet}},
   \code{\link{spark_read_source}},
   \code{\link{spark_read_table}},
@@ -42,4 +46,3 @@ Other Spark serialization routines: \code{\link{spark_load_table}},
   \code{\link{spark_write_table}},
   \code{\link{spark_write_text}}
 }
-\concept{Spark serialization routines}

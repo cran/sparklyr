@@ -27,7 +27,7 @@ spark_get_checkpoint_dir <- function(sc) {
 
 #' Generate a Table Name from Expression
 #'
-#' Attempts to generate a table name from an expression; othewise,
+#' Attempts to generate a table name from an expression; otherwise,
 #' assigns an auto-generated generic name with "sparklyr_" prefix.
 #'
 #' @param expr The expression to attempt to use as name
@@ -36,4 +36,21 @@ spark_get_checkpoint_dir <- function(sc) {
 spark_table_name <- function(expr) {
   table_name <- deparse(expr)
   if (grepl("^[a-zA-Z][a-zA-Z0-9_]*$", table_name)) table_name else random_string(prefix = "sparklyr_")
+}
+
+#' Superclasses of object
+#'
+#' Extract the classes that a Java object inherits from. This is the jobj equivalent of \code{class()}.
+#'
+#' @param jobj A \code{spark_jobj}
+#' @param simple_name Whether to return simple names, defaults to TRUE
+#' @keywords internal
+#' @export
+jobj_class <- function(jobj, simple_name = TRUE) {
+  invoke_static(spark_connection(jobj),
+                "sparklyr.Utils",
+                "getAncestry",
+                jobj,
+                ensure_scalar_boolean(simple_name)) %>%
+    unlist()
 }
