@@ -2,7 +2,7 @@
 #'
 #' Methods for transformation, fit, and prediction. These are mirrors of the corresponding \link{sdf-transform-methods}.
 #'
-#' @param x A \code{ml_estimator}, \code{ml_transformer}, or \code{ml_model} object.
+#' @param x A \code{ml_estimator}, \code{ml_transformer} (or a list thereof), or \code{ml_model} object.
 #' @param dataset A \code{tbl_spark}.
 #' @template roxlate-ml-dots
 #'
@@ -35,8 +35,34 @@ ml_fit <- function(x, dataset, ...) {
 #' @rdname ml-transform-methods
 #' @export
 ml_transform <- function(x, dataset, ...) {
-  if (!is_ml_transformer(x))
-    stop("'ml_transform()' is only applicable to 'ml_transformer' objects")
+  UseMethod("ml_transform")
+}
+
+#' @export
+ml_transform.default <- function(x, dataset, ...) {
+  stop("Transformers must be 'ml_transformer' objects.")
+}
+
+#' @export
+ml_transform.list <- function(x, dataset, ...) {
+  if (!all(sapply(x, is_ml_transformer)))
+    stop("Transformers must be 'ml_transformer' objects.")
+  sdf <- spark_dataframe(dataset)
+
+  transforms <- x %>%
+    lapply(spark_jobj)
+
+  result_sdf <- Reduce(
+    function(dataset, transformer) invoke(transformer, "transform", dataset),
+    transforms,
+    init = sdf
+  )
+
+  sdf_register(result_sdf)
+}
+
+#' @export
+ml_transform.ml_transformer <- function(x, dataset, ...) {
   sdf <- spark_dataframe(dataset)
   spark_jobj(x) %>%
     invoke("transform", sdf) %>%
@@ -139,7 +165,16 @@ sdf_predict <- function(x, model, ...) {
 
 #' @export
 sdf_predict.ml_model <- function(x, model, ...) {
+  msg <- "The signature sdf_predict(model, dataset) is deprecated and will be removed in a future version. Use sdf_predict(dataset, model) or ml_predict(model, dataset) instead."
+  warning(msg)
   ml_predict(x, dataset = model, ...)
+}
+
+#' @export
+sdf_predict.ml_transformer <- function(x, model, ...) {
+  msg <- "The signature sdf_predict(transformer, dataset) is deprecated and will be removed in a future version. Use sdf_predict(dataset, transformer) or ml_predict(transformer, dataset) instead."
+  warning(msg)
+  ml_transform(x, dataset = model, ...)
 }
 
 #' @export

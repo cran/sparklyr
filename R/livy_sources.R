@@ -6,7 +6,25 @@ livy_sources_included <- function() {
     "/stream\\.scala",
     "/sqlutils\\.scala",
     "/utils\\.scala",
-    "/repartition\\.scala"
+    "/repartition\\.scala",
+    "/tracker\\.scala",
+    "/livyutils\\.scala",
+    "/applyutils\\.scala",
+    "/classutils\\.scala",
+    "/fileutils\\.scala",
+    "/rscript\\.scala",
+    "/sources\\.scala",
+    "/workercontext\\.scala",
+    "/channel\\.scala",
+    "/handler\\.scala",
+    "/backend\\.scala",
+    "/workerhelper\\.scala",
+    "/workerrdd\\.scala",
+    "/workerutils\\.scala",
+    "/mlutils\\.scala",
+    "/mlutils2\\.scala",
+    "/bucketizerutils\\.scala"
+    # New files might require entries to livy_load_scala_sources and globalClassMap
   )
 }
 
@@ -29,6 +47,9 @@ livy_sources_refresh <- function() {
                                  basename(sourcePath))
 
     lines <- readLines(sourcePath)
+
+    if (!dir.exists(dirname(destinationPath)))
+      dir.create(dirname(destinationPath), recursive = TRUE)
 
     write("//", file = destinationPath, append = FALSE)
     write("// This file was automatically generated using livy_sources_refresh()", file = destinationPath, append = TRUE)

@@ -36,6 +36,7 @@ livy_validate_http_response <- function(message, req) {
 #' @param config Optional base configuration
 #' @param username The username to use in the Authorization header
 #' @param password The password to use in the Authorization header
+#' @param negotiate Whether to use gssnegotiate method or not
 #' @param custom_headers List of custom headers to append to http requests. Defaults to \code{list("X-Requested-By" = "sparklyr")}.
 #' @param ... additional Livy session parameters
 #'
@@ -66,17 +67,12 @@ livy_validate_http_response <- function(message, req) {
 #' }
 #'
 #' @return Named list with configuration data
-livy_config <- function(config = spark_config(), username = NULL, password = NULL,
+livy_config <- function(config = spark_config(), username = NULL, password = NULL, negotiate = FALSE,
                         custom_headers = list("X-Requested-By" = "sparklyr"), ...) {
-  if (!is.null(username) || !is.null(password)) {
-    config[["sparklyr.livy.headers"]] <- c(
-      config[["sparklyr.livy.headers"]], list(
-        Authorization = paste(
-          "Basic",
-          base64encode(charToRaw(paste(username, password, sep = ":")))
-        )
-      )
-    )
+  if (negotiate) {
+    config[["sparklyr.livy.auth"]] <- httr::authenticate("", "", type = "gssnegotiate")
+  } else if (!is.null(username) || !is.null(password)) {
+    config[["sparklyr.livy.auth"]] <- httr::authenticate(username, password, type = "basic")
   }
 
   if (!is.null(custom_headers)) {
@@ -139,7 +135,8 @@ livy_get_json <- function(url, config) {
   req <- GET(url,
              livy_get_httr_headers(config, list(
                "Content-Type" = "application/json"
-             ))
+             )),
+             config$sparklyr.livy.auth
   )
 
   livy_validate_http_response("Failed to retrieve livy session", req)
@@ -190,7 +187,7 @@ livy_create_session <- function(master, config) {
     conf = livy_config_get(master, config)
   )
 
-  session_params <- connection_config(list(master = master, config = config), "livy.", NULL)
+  session_params <- connection_config(list(master = master, config = config), "livy.", "livy.session.")
   if (length(session_params) > 0) data <- append(data, session_params)
 
   req <- POST(paste(master, "sessions", sep = "/"),
@@ -199,7 +196,8 @@ livy_create_session <- function(master, config) {
               )),
               body = toJSON(
                 data
-              )
+              ),
+              config$sparklyr.livy.auth
   )
 
   livy_validate_http_response("Failed to create livy session", req)
@@ -218,7 +216,8 @@ livy_destroy_session <- function(sc) {
                 livy_get_httr_headers(sc$config, list(
                   "Content-Type" = "application/json"
                 )),
-                body = NULL
+                body = NULL,
+                sc$config$sparklyr.livy.auth
   )
 
   livy_validate_http_response("Failed to destroy livy statement", req)
@@ -265,22 +264,60 @@ livy_statement_new <- function(code, lobj) {
   )
 }
 
+livy_serialized_chunks <- function(serialized, n) {
+  num_chars <- nchar(serialized)
+  start <- seq(1, num_chars, by = n)
+  sapply(seq_along(start), function(i) {
+    end <- if (i < length(start)) start[i + 1] - 1 else num_chars
+    substr(serialized, start[i], end)
+  })
+}
+
 livy_statement_compose <- function(sc, static, class, method, ...) {
   serialized <- livy_invoke_serialize(sc = sc, static = static, object = class, method = method, ...)
+  chunks <- livy_serialized_chunks(serialized, 1000)
 
-  varName <- livy_code_new_return_var(sc)
+  chunk_vars <- list()
+  last_var <- NULL
+  for (i in 1:length(chunks)) {
+    if (is.null(last_var)) {
+      var_name <- paste("\"", chunks[i], "\"", sep = "")
+    }
+    else {
+      if (length(chunk_vars) == 0) {
+        var_name <- livy_code_new_return_var(sc)
+        chunk_vars <- c(chunk_vars, paste("var ", var_name, " = ", last_var, sep = ""))
+        last_var <- var_name
+      }
+
+      var_name <- livy_code_new_return_var(sc)
+      chunk_vars <- c(chunk_vars, paste("var ", var_name, " = ", last_var, " + \"", chunks[i], "\"", sep = ""))
+    }
+
+    last_var <- var_name
+  }
+
+  var_name <- livy_code_new_return_var(sc)
+
+  invoke_var <- paste(
+    "var ", var_name, " = ",
+    "LivyUtils.invokeFromBase64(",
+    last_var,
+    ")",
+    sep = ""
+  )
 
   code <- paste(
-    "var ", varName, " = ",
-    "LivyUtils.invokeFromBase64(\"",
-    serialized,
-    "\")",
-    sep = ""
+    c(
+      chunk_vars,
+      invoke_var
+    ),
+    collapse = "\n"
   )
 
   livy_statement_new(
     code = code,
-    lobj = livy_jobj_create(sc, varName)
+    lobj = livy_jobj_create(sc, var_name)
   )
 }
 
@@ -332,7 +369,8 @@ livy_post_statement <- function(sc, code) {
                 list(
                   code = unbox(code)
                 )
-              )
+              ),
+              sc$config$sparklyr.livy.auth
   )
 
   livy_validate_http_response("Failed to invoke livy statement", req)
@@ -363,7 +401,15 @@ livy_post_statement <- function(sc, code) {
     withr::with_options(list(
       warning.length = 8000
     ), {
-      stop("Failed to execute Livy statement with error: ", statementReponse$output$evalue)
+      stop(
+        "Failed to execute Livy statement with error: ",
+        if (is.null(statementReponse$output$evalue))
+          jsonlite::toJSON(statementReponse)
+        else
+          statementReponse$output$evalue,
+        "\nTraceback: ",
+        paste(statementReponse$output$traceback, collapse = "")
+      )
     })
   }
 
@@ -628,6 +674,22 @@ livy_load_scala_sources <- function(sc) {
     "serializer.scala",
     "stream.scala",
     "repartition.scala",
+    "applyutils.scala",
+    "classutils.scala",
+    "fileutils.scala",
+    "sources.scala",
+    "rscript.scala",
+    "workercontext.scala",
+    "handler.scala",
+    "channel.scala",
+    "backend.scala",
+    "workerrdd.scala",
+    "workerhelper.scala",
+    "workerutils.scala",
+    "mlutils.scala",
+    "mlutils2.scala",
+    "bucketizerutils.scala",
+    # LivyUtils should be the last file to include to map classes correctly
     "livyutils.scala"
   )
 
@@ -639,8 +701,25 @@ livy_load_scala_sources <- function(sc) {
     match(livySources) %>%
     order()
 
-  lapply(livySourcesFiles[sourceOrder], function(sourceFile) {
+  livySparkVersion <- livy_post_statement(sc, "sc.version") %>%
+    gsub("^.+= |[\n\r \t]", "", .) %>%
+    numeric_version()
+
+  livySourcesFiles <- livySourcesFiles[sourceOrder] %>%
+    Filter(function(x) {
+      requiredVersion <- x %>%
+        dirname() %>%
+        basename() %>%
+        gsub("^spark-", "", .) %>%
+        numeric_version()
+      requiredVersion <= livySparkVersion
+    }, .)
+
+  lapply(livySourcesFiles, function(sourceFile) {
     tryCatch({
+      subpath_name <- file.path(basename(dirname(sourceFile)), basename(sourceFile))
+      if (sparklyr_boolean_option("sparklyr.verbose")) message("Loading ", subpath_name)
+
       sources <- paste(readLines(sourceFile), collapse = "\n")
 
       statement <- livy_statement_new(sources, NULL)
@@ -668,6 +747,9 @@ initialize_connection.livy_connection <- function(sc) {
       "fromSparkContext",
       sc$spark_context
     )
+
+    # cache spark version
+    sc$spark_version <- spark_version(sc)
 
     sc$hive_context <- create_hive_context(sc)
 

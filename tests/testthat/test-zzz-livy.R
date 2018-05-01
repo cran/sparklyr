@@ -26,10 +26,26 @@ test_that("'livy_config()' works with extended parameters", {
 })
 
 test_that("'livy_config()' works with authentication", {
-  config <- livy_config(username = "foo", password = "bar")
+  config_basic <- livy_config(username = "foo", password = "bar")
 
   expect_equal(
-    config$sparklyr.livy.headers$Authorization,
-    "Basic Zm9vOmJhcg=="
+    config_basic$sparklyr.livy.auth,
+    httr::authenticate("foo", "bar", type = "basic")
   )
+
+  config_negotiate <- livy_config(negotiate = TRUE)
+
+  expect_equal(
+    config_negotiate$sparklyr.livy.auth,
+    httr::authenticate("", "", type = "gssnegotiate")
+  )
+})
+
+test_that("'spark_apply()' works under Livy connections", {
+  lc <- testthat_livy_connection()
+
+  df <- data.frame(id = 10)
+  apply_tbl <- sdf_len(lc, 1) %>% spark_apply(function(x) 10)
+
+  expect_equal(apply_tbl %>% collect(), df)
 })

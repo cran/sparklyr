@@ -1,24 +1,5 @@
 package sparklyr
 
-import java.io.{DataInputStream, DataOutputStream}
-import java.io.{File, FileOutputStream, IOException}
-import java.net.{InetAddress, InetSocketAddress, ServerSocket, Socket}
-import java.util.concurrent.TimeUnit
-
-import io.netty.bootstrap.ServerBootstrap
-import io.netty.channel.{ChannelFuture, ChannelInitializer, EventLoopGroup}
-import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.SocketChannel
-import io.netty.channel.socket.nio.NioServerSocketChannel
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder
-import io.netty.handler.codec.bytes.{ByteArrayDecoder, ByteArrayEncoder}
-
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.sql.hive.HiveContext
-
-import scala.util.Try
-
 /*
  * The Backend class is launched from Spark through spark-submit with the following
  * paramters: port, session and service.
@@ -63,14 +44,18 @@ import scala.util.Try
  * to the main gateway the port in which this instance will listen to.
  */
 
-object Backend {
-  /* Leaving this entry for backward compatibility with databricks */
-  def main(args: Array[String]): Unit = {
-    Shell.main(args)
-  }
-}
+class Backend() {
+  import java.io.{DataInputStream, DataOutputStream}
+  import java.io.{File, FileOutputStream, IOException}
+  import java.net.{InetAddress, InetSocketAddress, ServerSocket, Socket}
+  import java.util.concurrent.TimeUnit
 
-class Backend {
+  import org.apache.spark.SparkConf
+  import org.apache.spark.SparkContext
+  import org.apache.spark.sql.hive.HiveContext
+
+  import scala.util.Try
+
   private[this] var isService: Boolean = false
   private[this] var isRemote: Boolean = false
   private[this] var isWorker: Boolean = false
@@ -96,6 +81,12 @@ class Backend {
   private[this] var logger: Logger = new Logger("Session", 0);
 
   private[this] var oneConnection: Boolean = false;
+
+  private[this] var defaultTracker: Option[JVMObjectTracker] = None
+
+  def setTracker(tracker: JVMObjectTracker): Unit = {
+    defaultTracker = Option(tracker)
+  }
 
   object GatewayOperattions extends Enumeration {
     val GetPorts, RegisterInstance, UnregisterInstance = Value
@@ -276,7 +267,9 @@ class Backend {
                 logger.log("found requested session matches current session")
                 logger.log("is creating backend and allocating system resources")
 
-                val backendChannel = new BackendChannel(logger, terminate)
+                val tracker = if (defaultTracker.isDefined) defaultTracker.get else new JVMObjectTracker();
+                val serializer = new Serializer(tracker);
+                val backendChannel = new BackendChannel(logger, terminate, serializer, tracker)
                 backendChannel.setHostContext(hostContext)
 
                 val backendPort: Int = backendChannel.init(isRemote)

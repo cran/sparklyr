@@ -11,9 +11,12 @@ ml_index_labels_metadata <- function(label_indexer_model, dataset, label_col) {
 }
 
 ml_feature_names_metadata <- function(pipeline_model, dataset, features_col) {
-  r_formula_model <- ml_stage(pipeline_model, 1)
-  transformed_tbl <- ml_transform(r_formula_model, dataset)
-  features_col <- ml_param(r_formula_model, "features_col")
+  preprocessor <- ml_stage(pipeline_model, 1)
+  transformed_tbl <- ml_transform(preprocessor, dataset)
+  features_col <- if (inherits(preprocessor, "ml_r_formula_model"))
+    ml_param(preprocessor, "features_col")
+  else # vector assembler
+    ml_param(preprocessor, "output_col")
 
   ml_column_metadata(transformed_tbl, features_col) %>%
     `[[`("attrs") %>%
@@ -25,7 +28,7 @@ ml_feature_names_metadata <- function(pipeline_model, dataset, features_col) {
 ml_generate_ml_model <- function(
   x, predictor, formula, features_col = "features",
   label_col = "label", type,
-  constructor, predicted_label_col = NULL, call = NULL) {
+  constructor, predicted_label_col = NULL) {
   sc <- spark_connection(x)
   classification <- identical(type, "classification")
 
@@ -45,6 +48,19 @@ ml_generate_ml_model <- function(
       pipeline <- ml_pipeline(r_formula, string_indexer, predictor)
     }
     pipeline
+  } else if (identical(type, "clustering") && spark_version(sc) < "2.0.0") {
+    # one-sided formulas not supported prior to Spark 2.0
+    rdf <- sdf_schema(x) %>%
+      lapply(`[[`, "name") %>%
+      as.data.frame(stringsAsFactors = FALSE)
+    features <- stats::terms(as.formula(formula), data = rdf) %>%
+      attr("term.labels")
+
+    vector_assembler <- ft_vector_assembler(
+      sc, input_cols = features, output_col = features_col
+    )
+    ml_pipeline(vector_assembler, predictor)
+
   } else {
     r_formula <- ft_r_formula(sc, formula, features_col, label_col)
     ml_pipeline(r_formula, predictor)
@@ -87,17 +103,13 @@ ml_generate_ml_model <- function(
 
   feature_names <- ml_feature_names_metadata(pipeline_model, x, features_col)
 
-  call <- call %||% sys.call(sys.parent())
-  call_string <- paste(deparse(call, width.cutoff = 500), " ")
-
   args <- list(
     pipeline = pipeline,
     pipeline_model = pipeline_model,
     model = ml_stage(pipeline_model, model_uid),
     dataset = x,
     formula = formula,
-    feature_names = feature_names,
-    call = call_string
+    feature_names = feature_names
   ) %>%
     (function(args) if (classification) rlang::modify(
       args, index_labels = index_labels

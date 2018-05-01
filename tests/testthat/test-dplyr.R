@@ -2,6 +2,7 @@ context("dplyr")
 sc <- testthat_spark_connection()
 
 iris_tbl <- testthat_tbl("iris")
+test_requires("dplyr")
 
 df1 <- data_frame(a = 1:3, b = letters[1:3])
 df2 <- data_frame(b = letters[1:3], c = letters[24:26])
@@ -90,9 +91,27 @@ test_that("the implementation of 'sample_frac' functions returns a sample", {
 
   # As of Spark 2.1.0, sampling functions are not exact.
   expect_lt(
-    iris_tbl %>% sample_frac(0.2) %>% collect() %>% nrow(),
+    iris_tbl %>% select(Petal_Length) %>%
+      sample_frac(0.2) %>% collect() %>% nrow(),
     nrow(iris)
   )
+
+  expect_lt(
+    iris_tbl %>% select(Petal_Length) %>%
+      sample_n(10) %>% collect() %>% nrow(),
+    nrow(iris)
+  )
+})
+
+test_that("'sample_n' and 'sample_frac' work in nontrivial queries (#1299)", {
+  test_requires_version("2.0.0", "sample_n() support")
+  test_requires("dplyr")
+
+  expect_lt(
+    iris_tbl %>% sample_n(10) %>% collect() %>% nrow(),
+    nrow(iris)
+  )
+
 })
 
 test_that("'sdf_broadcast' forces broadcast hash join", {
@@ -103,5 +122,5 @@ test_that("'sdf_broadcast' forces broadcast hash join", {
     invoke("queryExecution") %>%
     invoke("optimizedPlan") %>%
     invoke("toString")
-  expect_match(query_plan, "BroadcastHint|isBroadcastable=true")
+  expect_match(query_plan, "B|broadcast")
 })

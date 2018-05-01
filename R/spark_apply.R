@@ -132,6 +132,28 @@ spark_apply_packages_is_bundle <- function(packages) {
 #' @param context Optional object to be serialized and passed back to \code{f()}.
 #' @param ... Optional arguments; currently unused.
 #'
+#' @section Configuration:
+#'
+#' \code{spark_config()} settings can be specified to change the workers
+#' environment.
+#'
+#' For instance, to set additional environment variables to each
+#' worker node use the \code{sparklyr.apply.env.*} config, to launch workers
+#' without \code{--vanilla} use \code{sparklyr.apply.options.vanilla} set to
+#' \code{FALSE}, to run a custom script before launching Rscript use
+#' \code{sparklyr.apply.options.rscript.before}.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' library(sparklyr)
+#' sc <- spark_connect(master = "local")
+#'
+#' # creates an Spark data frame with 10 elements then multiply times 10 in R
+#' sdf_len(sc, 10) %>% spark_apply(function(df) df * 10)
+#'
+#' }
+#'
 #' @export
 spark_apply <- function(x,
                         f,
@@ -177,11 +199,23 @@ spark_apply <- function(x,
   worker_config <- worker_config_serialize(
     c(
       list(
-        debug = isTRUE(args$debug)
+        debug = isTRUE(args$debug),
+        profile = isTRUE(args$profile)
       ),
       sc$config
     )
   )
+
+  # add debug connection message
+  if (isTRUE(args$debug)) {
+    message("Debugging spark_apply(), connect to worker debugging session as follows:")
+    message("  1. Find the workers <sessionid> and <port> in the worker logs, from RStudio click")
+    message("     'Log' under the connection, look for the last entry with contents:")
+    message("     'Session (<sessionid>) is waiting for sparklyr client to connect to port <port>'")
+    message("  2. From a new R session run:")
+    message("     debugonce(sparklyr:::spark_worker_main)")
+    message("     sparklyr:::spark_worker_main(<sessionid>, <port>)")
+  }
 
   if (grouped) {
     colpos <- which(colnames(x) %in% group_by)
@@ -226,6 +260,11 @@ spark_apply <- function(x,
     }
   }
 
+  spark_apply_options <- lapply(
+    connection_config(sc, "sparklyr.apply.options."),
+    as.character
+  )
+
   rdd <- invoke_static(
     sc,
     "sparklyr.WorkerHelper",
@@ -240,7 +279,8 @@ spark_apply <- function(x,
     bundle_path,
     as.environment(proc_env),
     as.integer(60),
-    context_serialize
+    context_serialize,
+    as.environment(spark_apply_options)
   )
 
   # while workers need to relaunch sparklyr backends, cache by default
