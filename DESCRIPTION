@@ -1,7 +1,7 @@
 Package: sparklyr
 Type: Package
 Title: R Interface to Apache Spark
-Version: 0.8.1
+Version: 0.8.2
 Authors@R: c(
     person("Javier", "Luraschi", email = "javier@rstudio.com", role = c("aut", "cre")),
     person("Kevin", "Kuo", role = "aut", email = "kevin.kuo@rstudio.com",
@@ -30,7 +30,7 @@ Imports: assertthat, base64enc, broom, config (>= 0.2), DBI (>= 0.6-1),
         rstudioapi, shiny (>= 1.0.1), withr, xml2, tidyr
 Suggests: ggplot2, janeaustenr, nycflights13, testthat, tibble, RCurl
 NeedsCompilation: no
-Packaged: 2018-05-02 02:52:12 UTC; javierluraschi
+Packaged: 2018-05-05 15:31:53 UTC; javierluraschi
 Author: Javier Luraschi [aut, cre],
   Kevin Kuo [aut] (<https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -38,4 +38,4 @@ Author: Javier Luraschi [aut, cre],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2018-05-02 07:59:37 UTC
+Date/Publication: 2018-05-06 06:23:04 UTC

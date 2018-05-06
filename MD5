@@ -1,7 +1,7 @@
-333042540ac9f57918c5895a5c98ab43 *DESCRIPTION
+da0f59aacaa6db6c756c3b55bbcd7b60 *DESCRIPTION
 3c340760b90af6b5cd5c7a9cc32bb228 *LICENSE
 cb8b6d58416054e266e328917c6a205f *NAMESPACE
-0f05f1ae1e378302c036c44417e3142d *NEWS.md
+e2569f0e20437e77aead4d3e4d0e40ae *NEWS.md
 9bb8b4158889c8a33e3840b744591c19 *R/config_spark.R
 9af77baec1725e72c20387e674f8f6d3 *R/connection_instances.R
 573a09f12e46c528c315225aca20edab *R/connection_shinyapp.R
@@ -35,7 +35,7 @@ dc072918ef3f329e870df1fdae3671f6 *R/install_spark.R
 8daf6c66cce9dc9b744714bcb6943d5a *R/install_spark_versions.R
 a65d4545226c1172a3b3a41a19989961 *R/install_spark_windows.R
 577064ae94ed3da7ee0a63c6be8ccffe *R/install_tools.R
-bce4347825256f6112184ea924e4f79d *R/livy_connection.R
+3cf62ce388e43adf4b8d8c1a3c06f6d9 *R/livy_connection.R
 0513491aa0d631ab8e8e18ce21fca987 *R/livy_install.R
 1b0b5efb81a44dc6a83ccbc53964da75 *R/livy_invoke.R
 746199171e1cf544ff5affca0511dc90 *R/livy_service.R
@@ -45,7 +45,7 @@ e746135653cb7cd1379ca53299b7a789 *R/ml_classification_decision_tree_classifier.R
 8a6027c4f0802c1f5113f22fd5d167d6 *R/ml_classification_linear_svc.R
 3fa6a34719d1666e83d2a475ebb652ec *R/ml_classification_logistic_regression.R
 e8162d6043ce38e958aff7caae7cea5e *R/ml_classification_multilayer_perceptron_classifier.R
-07c37f9b4d22b09d3232e26488ca55e6 *R/ml_classification_naive_bayes.R
+1722479de6c09930ce8d399cdc3e7aeb *R/ml_classification_naive_bayes.R
 02d76f3876e59467c49784a1cee294f2 *R/ml_classification_one_vs_rest.R
 f3a7fb96388eb8baea209583ab2166d8 *R/ml_classification_random_forest_classifier.R
 cc6c207b8227f8ff22bdb3d4edc35f15 *R/ml_clustering_bisecting_kmeans.R
@@ -137,7 +137,7 @@ c2851874126d81cfa97cbf71f61052b9 *R/ml_tuning_train_validation_split.R
 325f3d1fe429e86f2761f5fc7617feca *R/sdf_wrapper.R
 dfdf050957378473321a2d973c2a3e66 *R/shell_connection.R
 763e0f74d4290b786f5071ec8ed607f0 *R/shell_hive.R
-a471d3abda4fca750ef90eddbe921b15 *R/spark_apply.R
+86fc79dab4532b4aa54ae38ed8712d64 *R/spark_apply.R
 b345ca9fbb9154e73b67d317de9062d3 *R/spark_apply_bundle.R
 3cad068b29d12b773857e8df14613896 *R/spark_compile.R
 d54a428165b4f9ed7ead55794e6eceac *R/spark_compile_embedded.R
@@ -166,7 +166,7 @@ a4d6120fb40842c7482f5d95b2576fda *R/tidiers_ml_linear_models.R
 b414c21e9c4409d0874448c75d90215d *R/worker_invoke.R
 c2bd5f432cc792eb2e9932f58b7d86ea *R/worker_log.R
 26b6a96eea0d27556ed656cb65ea27b5 *R/worker_main.R
-83202cf59e98f9f5f1c7942862a6982a *R/yarn_cluster.R
+72a65475a2b694f3d8eec45b41a9fb57 *R/yarn_cluster.R
 ba5d32042d7471781d7d07b5d15060d2 *R/zzz.R
 046a7df9edf96d4f7ec3282bc27cc2a0 *README.md
 2fdb77962b16401561f2cb5dd754854a *inst/conf/config-template.yml
@@ -205,7 +205,7 @@ aeb8f25878a2990d116a05f7742334a5 *inst/livy/spark-1.5.2/tracker.scala
 4e04031c0cf1bca5c8fd0773de9ab364 *inst/livy/spark-1.6.0/applyutils.scala
 bddabaa38febe6cfaaa20cf58eb93b9b *inst/livy/spark-1.6.0/classutils.scala
 a8530f442cf8d2ddb2f5c4838b68adb0 *inst/livy/spark-1.6.0/fileutils.scala
-73563f52816a9a8565bc8a3b179df36b *inst/livy/spark-1.6.0/livyutils.scala
+6f5a065208bb26b7e17d1e88f03d8bd3 *inst/livy/spark-1.6.0/livyutils.scala
 2cb20f54d634ed537ceed908995a8551 *inst/livy/spark-1.6.0/rscript.scala
 4f5fc1f238b22677025aedb8adacc601 *inst/livy/spark-1.6.0/sources.scala
 c5c3fb2958291f4313728003d05d548b *inst/livy/spark-1.6.0/workercontext.scala
@@ -323,7 +323,7 @@ fdb2871c3a00bb0f7725c8b19ee95697 *man/ml_linear_regression.Rd
 05608a28e948de629b68701c1ed35e67 *man/ml_logistic_regression.Rd
 cf909e1499e37da2978980556880a5e5 *man/ml_model_data.Rd
 0bdc996c5d5cc75ba8196ae1ffd48f4d *man/ml_multilayer_perceptron_classifier.Rd
-2e3129c4847b5e22243c2ef5172048bb *man/ml_naive_bayes.Rd
+8f9d4458a3beafc658ecaa453815dfda *man/ml_naive_bayes.Rd
 7452fb36cecc5c8a7d2c14f000f32b5e *man/ml_one_vs_rest.Rd
 e88f52dd8cd4bab882f8355fb97b3304 *man/ml_pipeline.Rd
 3a019867f14257eba847533e373204a8 *man/ml_random_forest.Rd
@@ -369,7 +369,7 @@ c27b731ab7cae3ad9e749570b3ea2068 *man/sdf_with_sequential_id.Rd
 9e7cff87a6481dde731177a5ea01dc9c *man/sdf_with_unique_id.Rd
 3855532aebd579b2fd094585d99fb03a *man/spark-api.Rd
 2a6a755c0ea54973a6bc7f1923ac5d94 *man/spark-connections.Rd
-d2e0044df361f06008275a23ac13d8ca *man/spark_apply.Rd
+36d46d1ef637bf4dd3b70b46e9ba581c *man/spark_apply.Rd
 353a7efc40c0faa999c19a3418040de1 *man/spark_apply_bundle.Rd
 c277edbcb33c2d492ed258b737b9f3b6 *man/spark_apply_log.Rd
 ac242d35a7e6294d8d90f26b10477f79 *man/spark_compilation_spec.Rd
@@ -426,7 +426,7 @@ f0d58cf5ef44a05a974788a570b481e8 *tests/testthat/data/sample_kmeans_data.txt
 6a42ad3460566c0ee7a3ce7bfe2fddfb *tests/testthat/data/sample_libsvm_data.txt
 142a30a2c622598ed22d9a4d0acc3562 *tests/testthat/data/yarn-site.xml
 18e893fb8aa72866398a33a95a1eee6a *tests/testthat/helper-initialize.R
-ea5a8d99b7b8c3121ca02bded3916735 *tests/testthat/logs/log4j.spark.log
+b052a5d73cf2ebec47aa7bb9cd4ac164 *tests/testthat/logs/log4j.spark.log
 1badb1ccbf8e1c633951946db7dac322 *tests/testthat/output/print/aft-model.txt
 4ca4d8dc87a1ede1a322fbd9cf63c635 *tests/testthat/output/print/bisecting-kmeans.txt
 2a90699e493090c87956fb5c21a2601b *tests/testthat/output/print/decision-tree.txt
@@ -472,7 +472,7 @@ d7d5e980f5590d3e0585d9bacebda978 *tests/testthat/test-ml-classification-naive-ba
 0b5d5d44636bae0b0b2e8835954fbbd6 *tests/testthat/test-ml-clustering-bisecting-kmeans.R
 73b5098e692d2b5760bf766ed75bdab2 *tests/testthat/test-ml-clustering-gaussian-mixture.R
 0a3055fa88ab527e5835db40374564fd *tests/testthat/test-ml-clustering-kmeans.R
-39c420e40334670313ce729d81574ead *tests/testthat/test-ml-clustering-lda.R
+94dfd961d13bc3d70a9ef15e483c73ae *tests/testthat/test-ml-clustering-lda.R
 0f5c2d5788b304c05446d20a0fa10d51 *tests/testthat/test-ml-evaluation-clustering.R
 18e1fd6b02c38e48b1eb3e1046acb01c *tests/testthat/test-ml-evaluation.R
 c49e75d8824803aec1d99034cc286c4c *tests/testthat/test-ml-feature-backwards-compat.R
@@ -496,16 +496,16 @@ f32144e99566e2e23262fe98fbe27d7e *tests/testthat/test-ml-feature-polynomial-expa
 3851157c14c026024785851f52b44d6b *tests/testthat/test-ml-feature-sql-transformer.R
 f21385dd9589ffdcfce99299e6829894 *tests/testthat/test-ml-feature-standard-scaler.R
 b726af5f6990f9d868a36f35ea67f163 *tests/testthat/test-ml-feature-standard-transformers.R
-9bc0dd830a9324f456ec32829efa22d2 *tests/testthat/test-ml-feature-stop-words-remover.R
+6230014803e40639efc409b46858e949 *tests/testthat/test-ml-feature-stop-words-remover.R
 a70143a5eae6307222026af8b39cec64 *tests/testthat/test-ml-feature-string-indexer.R
 81f7bb9e2666800b7e051c9f4805e224 *tests/testthat/test-ml-feature-vector-slicer.R
 f92ed99c105b33462dc1683d6b9268c0 *tests/testthat/test-ml-feature-word2vec.R
 cc4b2869a6aaa0bb7baa2d4046608d37 *tests/testthat/test-ml-fpm-fpgrowth.R
-d44b76adc3f888f96c2d3cbd0bab5274 *tests/testthat/test-ml-helpers.R
+786324bb5bea3bc848096d300ff804cc *tests/testthat/test-ml-helpers.R
 49e0725b0d37065d28b96c220ec340f6 *tests/testthat/test-ml-persistence.R
-7642765d58c16391c006a57691d8f0da *tests/testthat/test-ml-pipeline-utils.R
+8398c0bfa31880b83a14c4bf72868617 *tests/testthat/test-ml-pipeline-utils.R
 175e8efa0233d81c60d4c72256dd02ad *tests/testthat/test-ml-pipeline.R
-2b23302c25d375189fe6dec71164e213 *tests/testthat/test-ml-print-methods.R
+54bdb6226ced827033e61da60600e0c2 *tests/testthat/test-ml-print-methods.R
 0a48d84abbabfcd8087a846c8a534241 *tests/testthat/test-ml-programming.R
 36c19f8929ea92e1191531046fbd6385 *tests/testthat/test-ml-regression-generalized-linear-regression.R
 84e2cb685dac583d9a82b524aa71afcf *tests/testthat/test-ml-regression-linear-regression.R
@@ -513,7 +513,7 @@ a98290962e9524e72282441c5494ee1a *tests/testthat/test-ml-regression-survival-reg
 737a61bc583d766e76697195d0a45a60 *tests/testthat/test-ml-stat-chisq.R
 8f73a158e86a333bbf15879ff89ad4e0 *tests/testthat/test-ml-stat-corr.R
 4b3cf51f428e18d12524570adbe52c81 *tests/testthat/test-ml-supervised-decision-tree.R
-e45a93fec4b43428ee70fcce44214ed2 *tests/testthat/test-ml-supervised-gradient-boosted-trees.R
+2e401490e863a9e674cb6aaf4ae05fca *tests/testthat/test-ml-supervised-gradient-boosted-trees.R
 368ea9e531791c8caaecfd1514ebad14 *tests/testthat/test-ml-supervised-isotonic-regression.R
 c9d1e0d135612c135d4050e68905b550 *tests/testthat/test-ml-supervised-random-forest.R
 11afcfbc1b3ab9615bcd8278a7441b61 *tests/testthat/test-ml-tuning.R
