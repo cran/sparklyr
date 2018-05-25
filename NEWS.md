@@ -1,3 +1,22 @@
+# Sparklyr 0.8.4
+
+- Added support for `spark_session_config()` to modify spark session settings.
+
+- Added support for `sdf_debug_string()` to print execution plan for a Spark DataFrame.
+
+- Fixed DESCRIPTION file to include test packages as requested by CRAN.
+
+- Support for `sparklyr.spark-submit` as `config` entry to allow customizing the `spark-submit`
+  command.
+
+- Changed `spark_connect()` to give precedence to the `version` parameter over `SPARK_HOME_VERSION` and
+  other automatic version detection mechanisms, improved automatic version detection in Spark 2.X.
+  
+- Fixed `sdf_bind_rows()` with `dplyr 0.7.5` and prepend id column instead of appending it to match
+  behavior.
+
+- `broom::tidy()` for linear regression and generalized linear regression models now give correct results (#1501).
+
 # Sparklyr 0.8.3
 
 - Support for Spark 2.3 in local windows clusters (#1473).
