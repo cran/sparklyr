@@ -2,7 +2,9 @@ context("serialization")
 sc <- testthat_spark_connection()
 
 test_requires("nycflights13")
-flights_tbl <- testthat_tbl("flights")
+
+flights_small <- flights %>% dplyr::sample_n(10000)
+flights_tbl <- testthat_tbl("flights_small")
 
 ensure_round_trip <- function(sc, data) {
   # round-trip data through Spark
@@ -267,7 +269,7 @@ test_that("collect() can retrieve as.POSIXct fields with timezones", {
   )
 
   collected <- sdf_len(sc, 1) %>%
-    spark_apply(function(e, c) c, context = list(tzs = tz_entries)) %>%
+    spark_apply(function(e, c) c$tzs, context = list(tzs = tz_entries)) %>%
     collect() %>%
     as.list() %>%
     unname()

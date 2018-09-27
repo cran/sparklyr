@@ -1,43 +1,317 @@
-18/05/25 09:17:41 INFO RSCDriver: Connecting to: 192.168.154.1:10000
-18/05/25 09:17:41 INFO RSCDriver: Starting RPC server...
-18/05/25 09:17:41 INFO RpcServer: Connected to the port 10001
-18/05/25 09:17:41 WARN RSCConf: Your hostname, 192.168.154.1, resolves to a loopback address, but we couldn't find any external IP address!
-18/05/25 09:17:41 WARN RSCConf: Set livy.rsc.rpc.server.address if you need to bind to another address.
-18/05/25 09:17:41 INFO RSCDriver: Received job request ab37b24f-e85c-4e9f-abfd-cb469ae902c1
-18/05/25 09:17:41 INFO RSCDriver: SparkContext not yet up, queueing job request.
-18/05/25 09:17:44 INFO SparkEntries: Starting Spark context...
-18/05/25 09:17:44 INFO SparkContext: Running Spark version 2.2.0
-18/05/25 09:17:44 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-18/05/25 09:17:44 INFO SparkContext: Submitted application: livy-session-1
-18/05/25 09:17:44 INFO SecurityManager: Changing view acls to: javierluraschi
-18/05/25 09:17:44 INFO SecurityManager: Changing modify acls to: javierluraschi
-18/05/25 09:17:44 INFO SecurityManager: Changing view acls groups to: 
-18/05/25 09:17:44 INFO SecurityManager: Changing modify acls groups to: 
-18/05/25 09:17:44 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
-18/05/25 09:17:45 INFO Utils: Successfully started service 'sparkDriver' on port 56843.
-18/05/25 09:17:45 INFO SparkEnv: Registering MapOutputTracker
-18/05/25 09:17:45 INFO SparkEnv: Registering BlockManagerMaster
-18/05/25 09:17:45 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-18/05/25 09:17:45 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-18/05/25 09:17:45 INFO DiskBlockManager: Created local directory at /private/var/folders/fz/v6wfsg2x1fb1rw4f6r0x4jwm0000gn/T/blockmgr-9901b97b-bd97-4495-9e5c-5f08fb634965
-18/05/25 09:17:45 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
-18/05/25 09:17:45 INFO SparkEnv: Registering OutputCommitCoordinator
-18/05/25 09:17:45 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-18/05/25 09:17:45 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://192.168.154.1:4040
-18/05/25 09:17:45 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.5.0/rsc-jars/netty-all-4.0.37.Final.jar at spark://192.168.154.1:56843/jars/netty-all-4.0.37.Final.jar with timestamp 1527265065471
-18/05/25 09:17:45 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.5.0/rsc-jars/livy-rsc-0.5.0-incubating.jar at spark://192.168.154.1:56843/jars/livy-rsc-0.5.0-incubating.jar with timestamp 1527265065472
-18/05/25 09:17:45 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.5.0/rsc-jars/livy-api-0.5.0-incubating.jar at spark://192.168.154.1:56843/jars/livy-api-0.5.0-incubating.jar with timestamp 1527265065472
-18/05/25 09:17:45 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.5.0/repl_2.11-jars/commons-codec-1.9.jar at spark://192.168.154.1:56843/jars/commons-codec-1.9.jar with timestamp 1527265065472
-18/05/25 09:17:45 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.5.0/repl_2.11-jars/livy-repl_2.11-0.5.0-incubating.jar at spark://192.168.154.1:56843/jars/livy-repl_2.11-0.5.0-incubating.jar with timestamp 1527265065472
-18/05/25 09:17:45 INFO SparkContext: Added JAR file:/Users/javierluraschi/Library/Caches/livy/livy-0.5.0/repl_2.11-jars/livy-core_2.11-0.5.0-incubating.jar at spark://192.168.154.1:56843/jars/livy-core_2.11-0.5.0-incubating.jar with timestamp 1527265065473
-18/05/25 09:17:45 INFO Executor: Starting executor ID driver on host localhost
-18/05/25 09:17:45 INFO Executor: Using REPL class URI: spark://192.168.154.1:56843/classes
-18/05/25 09:17:45 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 56844.
-18/05/25 09:17:45 INFO NettyBlockTransferService: Server created on 192.168.154.1:56844
-18/05/25 09:17:45 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-18/05/25 09:17:45 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.154.1, 56844, None)
-18/05/25 09:17:45 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.154.1:56844 with 366.3 MB RAM, BlockManagerId(driver, 192.168.154.1, 56844, None)
-18/05/25 09:17:45 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.154.1, 56844, None)
-18/05/25 09:17:45 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 192.168.154.1, 56844, None)
-18/05/25 09:17:45 INFO SparkEntries: Spark context finished initialization in 1418ms
-18/05/25 09:17:45 INFO SparkEntries: Created Spark session.
+18/09/25 14:56:30 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+18/09/25 14:56:31 INFO SparkContext: Running Spark version 2.3.1
+18/09/25 14:56:31 INFO SparkContext: Submitted application: sparklyr.Shell
+18/09/25 14:56:31 INFO SecurityManager: Changing view acls to: javierluraschi
+18/09/25 14:56:31 INFO SecurityManager: Changing modify acls to: javierluraschi
+18/09/25 14:56:31 INFO SecurityManager: Changing view acls groups to: 
+18/09/25 14:56:31 INFO SecurityManager: Changing modify acls groups to: 
+18/09/25 14:56:31 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+18/09/25 14:56:31 INFO Utils: Successfully started service 'sparkDriver' on port 56069.
+18/09/25 14:56:31 INFO SparkEnv: Registering MapOutputTracker
+18/09/25 14:56:31 INFO SparkEnv: Registering BlockManagerMaster
+18/09/25 14:56:31 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+18/09/25 14:56:31 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+18/09/25 14:56:31 INFO DiskBlockManager: Created local directory at /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/blockmgr-68fad5ea-27d7-42f9-b958-7b9e7475e81e
+18/09/25 14:56:31 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+18/09/25 14:56:31 INFO SparkEnv: Registering OutputCommitCoordinator
+18/09/25 14:56:32 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+18/09/25 14:56:32 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://localhost:4040
+18/09/25 14:56:32 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.3-2.11.jar at spark://localhost:56069/jars/sparklyr-2.3-2.11.jar with timestamp 1537912592244
+18/09/25 14:56:32 ERROR SparkContext: Error initializing SparkContext.
+java.io.FileNotFoundException: File file:/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpxGyyiQ/file67fb63f4923b/sparklyr-batch.R does not exist
+	at org.apache.hadoop.fs.RawLocalFileSystem.deprecatedGetFileStatus(RawLocalFileSystem.java:611)
+	at org.apache.hadoop.fs.RawLocalFileSystem.getFileLinkStatusInternal(RawLocalFileSystem.java:824)
+	at org.apache.hadoop.fs.RawLocalFileSystem.getFileStatus(RawLocalFileSystem.java:601)
+	at org.apache.hadoop.fs.FilterFileSystem.getFileStatus(FilterFileSystem.java:421)
+	at org.apache.spark.SparkContext.addFile(SparkContext.scala:1529)
+	at org.apache.spark.SparkContext.addFile(SparkContext.scala:1499)
+	at org.apache.spark.SparkContext$$anonfun$13.apply(SparkContext.scala:461)
+	at org.apache.spark.SparkContext$$anonfun$13.apply(SparkContext.scala:461)
+	at scala.collection.immutable.List.foreach(List.scala:381)
+	at org.apache.spark.SparkContext.<init>(SparkContext.scala:461)
+	at org.apache.spark.SparkContext.<init>(SparkContext.scala:116)
+	at org.apache.spark.SparkContext$.getOrCreate(SparkContext.scala:2517)
+	at sparklyr.Backend.run(backend.scala:251)
+	at sparklyr.Backend.init(backend.scala:186)
+	at sparklyr.Shell$.main(shell.scala:34)
+	at sparklyr.Shell.main(shell.scala)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.spark.deploy.JavaMainApplication.start(SparkApplication.scala:52)
+	at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:894)
+	at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:198)
+	at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:228)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:137)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+18/09/25 14:56:32 INFO SparkUI: Stopped Spark web UI at http://localhost:4040
+18/09/25 14:56:32 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+18/09/25 14:56:32 INFO MemoryStore: MemoryStore cleared
+18/09/25 14:56:32 INFO BlockManager: BlockManager stopped
+18/09/25 14:56:32 INFO BlockManagerMaster: BlockManagerMaster stopped
+18/09/25 14:56:32 WARN MetricsSystem: Stopping a MetricsSystem that is not running
+18/09/25 14:56:32 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+18/09/25 14:56:32 INFO SparkContext: Successfully stopped SparkContext
+18/09/25 14:56:32 INFO ShutdownHookManager: Shutdown hook called
+18/09/25 14:56:32 INFO ShutdownHookManager: Deleting directory /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-97990e3e-1988-4ccb-9b93-d340c85e057e
+18/09/25 14:56:32 INFO ShutdownHookManager: Deleting directory /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-b489a4e0-d4da-4aa8-aabf-b71e78f4f198
+18/09/25 14:57:00 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+18/09/25 14:57:00 INFO SparkContext: Running Spark version 2.3.1
+18/09/25 14:57:00 INFO SparkContext: Submitted application: sparklyr.Shell
+18/09/25 14:57:01 INFO SecurityManager: Changing view acls to: javierluraschi
+18/09/25 14:57:01 INFO SecurityManager: Changing modify acls to: javierluraschi
+18/09/25 14:57:01 INFO SecurityManager: Changing view acls groups to: 
+18/09/25 14:57:01 INFO SecurityManager: Changing modify acls groups to: 
+18/09/25 14:57:01 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(javierluraschi); groups with view permissions: Set(); users  with modify permissions: Set(javierluraschi); groups with modify permissions: Set()
+18/09/25 14:57:01 INFO Utils: Successfully started service 'sparkDriver' on port 56134.
+18/09/25 14:57:01 INFO SparkEnv: Registering MapOutputTracker
+18/09/25 14:57:01 INFO SparkEnv: Registering BlockManagerMaster
+18/09/25 14:57:01 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+18/09/25 14:57:01 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+18/09/25 14:57:01 INFO DiskBlockManager: Created local directory at /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/blockmgr-0688eb73-d9b6-4a7f-81b4-a936207f7c63
+18/09/25 14:57:01 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+18/09/25 14:57:01 INFO SparkEnv: Registering OutputCommitCoordinator
+18/09/25 14:57:01 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+18/09/25 14:57:01 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://localhost:4040
+18/09/25 14:57:01 INFO SparkContext: Added JAR file:/Users/javierluraschi/RStudio/sparklyr/inst/java/sparklyr-2.3-2.11.jar at spark://localhost:56134/jars/sparklyr-2.3-2.11.jar with timestamp 1537912621832
+18/09/25 14:57:01 INFO SparkContext: Added file file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R at file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R with timestamp 1537912621878
+18/09/25 14:57:01 INFO Utils: Copying /var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R to /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-8de99555-f9a4-4039-ba88-7cc8b9e982ea/userFiles-db15228a-4ce2-4e22-afb4-7d645a75304a/sparklyr-batch.R
+18/09/25 14:57:02 INFO Executor: Starting executor ID driver on host localhost
+18/09/25 14:57:02 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 56145.
+18/09/25 14:57:02 INFO NettyBlockTransferService: Server created on localhost:56145
+18/09/25 14:57:02 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+18/09/25 14:57:02 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, localhost, 56145, None)
+18/09/25 14:57:02 INFO BlockManagerMasterEndpoint: Registering block manager localhost:56145 with 366.3 MB RAM, BlockManagerId(driver, localhost, 56145, None)
+18/09/25 14:57:02 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, localhost, 56145, None)
+18/09/25 14:57:02 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, localhost, 56145, None)
+18/09/25 14:57:04 WARN SparkContext: Using an existing SparkContext; some configuration may not take effect.
+18/09/25 14:57:04 WARN SparkContext: Using an existing SparkContext; some configuration may not take effect.
+18/09/25 14:57:06 INFO SharedState: loading hive config file: file:/Users/javierluraschi/spark/spark-2.3.1-bin-hadoop2.7/conf/hive-site.xml
+18/09/25 14:57:06 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir ('file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse').
+18/09/25 14:57:06 INFO SharedState: Warehouse path is 'file:/Users/javierluraschi/RStudio/sparklyr/tests/testthat/spark-warehouse'.
+18/09/25 14:57:07 INFO StateStoreCoordinatorRef: Registered StateStoreCoordinator endpoint
+18/09/25 14:57:09 INFO FileOutputCommitter: File Output Committer Algorithm version is 1
+18/09/25 14:57:09 INFO SQLHadoopMapReduceCommitProtocol: Using output committer class org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter
+18/09/25 14:57:09 INFO SparkContext: Starting job: csv at NativeMethodAccessorImpl.java:0
+18/09/25 14:57:09 INFO DAGScheduler: Got job 0 (csv at NativeMethodAccessorImpl.java:0) with 2 output partitions
+18/09/25 14:57:09 INFO DAGScheduler: Final stage: ResultStage 0 (csv at NativeMethodAccessorImpl.java:0)
+18/09/25 14:57:09 INFO DAGScheduler: Parents of final stage: List()
+18/09/25 14:57:09 INFO DAGScheduler: Missing parents: List()
+18/09/25 14:57:09 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[4] at csv at NativeMethodAccessorImpl.java:0), which has no missing parents
+18/09/25 14:57:09 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 150.9 KB, free 366.2 MB)
+18/09/25 14:57:09 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 55.7 KB, free 366.1 MB)
+18/09/25 14:57:09 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on localhost:56145 (size: 55.7 KB, free: 366.2 MB)
+18/09/25 14:57:09 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:1039
+18/09/25 14:57:09 INFO DAGScheduler: Submitting 2 missing tasks from ResultStage 0 (MapPartitionsRDD[4] at csv at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0, 1))
+18/09/25 14:57:09 INFO TaskSchedulerImpl: Adding task set 0.0 with 2 tasks
+18/09/25 14:57:09 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, executor driver, partition 0, PROCESS_LOCAL, 7853 bytes)
+18/09/25 14:57:09 INFO TaskSetManager: Starting task 1.0 in stage 0.0 (TID 1, localhost, executor driver, partition 1, PROCESS_LOCAL, 7853 bytes)
+18/09/25 14:57:09 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+18/09/25 14:57:09 INFO Executor: Running task 1.0 in stage 0.0 (TID 1)
+18/09/25 14:57:09 INFO Executor: Fetching file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R with timestamp 1537912621878
+18/09/25 14:57:10 INFO Executor: Fetching file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R with timestamp 1537912621878
+18/09/25 14:57:10 ERROR Executor: Exception in task 1.0 in stage 0.0 (TID 1)
+org.apache.spark.SparkException: File /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-8de99555-f9a4-4039-ba88-7cc8b9e982ea/userFiles-db15228a-4ce2-4e22-afb4-7d645a75304a/sparklyr-batch.R exists and does not match contents of file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R
+	at org.apache.spark.util.Utils$.copyFile(Utils.scala:585)
+	at org.apache.spark.util.Utils$.doFetchFile(Utils.scala:691)
+	at org.apache.spark.util.Utils$.fetchFile(Utils.scala:488)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:743)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:740)
+	at scala.collection.TraversableLike$WithFilter$$anonfun$foreach$1.apply(TraversableLike.scala:733)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashTable$class.foreachEntry(HashTable.scala:230)
+	at scala.collection.mutable.HashMap.foreachEntry(HashMap.scala:40)
+	at scala.collection.mutable.HashMap.foreach(HashMap.scala:99)
+	at scala.collection.TraversableLike$WithFilter.foreach(TraversableLike.scala:732)
+	at org.apache.spark.executor.Executor.org$apache$spark$executor$Executor$$updateDependencies(Executor.scala:740)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+18/09/25 14:57:10 ERROR Executor: Exception in task 0.0 in stage 0.0 (TID 0)
+org.apache.spark.SparkException: File /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-8de99555-f9a4-4039-ba88-7cc8b9e982ea/userFiles-db15228a-4ce2-4e22-afb4-7d645a75304a/sparklyr-batch.R exists and does not match contents of file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R
+	at org.apache.spark.util.Utils$.copyFile(Utils.scala:585)
+	at org.apache.spark.util.Utils$.doFetchFile(Utils.scala:691)
+	at org.apache.spark.util.Utils$.fetchFile(Utils.scala:488)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:743)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:740)
+	at scala.collection.TraversableLike$WithFilter$$anonfun$foreach$1.apply(TraversableLike.scala:733)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashTable$class.foreachEntry(HashTable.scala:230)
+	at scala.collection.mutable.HashMap.foreachEntry(HashMap.scala:40)
+	at scala.collection.mutable.HashMap.foreach(HashMap.scala:99)
+	at scala.collection.TraversableLike$WithFilter.foreach(TraversableLike.scala:732)
+	at org.apache.spark.executor.Executor.org$apache$spark$executor$Executor$$updateDependencies(Executor.scala:740)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+18/09/25 14:57:10 WARN TaskSetManager: Lost task 0.0 in stage 0.0 (TID 0, localhost, executor driver): org.apache.spark.SparkException: File /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-8de99555-f9a4-4039-ba88-7cc8b9e982ea/userFiles-db15228a-4ce2-4e22-afb4-7d645a75304a/sparklyr-batch.R exists and does not match contents of file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R
+	at org.apache.spark.util.Utils$.copyFile(Utils.scala:585)
+	at org.apache.spark.util.Utils$.doFetchFile(Utils.scala:691)
+	at org.apache.spark.util.Utils$.fetchFile(Utils.scala:488)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:743)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:740)
+	at scala.collection.TraversableLike$WithFilter$$anonfun$foreach$1.apply(TraversableLike.scala:733)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashTable$class.foreachEntry(HashTable.scala:230)
+	at scala.collection.mutable.HashMap.foreachEntry(HashMap.scala:40)
+	at scala.collection.mutable.HashMap.foreach(HashMap.scala:99)
+	at scala.collection.TraversableLike$WithFilter.foreach(TraversableLike.scala:732)
+	at org.apache.spark.executor.Executor.org$apache$spark$executor$Executor$$updateDependencies(Executor.scala:740)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+18/09/25 14:57:10 ERROR TaskSetManager: Task 0 in stage 0.0 failed 1 times; aborting job
+18/09/25 14:57:10 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+18/09/25 14:57:10 INFO TaskSetManager: Lost task 1.0 in stage 0.0 (TID 1) on localhost, executor driver: org.apache.spark.SparkException (File /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-8de99555-f9a4-4039-ba88-7cc8b9e982ea/userFiles-db15228a-4ce2-4e22-afb4-7d645a75304a/sparklyr-batch.R exists and does not match contents of file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R) [duplicate 1]
+18/09/25 14:57:10 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+18/09/25 14:57:10 INFO TaskSchedulerImpl: Cancelling stage 0
+18/09/25 14:57:10 INFO DAGScheduler: ResultStage 0 (csv at NativeMethodAccessorImpl.java:0) failed in 0.458 s due to Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0, localhost, executor driver): org.apache.spark.SparkException: File /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-8de99555-f9a4-4039-ba88-7cc8b9e982ea/userFiles-db15228a-4ce2-4e22-afb4-7d645a75304a/sparklyr-batch.R exists and does not match contents of file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R
+	at org.apache.spark.util.Utils$.copyFile(Utils.scala:585)
+	at org.apache.spark.util.Utils$.doFetchFile(Utils.scala:691)
+	at org.apache.spark.util.Utils$.fetchFile(Utils.scala:488)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:743)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:740)
+	at scala.collection.TraversableLike$WithFilter$$anonfun$foreach$1.apply(TraversableLike.scala:733)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashTable$class.foreachEntry(HashTable.scala:230)
+	at scala.collection.mutable.HashMap.foreachEntry(HashMap.scala:40)
+	at scala.collection.mutable.HashMap.foreach(HashMap.scala:99)
+	at scala.collection.TraversableLike$WithFilter.foreach(TraversableLike.scala:732)
+	at org.apache.spark.executor.Executor.org$apache$spark$executor$Executor$$updateDependencies(Executor.scala:740)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:
+18/09/25 14:57:10 INFO DAGScheduler: Job 0 failed: csv at NativeMethodAccessorImpl.java:0, took 0.534931 s
+18/09/25 14:57:10 ERROR FileFormatWriter: Aborting job null.
+org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0, localhost, executor driver): org.apache.spark.SparkException: File /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-8de99555-f9a4-4039-ba88-7cc8b9e982ea/userFiles-db15228a-4ce2-4e22-afb4-7d645a75304a/sparklyr-batch.R exists and does not match contents of file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R
+	at org.apache.spark.util.Utils$.copyFile(Utils.scala:585)
+	at org.apache.spark.util.Utils$.doFetchFile(Utils.scala:691)
+	at org.apache.spark.util.Utils$.fetchFile(Utils.scala:488)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:743)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:740)
+	at scala.collection.TraversableLike$WithFilter$$anonfun$foreach$1.apply(TraversableLike.scala:733)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashTable$class.foreachEntry(HashTable.scala:230)
+	at scala.collection.mutable.HashMap.foreachEntry(HashMap.scala:40)
+	at scala.collection.mutable.HashMap.foreach(HashMap.scala:99)
+	at scala.collection.TraversableLike$WithFilter.foreach(TraversableLike.scala:732)
+	at org.apache.spark.executor.Executor.org$apache$spark$executor$Executor$$updateDependencies(Executor.scala:740)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:
+	at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1602)
+	at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1590)
+	at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1589)
+	at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)
+	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1589)
+	at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:831)
+	at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:831)
+	at scala.Option.foreach(Option.scala:257)
+	at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:831)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:1823)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1772)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1761)
+	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:48)
+	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:642)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2034)
+	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.write(FileFormatWriter.scala:194)
+	at org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.run(InsertIntoHadoopFsRelationCommand.scala:154)
+	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult$lzycompute(commands.scala:104)
+	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult(commands.scala:102)
+	at org.apache.spark.sql.execution.command.DataWritingCommandExec.doExecute(commands.scala:122)
+	at org.apache.spark.sql.execution.SparkPlan$$anonfun$execute$1.apply(SparkPlan.scala:131)
+	at org.apache.spark.sql.execution.SparkPlan$$anonfun$execute$1.apply(SparkPlan.scala:127)
+	at org.apache.spark.sql.execution.SparkPlan$$anonfun$executeQuery$1.apply(SparkPlan.scala:155)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:152)
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:127)
+	at org.apache.spark.sql.execution.QueryExecution.toRdd$lzycompute(QueryExecution.scala:80)
+	at org.apache.spark.sql.execution.QueryExecution.toRdd(QueryExecution.scala:80)
+	at org.apache.spark.sql.DataFrameWriter$$anonfun$runCommand$1.apply(DataFrameWriter.scala:654)
+	at org.apache.spark.sql.DataFrameWriter$$anonfun$runCommand$1.apply(DataFrameWriter.scala:654)
+	at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:77)
+	at org.apache.spark.sql.DataFrameWriter.runCommand(DataFrameWriter.scala:654)
+	at org.apache.spark.sql.DataFrameWriter.saveToV1Source(DataFrameWriter.scala:273)
+	at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:267)
+	at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:225)
+	at org.apache.spark.sql.DataFrameWriter.csv(DataFrameWriter.scala:642)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at sparklyr.Invoke.invoke(invoke.scala:139)
+	at sparklyr.StreamHandler.handleMethodCall(stream.scala:123)
+	at sparklyr.StreamHandler.read(stream.scala:66)
+	at sparklyr.BackendHandler.channelRead0(handler.scala:51)
+	at sparklyr.BackendHandler.channelRead0(handler.scala:4)
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:105)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:340)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:102)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:340)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:310)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:284)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:340)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1359)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:935)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:138)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:645)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:580)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:497)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:459)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:858)
+	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:138)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.apache.spark.SparkException: File /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-8de99555-f9a4-4039-ba88-7cc8b9e982ea/userFiles-db15228a-4ce2-4e22-afb4-7d645a75304a/sparklyr-batch.R exists and does not match contents of file:///var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/RtmpDBdg29/file68cf52ff8ab7/sparklyr-batch.R
+	at org.apache.spark.util.Utils$.copyFile(Utils.scala:585)
+	at org.apache.spark.util.Utils$.doFetchFile(Utils.scala:691)
+	at org.apache.spark.util.Utils$.fetchFile(Utils.scala:488)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:743)
+	at org.apache.spark.executor.Executor$$anonfun$org$apache$spark$executor$Executor$$updateDependencies$3.apply(Executor.scala:740)
+	at scala.collection.TraversableLike$WithFilter$$anonfun$foreach$1.apply(TraversableLike.scala:733)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashMap$$anonfun$foreach$1.apply(HashMap.scala:99)
+	at scala.collection.mutable.HashTable$class.foreachEntry(HashTable.scala:230)
+	at scala.collection.mutable.HashMap.foreachEntry(HashMap.scala:40)
+	at scala.collection.mutable.HashMap.foreach(HashMap.scala:99)
+	at scala.collection.TraversableLike$WithFilter.foreach(TraversableLike.scala:732)
+	at org.apache.spark.executor.Executor.org$apache$spark$executor$Executor$$updateDependencies(Executor.scala:740)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	... 1 more
+18/09/25 14:57:11 INFO SparkContext: Invoking stop() from shutdown hook
+18/09/25 14:57:11 INFO SparkUI: Stopped Spark web UI at http://localhost:4040
+18/09/25 14:57:11 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+18/09/25 14:57:11 INFO MemoryStore: MemoryStore cleared
+18/09/25 14:57:11 INFO BlockManager: BlockManager stopped
+18/09/25 14:57:11 INFO BlockManagerMaster: BlockManagerMaster stopped
+18/09/25 14:57:11 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+18/09/25 14:57:11 INFO SparkContext: Successfully stopped SparkContext
+18/09/25 14:57:11 INFO ShutdownHookManager: Shutdown hook called
+18/09/25 14:57:11 INFO ShutdownHookManager: Deleting directory /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-8de99555-f9a4-4039-ba88-7cc8b9e982ea
+18/09/25 14:57:11 INFO ShutdownHookManager: Deleting directory /private/var/folders/ks/wm_bx4cn70s6h0r5vgqpsldm0000gn/T/spark-e0ea39e1-0001-4cf8-ad30-7d8fd7652a97

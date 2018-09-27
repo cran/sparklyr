@@ -2,10 +2,10 @@
 % Please edit documentation in R/ml_feature_standard_scaler.R
 \name{ft_standard_scaler}
 \alias{ft_standard_scaler}
-\title{Feature Tranformation -- StandardScaler (Estimator)}
+\title{Feature Transformation -- StandardScaler (Estimator)}
 \usage{
-ft_standard_scaler(x, input_col, output_col, with_mean = FALSE,
-  with_std = TRUE, dataset = NULL,
+ft_standard_scaler(x, input_col = NULL, output_col = NULL,
+  with_mean = FALSE, with_std = TRUE, dataset = NULL,
   uid = random_string("standard_scaler_"), ...)
 }
 \arguments{
@@ -61,6 +61,22 @@ When \code{dataset} is provided for an estimator transformer, the function
   in the case where \code{x} is a \code{tbl_spark}, the estimator fits against \code{x} then
   to obtain a transformer, which is then immediately used to transform \code{x}.
 }
+\examples{
+\dontrun{
+sc <- spark_connect(master = "local")
+iris_tbl <- sdf_copy_to(sc, iris, name = "iris_tbl", overwrite = TRUE)
+
+features <- c("Sepal_Length", "Sepal_Width", "Petal_Length", "Petal_Width")
+
+iris_tbl \%>\%
+  ft_vector_assembler(input_col = features,
+                      output_col = "features_temp") \%>\%
+  ft_standard_scaler(input_col = "features_temp",
+                     output_col = "features",
+                     with_mean = TRUE)
+}
+
+}
 \seealso{
 See \url{http://spark.apache.org/docs/latest/ml-features.html} for
   more information on the set of transformations available for DataFrame
@@ -92,3 +108,4 @@ Other feature transformers: \code{\link{ft_binarizer}},
   \code{\link{ft_vector_indexer}},
   \code{\link{ft_vector_slicer}}, \code{\link{ft_word2vec}}
 }
+\concept{feature transformers}

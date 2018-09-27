@@ -2,12 +2,12 @@
 % Please edit documentation in R/ml_feature_chisq_selector.R
 \name{ft_chisq_selector}
 \alias{ft_chisq_selector}
-\title{Feature Tranformation -- ChiSqSelector (Estimator)}
+\title{Feature Transformation -- ChiSqSelector (Estimator)}
 \usage{
-ft_chisq_selector(x, features_col, output_col, label_col,
-  selector_type = "numTopFeatures", fdr = 0.05, fpr = 0.05, fwe = 0.05,
-  num_top_features = 50L, percentile = 0.1, dataset = NULL,
-  uid = random_string("chisq_selector_"), ...)
+ft_chisq_selector(x, features_col = "features", output_col = NULL,
+  label_col = "label", selector_type = "numTopFeatures", fdr = 0.05,
+  fpr = 0.05, fwe = 0.05, num_top_features = 50, percentile = 0.1,
+  dataset = NULL, uid = random_string("chisq_selector_"), ...)
 }
 \arguments{
 \item{x}{A \code{spark_connection}, \code{ml_pipeline}, or a \code{tbl_spark}.}
@@ -99,3 +99,4 @@ Other feature transformers: \code{\link{ft_binarizer}},
   \code{\link{ft_vector_indexer}},
   \code{\link{ft_vector_slicer}}, \code{\link{ft_word2vec}}
 }
+\concept{feature transformers}

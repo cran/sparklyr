@@ -16,10 +16,19 @@ spark_version_clean <- function(version) {
 #'
 #' @export
 spark_version <- function(sc) {
+  UseMethod("spark_version")
+}
+
+#' @export
+spark_version.default <- function(sc) {
 
   # use cached value if available
-  if (!is.null(sc$spark_version))
-    return(sc$spark_version)
+  if (!is.null(sc$state$spark_version))
+    return(sc$state$spark_version)
+
+  # if `SPARK_HOME` is specified, infer version from it
+  if (!is.null(sc$spark_home))
+    return(spark_version_from_home(sc$spark_home))
 
   # get the version
   version <- invoke(spark_context(sc), "version")
@@ -28,10 +37,10 @@ spark_version <- function(sc) {
   version <- spark_version_clean(version)
 
   # cache as numeric version
-  sc$spark_version <- numeric_version(version)
+  sc$state$spark_version <- numeric_version(version)
 
   # return to caller
-  sc$spark_version
+  sc$state$spark_version
 }
 
 spark_version_from_home_version <- function() {

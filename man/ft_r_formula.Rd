@@ -2,10 +2,10 @@
 % Please edit documentation in R/ml_feature_r_formula.R
 \name{ft_r_formula}
 \alias{ft_r_formula}
-\title{Feature Tranformation -- RFormula (Estimator)}
+\title{Feature Transformation -- RFormula (Estimator)}
 \usage{
-ft_r_formula(x, formula, features_col = "features", label_col = "label",
-  force_index_label = FALSE, dataset = NULL,
+ft_r_formula(x, formula = NULL, features_col = "features",
+  label_col = "label", force_index_label = FALSE, dataset = NULL,
   uid = random_string("r_formula_"), ...)
 }
 \arguments{
@@ -124,3 +124,4 @@ Other feature transformers: \code{\link{ft_binarizer}},
   \code{\link{ft_vector_indexer}},
   \code{\link{ft_vector_slicer}}, \code{\link{ft_word2vec}}
 }
+\concept{feature transformers}

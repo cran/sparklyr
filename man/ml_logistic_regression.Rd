@@ -5,13 +5,16 @@
 \title{Spark ML -- Logistic Regression}
 \usage{
 ml_logistic_regression(x, formula = NULL, fit_intercept = TRUE,
-  elastic_net_param = 0, reg_param = 0, max_iter = 100L,
-  threshold = 0.5, thresholds = NULL, tol = 1e-06, weight_col = NULL,
-  aggregation_depth = 2L, lower_bounds_on_coefficients = NULL,
-  lower_bounds_on_intercepts = NULL, upper_bounds_on_coefficients = NULL,
+  elastic_net_param = 0, reg_param = 0, max_iter = 100,
+  threshold = 0.5, thresholds = NULL, tol = 1e-06,
+  weight_col = NULL, aggregation_depth = 2,
+  lower_bounds_on_coefficients = NULL,
+  lower_bounds_on_intercepts = NULL,
+  upper_bounds_on_coefficients = NULL,
   upper_bounds_on_intercepts = NULL, features_col = "features",
-  label_col = "label", family = "auto", prediction_col = "prediction",
-  probability_col = "probability", raw_prediction_col = "rawPrediction",
+  label_col = "label", family = "auto",
+  prediction_col = "prediction", probability_col = "probability",
+  raw_prediction_col = "rawPrediction",
   uid = random_string("logistic_regression_"), ...)
 }
 \arguments{
@@ -92,6 +95,26 @@ Perform classification using logistic regression.
 \details{
 When \code{x} is a \code{tbl_spark} and \code{formula} (alternatively, \code{response} and \code{features}) is specified, the function returns a \code{ml_model} object wrapping a \code{ml_pipeline_model} which contains data pre-processing transformers, the ML predictor, and, for classification models, a post-processing transformer that converts predictions into class labels. For classification, an optional argument \code{predicted_label_col} (defaults to \code{"predicted_label"}) can be used to specify the name of the predicted label column. In addition to the fitted \code{ml_pipeline_model}, \code{ml_model} objects also contain a \code{ml_pipeline} object where the ML predictor stage is an estimator ready to be fit against data. This is utilized by \code{\link{ml_save}} with \code{type = "pipeline"} to faciliate model refresh workflows.
 }
+\examples{
+\dontrun{
+sc <- spark_connect(master = "local")
+mtcars_tbl <- sdf_copy_to(sc, mtcars, name = "mtcars_tbl", overwrite = TRUE)
+
+partitions <- mtcars_tbl \%>\%
+  sdf_partition(training = 0.7, test = 0.3, seed = 1111)
+
+mtcars_training <- partitions$training
+mtcars_test <- partitions$test
+
+lr_model <- mtcars_training \%>\%
+  ml_logistic_regression(am ~ gear + carb)
+
+pred <- sdf_predict(mtcars_test, lr_model)
+
+ml_binary_classification_evaluator(pred)
+}
+
+}
 \seealso{
 See \url{http://spark.apache.org/docs/latest/ml-classification-regression.html} for
   more information on the set of supervised learning algorithms.
@@ -108,3 +131,4 @@ Other ml algorithms: \code{\link{ml_aft_survival_regression}},
   \code{\link{ml_one_vs_rest}},
   \code{\link{ml_random_forest_classifier}}
 }
+\concept{ml algorithms}

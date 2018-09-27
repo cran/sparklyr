@@ -1,3 +1,5 @@
+# nocov start
+
 livy_sources_included <- function() {
   c(
     "/invoke\\.scala",
@@ -19,6 +21,7 @@ livy_sources_included <- function() {
     "/handler\\.scala",
     "/backend\\.scala",
     "/workerhelper\\.scala",
+    "/workerapply\\.scala",
     "/workerrdd\\.scala",
     "/workerutils\\.scala",
     "/mlutils\\.scala",
@@ -68,3 +71,5 @@ livy_sources_refresh <- function() {
 
   invisible(NULL)
 }
+
+# nocov end

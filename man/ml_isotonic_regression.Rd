@@ -4,7 +4,7 @@
 \alias{ml_isotonic_regression}
 \title{Spark ML -- Isotonic Regression}
 \usage{
-ml_isotonic_regression(x, formula = NULL, feature_index = 0L,
+ml_isotonic_regression(x, formula = NULL, feature_index = 0,
   isotonic = TRUE, weight_col = NULL, features_col = "features",
   label_col = "label", prediction_col = "prediction",
   uid = random_string("isotonic_regression_"), ...)
@@ -73,3 +73,4 @@ Other ml algorithms: \code{\link{ml_aft_survival_regression}},
   \code{\link{ml_one_vs_rest}},
   \code{\link{ml_random_forest_classifier}}
 }
+\concept{ml algorithms}

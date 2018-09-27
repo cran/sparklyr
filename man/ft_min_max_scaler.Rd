@@ -2,10 +2,11 @@
 % Please edit documentation in R/ml_feature_min_max_scaler.R
 \name{ft_min_max_scaler}
 \alias{ft_min_max_scaler}
-\title{Feature Tranformation -- MinMaxScaler (Estimator)}
+\title{Feature Transformation -- MinMaxScaler (Estimator)}
 \usage{
-ft_min_max_scaler(x, input_col, output_col, min = 0, max = 1,
-  dataset = NULL, uid = random_string("min_max_scaler_"), ...)
+ft_min_max_scaler(x, input_col = NULL, output_col = NULL, min = 0,
+  max = 1, dataset = NULL, uid = random_string("min_max_scaler_"),
+  ...)
 }
 \arguments{
 \item{x}{A \code{spark_connection}, \code{ml_pipeline}, or a \code{tbl_spark}.}
@@ -58,6 +59,21 @@ When \code{dataset} is provided for an estimator transformer, the function
   in the case where \code{x} is a \code{tbl_spark}, the estimator fits against \code{x} then
   to obtain a transformer, which is then immediately used to transform \code{x}.
 }
+\examples{
+\dontrun{
+sc <- spark_connect(master = "local")
+iris_tbl <- sdf_copy_to(sc, iris, name = "iris_tbl", overwrite = TRUE)
+
+features <- c("Sepal_Length", "Sepal_Width", "Petal_Length", "Petal_Width")
+
+iris_tbl \%>\%
+  ft_vector_assembler(input_col = features,
+                      output_col = "features_temp") \%>\%
+  ft_min_max_scaler(input_col = "features_temp",
+                     output_col = "features")
+}
+
+}
 \seealso{
 See \url{http://spark.apache.org/docs/latest/ml-features.html} for
   more information on the set of transformations available for DataFrame
@@ -89,3 +105,4 @@ Other feature transformers: \code{\link{ft_binarizer}},
   \code{\link{ft_vector_indexer}},
   \code{\link{ft_vector_slicer}}, \code{\link{ft_word2vec}}
 }
+\concept{feature transformers}

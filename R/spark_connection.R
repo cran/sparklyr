@@ -44,31 +44,36 @@ NULL
 #' @name spark-api
 #' @export
 spark_context <- function(sc) {
-  sc$spark_context
+  sc$state$spark_context
 }
 
 #' @name spark-api
 #' @export
 java_context <- function(sc) {
-  sc$java_context
+  sc$state$java_context
 }
 
 #' @name spark-api
 #' @export
 hive_context <- function(sc) {
-  if (is.null(sc$hive_context))
-    sc$hive_context <- create_hive_context(sc)
-
-  sc$hive_context
+  UseMethod("hive_context")
 }
 
 #' @name spark-api
 #' @export
 spark_session <- function(sc) {
-  if (is.null(sc$hive_context))
-    sc$hive_context <- create_hive_context(sc)
+  UseMethod("spark_session")
+}
 
-  sc$hive_context
+
+#' @export
+hive_context.spark_connection <- function(sc) {
+  sc$state$hive_context
+}
+
+#' @export
+spark_session.spark_connection <- function(sc) {
+  sc$state$hive_context
 }
 
 #' Retrieve the Spark Connection Associated with an R Object
@@ -128,7 +133,7 @@ connection_config <- function(sc, prefix, not_prefix = list()) {
     if (grepl("\\.remote$", e) && isLocal)
       found <- FALSE
 
-    if (all(nchar(config[[e]]) == 0))
+    if (is.character(config[[e]]) && all(nchar(config[[e]]) == 0))
       found <- FALSE
 
     found
@@ -219,3 +224,33 @@ initialize_connection <- function(sc) {
   UseMethod("initialize_connection")
 }
 
+new_spark_connection <- function(scon, ..., subclass = NULL) {
+  structure(
+    scon,
+    ...,
+    class = c("spark_connection", subclass, "DBIConnection")
+  )
+}
+
+new_spark_shell_connection <- function(scon, ..., subclass = NULL) {
+  new_spark_connection(
+    scon,
+    ...,
+    subclass = c(subclass, "spark_shell_connection")
+  )
+}
+
+new_spark_gateway_connection <- function(scon, ..., subclass = NULL) {
+  new_spark_shell_connection(
+    scon,
+    ...,
+    subclass = c(subclass, "spark_gateway_connection")
+  )
+}
+
+new_livy_connection <- function(scon) {
+  new_spark_connection(
+    scon,
+    subclass = "livy_connection"
+  )
+}

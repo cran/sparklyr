@@ -5,14 +5,16 @@
 \alias{ft_lsh}
 \alias{ft_bucketed_random_projection_lsh}
 \alias{ft_minhash_lsh}
-\title{Feature Tranformation -- LSH (Estimator)}
+\title{Feature Transformation -- LSH (Estimator)}
 \usage{
-ft_bucketed_random_projection_lsh(x, input_col, output_col, bucket_length,
-  num_hash_tables = 1L, seed = NULL, dataset = NULL,
+ft_bucketed_random_projection_lsh(x, input_col = NULL,
+  output_col = NULL, bucket_length = NULL, num_hash_tables = 1,
+  seed = NULL, dataset = NULL,
   uid = random_string("bucketed_random_projection_lsh_"), ...)
 
-ft_minhash_lsh(x, input_col, output_col, num_hash_tables = 1L, seed = NULL,
-  dataset = NULL, uid = random_string("minhash_lsh_"), ...)
+ft_minhash_lsh(x, input_col = NULL, output_col = NULL,
+  num_hash_tables = 1L, seed = NULL, dataset = NULL,
+  uid = random_string("minhash_lsh_"), ...)
 }
 \arguments{
 \item{x}{A \code{spark_connection}, \code{ml_pipeline}, or a \code{tbl_spark}.}
@@ -106,3 +108,4 @@ Other feature transformers: \code{\link{ft_binarizer}},
   \code{\link{ft_vector_indexer}},
   \code{\link{ft_vector_slicer}}, \code{\link{ft_word2vec}}
 }
+\concept{feature transformers}

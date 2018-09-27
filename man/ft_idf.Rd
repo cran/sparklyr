@@ -2,10 +2,10 @@
 % Please edit documentation in R/ml_feature_idf.R
 \name{ft_idf}
 \alias{ft_idf}
-\title{Feature Tranformation -- IDF (Estimator)}
+\title{Feature Transformation -- IDF (Estimator)}
 \usage{
-ft_idf(x, input_col, output_col, min_doc_freq = 0L, dataset = NULL,
-  uid = random_string("idf_"), ...)
+ft_idf(x, input_col = NULL, output_col = NULL, min_doc_freq = 0,
+  dataset = NULL, uid = random_string("idf_"), ...)
 }
 \arguments{
 \item{x}{A \code{spark_connection}, \code{ml_pipeline}, or a \code{tbl_spark}.}
@@ -85,3 +85,4 @@ Other feature transformers: \code{\link{ft_binarizer}},
   \code{\link{ft_vector_indexer}},
   \code{\link{ft_vector_slicer}}, \code{\link{ft_word2vec}}
 }
+\concept{feature transformers}

@@ -2,7 +2,7 @@
 spark_data_build_types <- function(sc, columns) {
   names <- names(columns)
   fields <- lapply(names, function(name) {
-    invoke_static(sc, "sparklyr.SQLUtils", "createStructField", name, columns[[name]], TRUE)
+    invoke_static(sc, "sparklyr.SQLUtils", "createStructField", name, columns[[name]][[1]], TRUE)
   })
 
   invoke_static(sc, "sparklyr.SQLUtils", "createStructType", fields)
@@ -56,7 +56,7 @@ spark_serialize_csv_string <- function(sc, df, columns, repartition) {
 
   tempFile <- tempfile(fileext = ".csv")
   write.table(df, tempFile, sep = separator$plain, col.names = FALSE, row.names = FALSE, quote = FALSE)
-  textData <- as.list(readr::read_lines(tempFile))
+  textData <- as.list(readLines(tempFile))
 
   rdd <- invoke_static(
     sc,
@@ -145,7 +145,7 @@ spark_data_copy <- function(
   # Many of these issues are marked as resolved, but it appears this is
   # a common regression in Spark and the handling is not uniform across
   # the Spark API.
-  names(df) <- spark_sanitize_names(names(df))
+  names(df) <- spark_sanitize_names(names(df), sc$config)
 
   columns <- lapply(df, function(e) {
     if (is.factor(e))

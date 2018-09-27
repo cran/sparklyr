@@ -8,15 +8,16 @@
 \alias{ml_topics_matrix}
 \title{Spark ML -- Latent Dirichlet Allocation}
 \usage{
-ml_lda(x, k = 10L, max_iter = 20L, doc_concentration = NULL,
+ml_lda(x, k = 10, max_iter = 20, doc_concentration = NULL,
   topic_concentration = NULL, subsampling_rate = 0.05,
-  optimizer = "online", checkpoint_interval = 10L,
+  optimizer = "online", checkpoint_interval = 10,
   keep_last_checkpoint = TRUE, learning_decay = 0.51,
-  learning_offset = 1024, optimize_doc_concentration = TRUE, seed = NULL,
-  features_col = "features", topic_distribution_col = "topicDistribution",
+  learning_offset = 1024, optimize_doc_concentration = TRUE,
+  seed = NULL, features_col = "features",
+  topic_distribution_col = "topicDistribution",
   uid = random_string("lda_"), ...)
 
-ml_describe_topics(model, max_terms_per_topic = 10L)
+ml_describe_topics(model, max_terms_per_topic = 10)
 
 ml_log_likelihood(model, dataset)
 
@@ -171,3 +172,4 @@ Other ml clustering algorithms: \code{\link{ml_bisecting_kmeans}},
   \code{\link{ml_gaussian_mixture}},
   \code{\link{ml_kmeans}}
 }
+\concept{ml clustering algorithms}

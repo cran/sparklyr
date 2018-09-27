@@ -7,6 +7,9 @@ iris_tbl <- testthat_tbl("iris")
 dates <- data.frame(dates = c(as.Date("2015/12/19"), as.Date(NA), as.Date("2015/12/19")))
 dates_tbl <- testthat_tbl("dates")
 
+colnas <- data.frame(c1 = c("A", "B"), c2 = c(NA, NA))
+colnas_tbl <- testthat_tbl("colnas")
+
 test_that("'spark_apply' can apply identity function", {
   expect_equal(
     iris_tbl %>% spark_apply(function(e) e) %>% collect(),
@@ -175,7 +178,7 @@ test_that("'spark_apply' can roundtrip dates", {
       spark_apply(function(e) as.Date(e[[1]], origin = "1970-01-01")) %>%
       spark_apply(function(e) e) %>%
       collect() %>%
-      pull(dates) %>%
+      pull() %>%
       class(),
     "Date"
   )
@@ -187,9 +190,64 @@ test_that("'spark_apply' can roundtrip Date-Time", {
       spark_apply(function(e) as.POSIXct(e[[1]], origin = "1970-01-01")) %>%
       spark_apply(function(e) e) %>%
       collect() %>%
-      pull(dates) %>%
+      pull() %>%
       class() %>%
       first(),
     "POSIXct"
+  )
+})
+
+test_that("'spark_apply' supports grouped empty results", {
+  process_data <- function(DF, exclude) {
+    DF <- subset(DF, select = colnames(DF)[!colnames(DF) %in% exclude])
+    DF[complete.cases(DF),]
+  }
+
+  data <- data.frame(
+    grp = rep(c("A", "B", "C"), each = 5),
+    x1 = 1:15,
+    x2 = c(1:9, rep(NA, 6)),
+    stringsAsFactors = FALSE
+  )
+
+  data_spark <- sdf_copy_to(sc, data, "grp_data", memory = TRUE)
+
+  collected <- data_spark %>% spark_apply(
+    process_data,
+    group_by = "grp",
+    columns = c("x1", "x2"),
+    packages = FALSE,
+    context = {exclude <- "grp"}
+  ) %>% collect()
+
+  expect_equal(
+    collected,
+    data %>% group_by(grp) %>% do(process_data(., exclude = "grp"))
+  )
+})
+
+test_that("'spark_apply' can use anonymous functions", {
+  expect_equal(
+    sdf_len(sc, 3) %>% spark_apply(~ .x + 1) %>% collect(),
+    data_frame(id = c(2, 3, 4))
+  )
+})
+
+test_that("'spark_apply' can apply function with 'NA's column", {
+  if (spark_version(sc) < "2.0.0") skip("automatic column types supported in Spark 2.0+")
+
+  expect_equal(
+    colnas_tbl %>% mutate(c2 = as.integer(c2)) %>% spark_apply(~ class(.x[[2]])) %>% pull(),
+    "integer"
+  )
+
+  expect_equal(
+    colnas_tbl %>%
+      mutate(c2 = as.integer(c2)) %>%
+      spark_apply(~ dplyr::mutate(.x, c1 = tolower(c1))) %>%
+      collect(),
+    colnas_tbl %>%
+      mutate(c2 = as.integer(c2)) %>%
+      mutate(c1 = tolower(c1))
   )
 })

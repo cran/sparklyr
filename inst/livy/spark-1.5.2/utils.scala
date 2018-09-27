@@ -4,6 +4,7 @@
 //
 
 import java.io._
+import java.net.{InetAddress, ServerSocket}
 import java.util.Arrays
 
 import scala.util.Try
@@ -336,6 +337,7 @@ object Utils {
           case "integer"  => if (Try(value.toInt).isSuccess) value.toInt else null.asInstanceOf[Int]
           case "double"  => if (Try(value.toDouble).isSuccess) value.toDouble else null.asInstanceOf[Double]
           case "logical" => if (Try(value.toBoolean).isSuccess) value.toBoolean else null.asInstanceOf[Boolean]
+          case "timestamp" => if (Try(new java.sql.Timestamp(value.toLong * 1000)).isSuccess) new java.sql.Timestamp(value.toLong * 1000) else null.asInstanceOf[java.sql.Timestamp]
           case _ => value
         }
       })
@@ -430,6 +432,33 @@ object Utils {
       if (cl == null) Nil else cl :: supers(cl.getSuperclass)
     }
   supers(obj.getClass).map(if (simpleName) _.getSimpleName else _.getName).toArray
+  }
+
+  def portIsAvailable(port: Int, inetAddress: InetAddress) = {
+    var ss: ServerSocket = null
+    var available = false
+
+    Try {
+        ss = new ServerSocket(port, 1, inetAddress)
+        available = true
+    }
+
+    if (ss != null) {
+        Try {
+            ss.close();
+        }
+    }
+
+    available
+  }
+
+  def nextPort(port: Int, inetAddress: InetAddress) = {
+    var freePort = port + 1
+    while (!portIsAvailable(freePort, inetAddress) && freePort - port < 100)
+      freePort += 1
+
+    // give up after 100 port searches
+    if (freePort - port < 100) freePort else 0;
   }
 }
 

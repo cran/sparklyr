@@ -1,4 +1,4 @@
-spark_worker_apply <- function(sc) {
+spark_worker_apply <- function(sc, config) {
   hostContextId <- worker_invoke_method(sc, FALSE, "Handler", "getHostContext")
   worker_log("retrieved worker context id ", hostContextId)
 
@@ -35,6 +35,11 @@ spark_worker_apply <- function(sc) {
     .libPaths(unbundlePath)
     worker_log("updated .libPaths with bundle packages")
   }
+  else {
+    spark_env <- worker_invoke_static(sc, "org.apache.spark.SparkEnv", "get")
+    spark_libpaths <- worker_invoke(worker_invoke(spark_env, "conf"), "get", "spark.r.libpaths", NULL)
+    if (!is.null(spark_libpaths)) .libPaths(spark_libpaths)
+  }
 
   grouped_by <- worker_invoke(context, "getGroupBy")
   grouped <- !is.null(grouped_by) && length(grouped_by) > 0
@@ -62,6 +67,10 @@ spark_worker_apply <- function(sc) {
     }
   }
 
+  if (identical(config$schema, TRUE)) {
+    worker_log("is running to compute schema")
+  }
+
   columnNames <- worker_invoke(context, "getColumns")
 
   if (!grouped) groups <- list(list(groups))
@@ -75,15 +84,25 @@ spark_worker_apply <- function(sc) {
     df <- do.call(rbind.data.frame, c(data, list(stringsAsFactors = FALSE)))
 
     # rbind removes Date classes so we re-assign them here
-    if (length(data) > 0 && ncol(df) > 0 && nrow(df) > 0 &&
-        any(sapply(data[[1]], function(e) class(e)[[1]]) %in% c("Date", "POSIXct"))) {
-      first_row <- data[[1]]
-      for (idx in seq_along(first_row)) {
-        first_class <- class(first_row[[idx]])[[1]]
-        if (identical(first_class, "Date")) {
-          df[[idx]] <- as.Date(df[[idx]], origin = "1970-01-01")
-        } else if (identical(first_class, "POSIXct")) {
-          df[[idx]] <- as.POSIXct(df[[idx]], origin = "1970-01-01")
+    if (length(data) > 0 && ncol(df) > 0 && nrow(df) > 0) {
+
+      if (any(sapply(data[[1]], function(e) class(e)[[1]]) %in% c("Date", "POSIXct"))) {
+        first_row <- data[[1]]
+        for (idx in seq_along(first_row)) {
+          first_class <- class(first_row[[idx]])[[1]]
+          if (identical(first_class, "Date")) {
+            df[[idx]] <- as.Date(df[[idx]], origin = "1970-01-01")
+          } else if (identical(first_class, "POSIXct")) {
+            df[[idx]] <- as.POSIXct(df[[idx]], origin = "1970-01-01")
+          }
+        }
+      }
+
+      # cast column to correct type, for instance, when dealing with NAs.
+      for (i in 1:ncol(df)) {
+        target_type <- funcContext$column_types[[i]]
+        if (!is.null(target_type) && class(df[[i]]) != target_type) {
+        df[[i]] <- do.call(paste("as", target_type, sep = "."), args = list(df[[i]]))
         }
       }
     }
@@ -99,7 +118,7 @@ spark_worker_apply <- function(sc) {
       closure_params <- length(formals(closure))
       closure_args <- c(
         list(df),
-        if (!is.null(funcContext)) list(funcContext) else NULL,
+        if (!is.null(funcContext$user_context)) list(funcContext$user_context) else NULL,
         as.list(
           if (nrow(df) > 0)
             lapply(grouped_by, function(group_by_name) df[[group_by_name]][[1]])
@@ -112,19 +131,37 @@ spark_worker_apply <- function(sc) {
       result <- do.call(closure, closure_args)
       worker_log("computed closure")
 
-      if (!identical(class(result), "data.frame")) {
+      if (!"data.frame" %in% class(result)) {
         worker_log("data.frame expected but ", class(result), " found")
-        result <- data.frame(result)
+        result <- as.data.frame(result)
       }
 
       if (!is.data.frame(result)) stop("Result from closure is not a data.frame")
     }
 
     if (grouped) {
-      new_column_values <- lapply(grouped_by, function(grouped_by_name) df[[grouped_by_name]][[1]])
-      names(new_column_values) <- grouped_by
+      if (nrow(result) > 0) {
+        new_column_values <- lapply(grouped_by, function(grouped_by_name) df[[grouped_by_name]][[1]])
+        names(new_column_values) <- grouped_by
 
-      result <- do.call("cbind", list(new_column_values, result))
+        if("AsIs" %in% class(result)) class(result) <- class(result)[-match("AsIs", class(result))]
+        result <- do.call("cbind", list(new_column_values, result))
+
+        names(result) <- gsub("\\.", "_", make.unique(names(result)))
+      }
+      else {
+        result <- NULL
+      }
+    }
+
+    firstClass <- function(e) class(e)[[1]]
+
+    if (identical(config$schema, TRUE)) {
+      worker_log("updating schema")
+      result <- data.frame(
+        names = paste(names(result), collapse = "|"),
+        types = paste(lapply(result, firstClass), collapse = "|")
+      )
     }
 
     all_results <- rbind(all_results, result)
@@ -132,6 +169,7 @@ spark_worker_apply <- function(sc) {
 
   if (!is.null(all_results) && nrow(all_results) > 0) {
     worker_log("updating ", nrow(all_results), " rows")
+
     all_data <- lapply(1:nrow(all_results), function(i) as.list(all_results[i,]))
 
     worker_invoke(context, "setResultArraySeq", all_data)

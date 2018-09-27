@@ -1,12 +1,11 @@
+# nocov start
+
 create_hive_context.livy_connection <- function(sc) {
-  if (spark_version(sc) >= "2.0.0")
-    create_hive_context_v2(sc)
-  else
-    invoke_new(
-      sc,
-      "org.apache.spark.sql.hive.HiveContext",
-      sc$spark_context
-    )
+  invoke_new(
+    sc,
+    "org.apache.spark.sql.hive.HiveContext",
+    spark_context(sc)
+  )
 }
 
 #' @import httr
@@ -62,9 +61,13 @@ livy_validate_http_response <- function(message, req) {
 #'   \item{\code{num_executors}}{Number of executors to launch for this session}
 #'   \item{\code{archives}}{Archives to be used in this session}
 #'   \item{\code{queue}}{The name of the YARN queue to which submitted}
-#'   \item{\code{queue}}{The name of this session}
+#'   \item{\code{name}}{The name of this session}
 #'   \item{\code{heartbeat_timeout}}{Timeout in seconds to which session be orphaned}
 #' }
+#'
+#' Note that \code{queue} is supported only by version 0.4.0 of Livy or newer.
+#' If you are using the older one, specify queue via \code{config} (e.g.
+#' \code{config = spark_config(spark.yarn.queue = "my_queue")}).
 #'
 #' @return Named list with configuration data
 livy_config <- function(config = spark_config(), username = NULL, password = NULL, negotiate = FALSE,
@@ -84,7 +87,7 @@ livy_config <- function(config = spark_config(), username = NULL, password = NUL
 
   #Params need to be restrictued or livy will complain about unknown parameters
   allowed_params <- c("proxy_user", "jars", "py_files", "files", "driver_memory", "driver_cores", "executor_memory",
-    "executor_cores", "num_executors", "archives", "queue", "name", "heartbeat_timeout")
+                      "executor_cores", "num_executors", "archives", "queue", "name", "heartbeat_timeout")
 
   additional_params <- list(...)
 
@@ -378,17 +381,19 @@ livy_post_statement <- function(sc, code) {
   statementReponse <- content(req)
   assert_that(!is.null(statementReponse$id))
 
-  waitTimeout <- spark_config_value(sc$config, "livy.session.command.timeout", 60)
-  waitTimeout <- waitTimeout * 10
+  waitTimeout <- spark_config_value(sc$config, "livy.session.command.timeout", 30 * 24 * 60 * 60)
+  pollInterval <- spark_config_value(sc$config, "livy.session.command.interval", 5)
+
+  commandStart <- Sys.time()
+
   sleepTime <- 0.001
   while ((statementReponse$state == "running" || statementReponse$state == "waiting" ) &&
-         waitTimeout > 0) {
+         Sys.time() < commandStart + waitTimeout) {
     statementReponse <- livy_get_statement(sc, statementReponse$id)
 
     Sys.sleep(sleepTime)
 
-    waitTimeout <- waitTimeout - 1
-    sleepTime <- sleepTime * 2
+    sleepTime <- min(pollInterval, sleepTime * 2)
   }
 
   if (statementReponse$state != "available") {
@@ -452,12 +457,25 @@ livy_invoke_statement <- function(sc, statement) {
   result
 }
 
+livy_invoke_statement_command <- function(sc, static, jobj, method, ...) {
+  if (identical(method, "<init>"))
+    paste0("// invoke_new(sc, '", jobj, "', ...)")
+  else if (is.character(jobj))
+    paste0("// invoke_static(sc, '", jobj, "', '", method, "', ...)")
+  else
+    paste0("// invoke(sc, <jobj>, '", method, "', ...)")
+}
+
 livy_invoke_statement_fetch <- function(sc, static, jobj, method, ...) {
   statement <- livy_statement_compose(sc, static, jobj, method, ...)
 
   # Note: Spark 2.0 requires magic to be present in the statement with the definition.
   statement$code <- paste(
-    statement$code,
+    paste(
+      livy_invoke_statement_command(sc, static, jobj, method, ...),
+      statement$code,
+      sep = "\n"
+    ),
     livy_statement_compose_magic(statement$lobj, "json")$code,
     sep = "\n")
 
@@ -490,21 +508,21 @@ livy_validate_master <- function(master, config) {
   retries <- 5
   retriesErr <- NULL
   while (retries >= 0) {
-    tryCatch({
+    if (!is.null(retriesErr)) Sys.sleep(1)
+
+    retriesErr <- tryCatch({
       livy_get_sessions(master, config)
+      NULL
     }, error = function(err) {
-      retriesErr <- err
+      err
     })
 
+    if (is.null(retriesErr)) return(NULL)
+
     retries <- retries - 1;
-    Sys.sleep(1)
   }
 
-  if (!is.null(retriesErr)) {
-    stop("Failed to connect to Livy service at ", master, ". ", retriesErr$message)
-  }
-
-  NULL
+  stop("Failed to connect to Livy service at ", master, ". ", retriesErr$message)
 }
 
 livy_connection_not_used_warn <- function(value, default = NULL, name = deparse(substitute(value))) {
@@ -536,10 +554,15 @@ livy_connection <- function(master,
 
   session <- livy_create_session(master, config)
 
-  sc <- structure(class = c("spark_connection", "livy_connection", "DBIConnection"), list(
+  sc <- new_livy_connection(list(
+    # spark_connection
     master = master,
-    sessionId = session$id,
+    method = "livy",
+    app_name = app_name,
     config = config,
+    state = new.env(),
+    # livy_connection
+    sessionId = session$id,
     code = new.env(),
     log = tempfile(fileext = ".log")
   ))
@@ -684,6 +707,7 @@ livy_load_scala_sources <- function(sc) {
     "channel.scala",
     "shell.scala",
     "backend.scala",
+    "workerapply.scala",
     "workerrdd.scala",
     "workerhelper.scala",
     "workerutils.scala",
@@ -704,6 +728,7 @@ livy_load_scala_sources <- function(sc) {
 
   livySparkVersion <- livy_post_statement(sc, "sc.version") %>%
     gsub("^.+= |[\n\r \t]", "", .) %>%
+    spark_version_clean() %>%
     numeric_version()
 
   livySourcesFiles <- livySourcesFiles[sourceOrder] %>%
@@ -712,6 +737,7 @@ livy_load_scala_sources <- function(sc) {
         dirname() %>%
         basename() %>%
         gsub("^spark-", "", .) %>%
+        spark_version_clean() %>%
         numeric_version()
       requiredVersion <= livySparkVersion
     }, .)
@@ -719,7 +745,7 @@ livy_load_scala_sources <- function(sc) {
   lapply(livySourcesFiles, function(sourceFile) {
     tryCatch({
       subpath_name <- file.path(basename(dirname(sourceFile)), basename(sourceFile))
-      if (sparklyr_boolean_option("sparklyr.verbose")) message("Loading ", subpath_name)
+      if (spark_config_value(sc$config, "sparklyr.verbose", FALSE)) message("Loading ", subpath_name)
 
       sources <- paste(readLines(sourceFile), collapse = "\n")
 
@@ -736,28 +762,40 @@ initialize_connection.livy_connection <- function(sc) {
   tryCatch({
     livy_load_scala_sources(sc)
 
-    sc$spark_context <- invoke_static(
-      sc,
-      "org.apache.spark.SparkContext",
-      "getOrCreate"
-    )
+    session <- NULL
+    sc$state$spark_context <- tryCatch({
+      session <<- invoke_static(
+        sc,
+        "org.apache.spark.sql.SparkSession",
+        "builder"
+      ) %>%
+        invoke("getOrCreate")
 
-    sc$java_context <- invoke_static(
+      invoke(session, "sparkContext")
+    },
+    error = function(e) {
+      invoke_static(
+        sc,
+        "org.apache.spark.SparkContext",
+        "getOrCreate"
+      )
+    })
+
+    sc$state$java_context <- invoke_static(
       sc,
       "org.apache.spark.api.java.JavaSparkContext",
       "fromSparkContext",
-      sc$spark_context
+      spark_context(sc)
     )
 
     # cache spark version
-    sc$spark_version <- spark_version(sc)
+    sc$state$spark_version <- spark_version(sc)
 
-    sc$hive_context <- create_hive_context(sc)
-    sc$hive_context$connection <- sc
+    sc$state$hive_context <- session %||% create_hive_context(sc)
 
     if (spark_version(sc) < "2.0.0") {
       params <- connection_config(sc, "spark.sql.")
-      apply_config(params, hive_context, "setConf", "spark.sql.")
+      apply_config(hive_context, params, "setConf", "spark.sql.")
     }
 
     sc
@@ -766,3 +804,4 @@ initialize_connection.livy_connection <- function(sc) {
   })
 }
 
+# nocov end
