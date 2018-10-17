@@ -1,3 +1,23 @@
+# Sparklyr 0.9.2
+
+- Support for Spark 2.3.2.
+
+- Fix installation error with older versions of `rstudioapi` (#1716).
+
+- Fix missing callstack and error case while logging in
+  `spark_apply()`.
+
+- Fix regression in `sdf_collect()` failing to collect tables.
+
+- Fix new connection RStudio selectors colors when running
+  under OS X Mojave.
+
+- Removed `overwrite` parameter in `spark_read_table()` (#1698).
+
+- Fix regression preventing using R 3.2 (#1695).
+
+- Additional jar search paths under Spark 2.3.1 (#1694)
+
 # Sparklyr 0.9.1
 
 - Terminate streams when Shiny app terminates.
@@ -152,8 +172,7 @@
 
 ### Broom
   
-- Implemented `tidy()`, `augment()`, and `glance()` for
-`ml_naive_bayes()`, `ml_logistic_regression()`, `ml_decision_tree()`, `ml_random_forest()`, `ml_gradient_boosted_trees()`, `ml_bisecting_kmeans()`, `ml_kmeans()`and `ml_gaussian_mixture()` models (@samuelmacedo83)
+- Implemented `tidy()`, `augment()`, and `glance()` for `ml_aft_survival_regression()`, `ml_isotonic_regression()`, `ml_naive_bayes()`, `ml_logistic_regression()`, `ml_decision_tree()`, `ml_random_forest()`, `ml_gradient_boosted_trees()`, `ml_bisecting_kmeans()`, `ml_kmeans()`and `ml_gaussian_mixture()` models (@samuelmacedo83)
 
 ### Configuration
 
