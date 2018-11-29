@@ -1,3 +1,37 @@
+# Sparklyr 0.9.3
+
+- Fix to make `spark_config_kubernetes()` work with variable `jar`
+  parameters.
+
+- Support to install and use Spark 2.4.0.
+
+- Improvements and fixes to `spark_config_kubernetes()`
+  parameters.
+
+- Support for `sparklyr.connect.ondisconnect` config setting to
+  allow cleanup of resources when using kubernetes.
+
+- `spark_apply()` and `spark_apply_bundle()` properly dereference
+  symlinks when creating package bundle (@awblocker, #1785)
+
+- Fix `tableName` warning triggered while connecting.
+
+- Deprecate `sdf_mutate()` (#1754).
+
+- Fix requirement to specify `SPARK_HOME_VERSION` when `version`
+  parameter is set in `spark_connect()`.
+
+- Cloudera autodetect Spark version improvements.
+
+- Fixed default for `session` in `reactiveSpark()`.
+
+- Removed `stream_read_jdbc()` and `stream_write_jdbc()` since they are 
+  not yet implemented in Spark.
+
+- Support for collecting NA values from logical columns (#1729).
+
+- Proactevely clean JVM objects when R object is deallocated.
+
 # Sparklyr 0.9.2
 
 - Support for Spark 2.3.2.
