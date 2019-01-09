@@ -1,3 +1,15 @@
+# Sparklyr 0.9.4
+
+- Improved multiple streaming documentation examples (#1801, #1805, #1806).
+
+- Fix issue while printing Spark data frames under `tibble` 2.0.0 (#1829).
+
+- Support for `stream_write_console()` to write to console log.
+
+- Support for `stream_read_scoket()` to read socket streams.
+
+- Fix to `spark_read_kafka()` to remove unused `path`.
+
 # Sparklyr 0.9.3
 
 - Fix to make `spark_config_kubernetes()` work with variable `jar`
