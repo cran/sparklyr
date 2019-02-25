@@ -111,7 +111,7 @@ then regression is used; classification otherwise.}
 The object returned depends on the class of \code{x}.
 
 \itemize{
-  \item \code{spark_connection}: When \code{x} is a \code{spark_connection}, the function returns an instance of a \code{ml_predictor} object. The object contains a pointer to
+  \item \code{spark_connection}: When \code{x} is a \code{spark_connection}, the function returns an instance of a \code{ml_estimator} object. The object contains a pointer to
   a Spark \code{Predictor} object and can be used to compose
   \code{Pipeline} objects.
 
@@ -160,7 +160,7 @@ iris_test <- partitions$test
 rf_model <- iris_training \%>\%
   ml_random_forest(Species ~ ., type = "classification")
 
-pred <- sdf_predict(iris_test, rf_model)
+pred <- ml_predict(rf_model, iris_test)
 
 ml_multiclass_classification_evaluator(pred)
 }

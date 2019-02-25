@@ -12,8 +12,11 @@
 #' @export
 ft_vector_assembler <- function(x, input_cols = NULL, output_col = NULL,
                                 uid = random_string("vector_assembler_"), ...) {
+  check_dots_used()
   UseMethod("ft_vector_assembler")
 }
+
+ml_vector_assembler <- ft_vector_assembler
 
 #' @export
 ft_vector_assembler.spark_connection <- function(x, input_cols = NULL, output_col = NULL,
@@ -24,9 +27,9 @@ ft_vector_assembler.spark_connection <- function(x, input_cols = NULL, output_co
     uid = uid
   ) %>%
     c(rlang::dots_list(...)) %>%
-    ml_validator_vector_assembler()
+    validator_ml_vector_assembler()
 
-  jobj <- ml_new_transformer(
+  jobj <- spark_pipeline_stage(
     x, "org.apache.spark.ml.feature.VectorAssembler",
     input_cols = .args[["input_cols"]], output_col = .args[["output_col"]], uid = .args[["uid"]]
   )
@@ -61,14 +64,10 @@ ft_vector_assembler.tbl_spark <- function(x, input_cols = NULL, output_col = NUL
 }
 
 new_ml_vector_assembler <- function(jobj) {
-  new_ml_transformer(jobj, subclass = "ml_vector_assembler")
+  new_ml_transformer(jobj, class = "ml_vector_assembler")
 }
 
-ml_validator_vector_assembler <- function(.args) {
-  .args <- ml_backwards_compatibility(.args, list(
-    input.col = "input_cols",
-    output.col = "output_col"
-  )) %>%
-    validate_args_transformer()
+validator_ml_vector_assembler <- function(.args) {
+  .args <- validate_args_transformer(.args)
   .args
 }

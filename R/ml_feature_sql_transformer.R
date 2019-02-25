@@ -16,8 +16,11 @@
 #' @export
 ft_sql_transformer <- function(x, statement = NULL,
                                uid = random_string("sql_transformer_"), ...) {
+  check_dots_used()
   UseMethod("ft_sql_transformer")
 }
+
+ml_sql_transformer <- ft_sql_transformer
 
 #' @export
 ft_sql_transformer.spark_connection <- function(x, statement = NULL,
@@ -28,12 +31,12 @@ ft_sql_transformer.spark_connection <- function(x, statement = NULL,
     uid = uid
   ) %>%
     c(rlang::dots_list(...)) %>%
-    ml_validator_sql_transformer()
+    validator_ml_sql_transformer()
 
   jobj <- invoke_new(
     x, "org.apache.spark.ml.feature.SQLTransformer",
     .args[["uid"]]) %>%
-    maybe_set_param("setStatement", .args[["statement"]])
+    jobj_set_param("setStatement", .args[["statement"]])
 
   new_ml_sql_transformer(jobj)
 }
@@ -65,7 +68,7 @@ ft_sql_transformer.tbl_spark <- function(x, statement = NULL,
 }
 
 new_ml_sql_transformer <- function(jobj) {
-  new_ml_transformer(jobj, subclass = "ml_sql_transformer")
+  new_ml_transformer(jobj, class = "ml_sql_transformer")
 }
 
 # dplyr transformer
@@ -131,10 +134,7 @@ ft_dplyr_transformer.tbl_spark <- function(x, tbl,
   ml_transform(stage, x)
 }
 
-ml_validator_sql_transformer <- function(.args) {
-  .args <- ml_backwards_compatibility(.args, list(
-    sql = "statement"
-  ))
+validator_ml_sql_transformer <- function(.args) {
   .args[["statement"]] <- cast_nullable_string(.args[["statement"]])
   .args[["uid"]] <- cast_string(.args[["uid"]])
   .args

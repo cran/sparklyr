@@ -71,6 +71,9 @@ testthat_shell_connection <- function() {
     options(sparklyr.na.omit.verbose = TRUE)
     options(sparklyr.na.action.verbose = TRUE)
 
+    config[["sparklyr.shell.driver-memory"]] <- "3G"
+    config[["sparklyr.apply.env.foo"]] <- "env-test"
+
     setwd(tempdir())
     sc <- spark_connect(master = "local", version = version, config = config)
     assign(".testthat_spark_connection", sc, envir = .GlobalEnv)
@@ -159,7 +162,9 @@ testthat_livy_connection <- function() {
   }
 
   if (nrow(livy_installed_versions()) == 0) {
-    livy_install(livy_version, spark_version = version)
+    cat("Installing Livy.")
+    livy_install(livy_version, spark_version = version, )
+    cat("Livy installed.")
   }
 
   expect_gt(nrow(livy_installed_versions()), 0)
@@ -182,7 +187,17 @@ testthat_livy_connection <- function() {
       stdout = FALSE,
       stderr = FALSE)
 
-    sc <- spark_connect(master = "http://localhost:8998", method = "livy")
+    sc <- spark_connect(
+      master = "http://localhost:8998",
+      method = "livy",
+      config = list(
+        sparklyr.verbose = TRUE,
+        sparklyr.connect.timeout = 120,
+        sparklyr.log.invoke = "cat"
+      ),
+      sources = TRUE
+    )
+
     assign(".testthat_livy_connection", sc, envir = .GlobalEnv)
   }
 
@@ -272,4 +287,28 @@ expect_coef_equal <- function(lhs, rhs) {
   rhs <- rhs[nm]
 
   expect_true(all.equal(lhs, rhs, tolerance = 0.01))
+}
+
+skip_on_arrow <- function() {
+  r_arrow <- isTRUE(as.logical(Sys.getenv("R_ARROW")))
+  if (r_arrow) skip("Test unsupported in Apache Arrow")
+}
+
+skip_covr <- function(message) {
+  is_covr <- identical(Sys.getenv("CODE_COVERAGE"), "true")
+  if (is_covr) skip(message)
+}
+
+using_arrow <- function() {
+  "package:arrow" %in% search()
+}
+
+skip_arrow_devel <- function(message) {
+  is_arrow_devel <- identical(Sys.getenv("ARROW_VERSION"), "devel")
+  if (is_arrow_devel) skip(message)
+}
+
+skip_slow <- function(message) {
+  skip_covr(message)
+  skip_arrow_devel(message)
 }

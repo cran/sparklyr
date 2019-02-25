@@ -48,14 +48,17 @@
 #'
 #' @export
 ft_r_formula <- function(x, formula = NULL, features_col = "features", label_col = "label",
-                         force_index_label = FALSE, dataset = NULL,
+                         force_index_label = FALSE,
                          uid = random_string("r_formula_"), ...) {
+  check_dots_used()
   UseMethod("ft_r_formula")
 }
 
+ml_r_formula <- ft_r_formula
+
 #' @export
 ft_r_formula.spark_connection <- function(x, formula = NULL, features_col = "features", label_col = "label",
-                                          force_index_label = FALSE, dataset = NULL,
+                                          force_index_label = FALSE,
                                           uid = random_string("r_formula_"), ...) {
 
   .args <- list(
@@ -66,24 +69,21 @@ ft_r_formula.spark_connection <- function(x, formula = NULL, features_col = "fea
     uid = uid
   ) %>%
     c(rlang::dots_list(...)) %>%
-    ml_validator_r_formula()
+    validator_ml_r_formula()
 
   estimator <- invoke_new(x, "org.apache.spark.ml.feature.RFormula", .args[["uid"]]) %>%
     invoke("setFeaturesCol", .args[["features_col"]]) %>%
-    maybe_set_param("setFormula", .args[["formula"]]) %>%
+    jobj_set_param("setFormula", .args[["formula"]]) %>%
     invoke("setLabelCol", .args[["label_col"]]) %>%
-    maybe_set_param("setForceIndexLabel", .args[["force_index_label"]], "2.1.0", FALSE) %>%
+    jobj_set_param("setForceIndexLabel", .args[["force_index_label"]], "2.1.0", FALSE) %>%
     new_ml_r_formula()
 
-  if (is.null(dataset))
-    estimator
-  else
-    ml_fit(estimator, dataset)
+  estimator
 }
 
 #' @export
 ft_r_formula.ml_pipeline <- function(x, formula = NULL, features_col = "features", label_col = "label",
-                                     force_index_label = FALSE, dataset = NULL,
+                                     force_index_label = FALSE,
                                      uid = random_string("r_formula_"), ...) {
 
   stage <- ft_r_formula.spark_connection(
@@ -92,7 +92,6 @@ ft_r_formula.ml_pipeline <- function(x, formula = NULL, features_col = "features
     features_col = features_col,
     label_col = label_col,
     force_index_label = force_index_label,
-    dataset = dataset,
     uid = uid,
     ...
   )
@@ -102,7 +101,7 @@ ft_r_formula.ml_pipeline <- function(x, formula = NULL, features_col = "features
 
 #' @export
 ft_r_formula.tbl_spark <- function(x, formula = NULL, features_col = "features", label_col = "label",
-                                   force_index_label = FALSE, dataset = NULL,
+                                   force_index_label = FALSE,
                                    uid = random_string("r_formula_"), ...) {
 
   stage <- ft_r_formula.spark_connection(
@@ -111,7 +110,6 @@ ft_r_formula.tbl_spark <- function(x, formula = NULL, features_col = "features",
     features_col = features_col,
     label_col = label_col,
     force_index_label = force_index_label,
-    dataset = dataset,
     uid = uid,
     ...
   )
@@ -123,20 +121,22 @@ ft_r_formula.tbl_spark <- function(x, formula = NULL, features_col = "features",
 }
 
 new_ml_r_formula <- function(jobj) {
-  new_ml_estimator(jobj, subclass = "ml_r_formula")
+  new_ml_estimator(jobj, class = "ml_r_formula")
 }
 
 new_ml_r_formula_model <- function(jobj) {
   new_ml_transformer(jobj,
-                     formula = try_null(jobj %>%
-                                          invoke("parent") %>%
-                                          invoke("getFormula")),
-                     subclass = "ml_r_formula_model")
+                     formula = possibly_null(
+                       ~ jobj %>%
+                         invoke("parent") %>%
+                         invoke("getFormula")
+                     )(),
+                     class = "ml_r_formula_model")
 }
 
 # Validator
 
-ml_validator_r_formula <- function(.args) {
+validator_ml_r_formula <- function(.args) {
   if (rlang::is_formula(.args[["formula"]]))
     .args[["formula"]] <- rlang::expr_text(.args[["formula"]], width = 500L)
   .args[["formula"]] <- cast_nullable_string(.args[["formula"]])

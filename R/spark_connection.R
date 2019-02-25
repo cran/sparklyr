@@ -193,8 +193,12 @@ print.spark_log <- function(x, ...) {
 #'
 #' @export
 spark_web <- function(sc, ...) {
-  if (!is.null(sc$config$sparklyr.sparkui.url)) {
-    structure(sc$config$sparklyr.sparkui.url, class = "spark_web_url")
+  sparkui_url <- spark_config_value(
+    sc$config, c("sparklyr.web.spark", "sparklyr.sparkui.url")
+  )
+
+  if (!is.null(sparkui_url)) {
+    structure(sparkui_url, class = "spark_web_url")
   }
   else if (spark_version(sc) >= "2.0.0" &&
            !spark_context(sc) %>% invoke("uiWebUrl") %>% invoke("isEmpty")) {
@@ -224,33 +228,33 @@ initialize_connection <- function(sc) {
   UseMethod("initialize_connection")
 }
 
-new_spark_connection <- function(scon, ..., subclass = NULL) {
+new_spark_connection <- function(scon, ..., class = character()) {
   structure(
     scon,
     ...,
-    class = c("spark_connection", subclass, "DBIConnection")
+    class = c("spark_connection", class, "DBIConnection")
   )
 }
 
-new_spark_shell_connection <- function(scon, ..., subclass = NULL) {
+new_spark_shell_connection <- function(scon, ..., class = character()) {
   new_spark_connection(
     scon,
     ...,
-    subclass = c(subclass, "spark_shell_connection")
+    class = c(class, "spark_shell_connection")
   )
 }
 
-new_spark_gateway_connection <- function(scon, ..., subclass = NULL) {
+new_spark_gateway_connection <- function(scon, ..., class = character()) {
   new_spark_shell_connection(
     scon,
     ...,
-    subclass = c(subclass, "spark_gateway_connection")
+    class = c(class, "spark_gateway_connection")
   )
 }
 
 new_livy_connection <- function(scon) {
   new_spark_connection(
     scon,
-    subclass = "livy_connection"
+    class = "livy_connection"
   )
 }

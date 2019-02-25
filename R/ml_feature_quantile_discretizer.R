@@ -46,16 +46,20 @@
 #' @export
 ft_quantile_discretizer <- function(x, input_col = NULL, output_col = NULL, num_buckets = 2,
                                     input_cols = NULL, output_cols = NULL, num_buckets_array = NULL,
-                                    handle_invalid = "error", relative_error = 0.001, dataset = NULL,
+                                    handle_invalid = "error", relative_error = 0.001,
                                     uid = random_string("quantile_discretizer_"), ...) {
+  check_dots_used()
   UseMethod("ft_quantile_discretizer")
 }
+
+ml_quantile_discretizer <- ft_quantile_discretizer
 
 #' @export
 ft_quantile_discretizer.spark_connection <- function(x, input_col = NULL, output_col = NULL, num_buckets = 2,
                                                      input_cols = NULL, output_cols = NULL, num_buckets_array = NULL,
-                                                     handle_invalid = "error", relative_error = 0.001, dataset = NULL,
+                                                     handle_invalid = "error", relative_error = 0.001,
                                                      uid = random_string("quantile_discretizer_"), ...) {
+
   .args <- list(
     input_col = input_col,
     output_col = output_col,
@@ -68,32 +72,29 @@ ft_quantile_discretizer.spark_connection <- function(x, input_col = NULL, output
     uid = uid
   ) %>%
     c(rlang::dots_list(...)) %>%
-    ml_validator_quantile_discretizer()
+    validator_ml_quantile_discretizer()
 
-  jobj <- ml_new_transformer(
+  jobj <- spark_pipeline_stage(
     x, "org.apache.spark.ml.feature.QuantileDiscretizer",
     input_col = .args[["input_col"]], output_col = .args[["output_col"]],
     input_cols = .args[["input_cols"]], output_cols = .args[["output_cols"]],
     uid = .args[["uid"]]
   ) %>%
-    maybe_set_param("setHandleInvalid", .args[["handle_invalid"]], "2.1.0", "error") %>%
-    maybe_set_param("setRelativeError", .args[["relative_error"]], "2.0.0", 0.001) %>%
-    maybe_set_param("setNumBuckets", .args[["num_buckets"]]) %>%
-    maybe_set_param("setNumBucketsArray", .args[["num_buckets_array"]], "2.3.0")
+    jobj_set_param("setHandleInvalid", .args[["handle_invalid"]], "2.1.0", "error") %>%
+    jobj_set_param("setRelativeError", .args[["relative_error"]], "2.0.0", 0.001) %>%
+    jobj_set_param("setNumBuckets", .args[["num_buckets"]]) %>%
+    jobj_set_param("setNumBucketsArray", .args[["num_buckets_array"]], "2.3.0")
 
   estimator <- jobj %>%
     new_ml_quantile_discretizer()
 
-  if (is.null(dataset))
-    estimator
-  else
-    ml_fit(estimator, dataset)
+  estimator
 }
 
 #' @export
 ft_quantile_discretizer.ml_pipeline <- function(x, input_col = NULL, output_col = NULL, num_buckets = 2,
                                                 input_cols = NULL, output_cols = NULL, num_buckets_array = NULL,
-                                                handle_invalid = "error", relative_error = 0.001, dataset = NULL,
+                                                handle_invalid = "error", relative_error = 0.001,
                                                 uid = random_string("quantile_discretizer_"), ...) {
   stage <- ft_quantile_discretizer.spark_connection(
     x = spark_connection(x),
@@ -105,7 +106,6 @@ ft_quantile_discretizer.ml_pipeline <- function(x, input_col = NULL, output_col 
     num_buckets_array = num_buckets_array,
     handle_invalid = handle_invalid,
     relative_error = relative_error,
-    dataset = dataset,
     uid = uid,
     ...
   )
@@ -115,7 +115,7 @@ ft_quantile_discretizer.ml_pipeline <- function(x, input_col = NULL, output_col 
 #' @export
 ft_quantile_discretizer.tbl_spark <- function(x, input_col = NULL, output_col = NULL, num_buckets = 2,
                                               input_cols = NULL, output_cols = NULL, num_buckets_array = NULL,
-                                              handle_invalid = "error", relative_error = 0.001, dataset = NULL,
+                                              handle_invalid = "error", relative_error = 0.001,
                                               uid = random_string("quantile_discretizer_"), ...) {
   stage <- ft_quantile_discretizer.spark_connection(
     x = spark_connection(x),
@@ -127,7 +127,6 @@ ft_quantile_discretizer.tbl_spark <- function(x, input_col = NULL, output_col = 
     num_buckets_array = num_buckets_array,
     handle_invalid = handle_invalid,
     relative_error = relative_error,
-    dataset = dataset,
     uid = uid,
     ...
   )
@@ -139,15 +138,10 @@ ft_quantile_discretizer.tbl_spark <- function(x, input_col = NULL, output_col = 
 }
 
 new_ml_quantile_discretizer <- function(jobj) {
-  new_ml_estimator(jobj, subclass = "ml_quantile_discretizer")
+  new_ml_estimator(jobj, class = "ml_quantile_discretizer")
 }
 
-ml_validator_quantile_discretizer <- function(.args) {
-  .args <- ml_backwards_compatibility(.args, list(
-    n.buckets = "num_buckets"
-  )) %>%
-    ml_backwards_compatibility()
-
+validator_ml_quantile_discretizer <- function(.args) {
   .args[["uid"]] <- cast_scalar_character(.args[["uid"]])
 
   if (!is.null(.args[["input_col"]]) && !is.null(.args[["input_cols"]]))

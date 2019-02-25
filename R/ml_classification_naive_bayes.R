@@ -25,7 +25,7 @@
 #' nb_model <- iris_training %>%
 #'   ml_naive_bayes(Species ~ .)
 #'
-#' pred <- sdf_predict(iris_test, nb_model)
+#' pred <- ml_predict(nb_model, iris_test)
 #'
 #' ml_multiclass_classification_evaluator(pred)
 #' }
@@ -37,6 +37,7 @@ ml_naive_bayes <- function(x, formula = NULL, model_type = "multinomial",
                            prediction_col = "prediction", probability_col = "probability",
                            raw_prediction_col = "rawPrediction",
                            uid = random_string("naive_bayes_"), ...) {
+  check_dots_used()
   UseMethod("ml_naive_bayes")
 }
 
@@ -60,17 +61,19 @@ ml_naive_bayes.spark_connection <- function(x, formula = NULL, model_type = "mul
     raw_prediction_col = raw_prediction_col
   ) %>%
     c(rlang::dots_list(...)) %>%
-    ml_validator_naive_bayes()
+    validator_ml_naive_bayes()
 
-  jobj <- ml_new_classifier(
+  jobj <- spark_pipeline_stage(
     x, "org.apache.spark.ml.classification.NaiveBayes", uid,
-    .args[["features_col"]], .args[["label_col"]], .args[["prediction_col"]],
-    .args[["probability_col"]], .args[["raw_prediction_col"]]
+    features_col = .args[["features_col"]], label_col = .args[["label_col"]],
+    prediction_col = .args[["prediction_col"]],
+    probability_col = .args[["probability_col"]],
+    raw_prediction_col = .args[["raw_prediction_col"]]
   ) %>%
     invoke("setSmoothing", .args[["smoothing"]]) %>%
     invoke("setModelType", .args[["model_type"]]) %>%
-    maybe_set_param("setThresholds", .args[["thresholds"]]) %>%
-    maybe_set_param("setWeightCol", .args[["weight_col"]], "2.1.0")
+    jobj_set_param("setThresholds", .args[["thresholds"]]) %>%
+    jobj_set_param("setWeightCol", .args[["weight_col"]], "2.1.0")
 
   new_ml_naive_bayes(jobj)
 }
@@ -108,7 +111,7 @@ ml_naive_bayes.tbl_spark <- function(x, formula = NULL, model_type = "multinomia
                                      raw_prediction_col = "rawPrediction",
                                      uid = random_string("naive_bayes_"), response = NULL,
                                      features = NULL, predicted_label_col = "predicted_label", ...) {
-  ml_formula_transformation()
+  formula <- ml_standardize_formula(formula, response, features)
 
   stage <- ml_naive_bayes.spark_connection(
     x = spark_connection(x),
@@ -130,17 +133,20 @@ ml_naive_bayes.tbl_spark <- function(x, formula = NULL, model_type = "multinomia
     stage %>%
       ml_fit(x)
   } else {
-    ml_generate_ml_model(
-      x, stage, formula, features_col, label_col,
-      "classification", new_ml_model_naive_bayes,
-      predicted_label_col
+    ml_construct_model_supervised(
+      new_ml_model_naive_bayes,
+      predictor = stage,
+      formula = formula,
+      dataset = x,
+      features_col = features_col,
+      label_col = label_col,
+      predicted_label_col = predicted_label_col
     )
   }
 }
 
 # Validator
-ml_validator_naive_bayes <- function(.args) {
-  .args <- ml_backwards_compatibility(.args, list(lambda = "smoothing"))
+validator_ml_naive_bayes <- function(.args) {
   .args[["thresholds"]] <- cast_nullable_double_list(.args[["thresholds"]])
   .args[["smoothing"]] <- cast_scalar_double(.args[["smoothing"]])
   .args[["weight_col"]] <- cast_nullable_string(.args[["weight_col"]])
@@ -149,20 +155,13 @@ ml_validator_naive_bayes <- function(.args) {
 }
 
 new_ml_naive_bayes <- function(jobj) {
-  new_ml_classifier(jobj, subclass = "ml_naive_bayes")
+  new_ml_probabilistic_classifier(jobj, class = "ml_naive_bayes")
 }
 
 new_ml_naive_bayes_model <- function(jobj) {
-  new_ml_prediction_model(
+  new_ml_probabilistic_classification_model(
     jobj,
-    num_features = invoke(jobj, "numFeatures"),
-    num_classes = invoke(jobj, "numClasses"),
     pi = read_spark_vector(jobj, "pi"),
     theta = read_spark_matrix(jobj, "theta"),
-    features_col = invoke(jobj, "getFeaturesCol"),
-    prediction_col = invoke(jobj, "getPredictionCol"),
-    probability_col = invoke(jobj, "getProbabilityCol"),
-    raw_prediction_col = invoke(jobj, "getRawPredictionCol"),
-    thresholds = try_null(invoke(jobj, "getThresholds")),
-    subclass = "ml_naive_bayes_model")
+    class = "ml_naive_bayes_model")
 }

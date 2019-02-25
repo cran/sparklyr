@@ -19,14 +19,17 @@
 #' @export
 ft_word2vec <- function(x, input_col = NULL, output_col = NULL, vector_size = 100, min_count = 5,
                         max_sentence_length = 1000, num_partitions = 1, step_size = 0.025, max_iter = 1,
-                        seed = NULL, dataset = NULL, uid = random_string("word2vec_"), ...) {
+                        seed = NULL, uid = random_string("word2vec_"), ...) {
+  check_dots_used()
   UseMethod("ft_word2vec")
 }
+
+ml_word2vec <- ft_word2vec
 
 #' @export
 ft_word2vec.spark_connection <- function(x, input_col = NULL, output_col = NULL, vector_size = 100, min_count = 5,
                                          max_sentence_length = 1000, num_partitions = 1, step_size = 0.025, max_iter = 1,
-                                         seed = NULL, dataset = NULL, uid = random_string("word2vec_"), ...) {
+                                         seed = NULL, uid = random_string("word2vec_"), ...) {
 
   .args <- list(
     input_col = input_col,
@@ -41,9 +44,9 @@ ft_word2vec.spark_connection <- function(x, input_col = NULL, output_col = NULL,
     uid = uid
   ) %>%
     c(rlang::dots_list(...)) %>%
-    ml_validator_word2vec()
+    validator_ml_word2vec()
 
-  jobj <- ml_new_transformer(
+  jobj <- spark_pipeline_stage(
     x, "org.apache.spark.ml.feature.Word2Vec",
     input_col = .args[["input_col"]], output_col = .args[["output_col"]], uid = .args[["uid"]]
   ) %>%
@@ -52,23 +55,20 @@ ft_word2vec.spark_connection <- function(x, input_col = NULL, output_col = NULL,
     invoke("setNumPartitions", .args[["num_partitions"]]) %>%
     invoke("setStepSize", .args[["step_size"]]) %>%
     invoke("setMaxIter", .args[["max_iter"]]) %>%
-    maybe_set_param("setMaxSentenceLength", .args[["max_sentence_length"]], "2.0.0", 1000)
+    jobj_set_param("setMaxSentenceLength", .args[["max_sentence_length"]], "2.0.0", 1000)
 
   if (!is.null(.args[["seed"]]))
     jobj <- invoke(jobj, "setSeed", .args[["seed"]])
 
   estimator <- new_ml_word2vec(jobj)
 
-  if (is.null(dataset))
-    estimator
-  else
-    ml_fit(estimator, dataset)
+  estimator
 }
 
 #' @export
 ft_word2vec.ml_pipeline <- function(x, input_col = NULL, output_col = NULL, vector_size = 100, min_count = 5,
                                     max_sentence_length = 1000, num_partitions = 1, step_size = 0.025, max_iter = 1,
-                                    seed = NULL, dataset = NULL, uid = random_string("word2vec_"), ...) {
+                                    seed = NULL, uid = random_string("word2vec_"), ...) {
 
   stage <- ft_word2vec.spark_connection(
     x = spark_connection(x),
@@ -81,7 +81,6 @@ ft_word2vec.ml_pipeline <- function(x, input_col = NULL, output_col = NULL, vect
     step_size = step_size,
     max_iter = max_iter,
     seed = seed,
-    dataset = dataset,
     uid = uid
   )
   ml_add_stage(x, stage)
@@ -91,7 +90,7 @@ ft_word2vec.ml_pipeline <- function(x, input_col = NULL, output_col = NULL, vect
 #' @export
 ft_word2vec.tbl_spark <- function(x, input_col = NULL, output_col = NULL, vector_size = 100, min_count = 5,
                                   max_sentence_length = 1000, num_partitions = 1, step_size = 0.025, max_iter = 1,
-                                  seed = NULL, dataset = NULL, uid = random_string("word2vec_"), ...) {
+                                  seed = NULL, uid = random_string("word2vec_"), ...) {
   stage <- ft_word2vec.spark_connection(
     x = spark_connection(x),
     input_col = input_col,
@@ -103,7 +102,6 @@ ft_word2vec.tbl_spark <- function(x, input_col = NULL, output_col = NULL, vector
     step_size = step_size,
     max_iter = max_iter,
     seed = seed,
-    dataset = dataset,
     uid = uid
   )
 
@@ -114,7 +112,7 @@ ft_word2vec.tbl_spark <- function(x, input_col = NULL, output_col = NULL, vector
 }
 
 new_ml_word2vec <- function(jobj) {
-  new_ml_estimator(jobj, subclass = "ml_word2vec")
+  new_ml_estimator(jobj, class = "ml_word2vec")
 }
 
 new_ml_word2vec_model <- function(jobj) {
@@ -131,10 +129,10 @@ new_ml_word2vec_model <- function(jobj) {
                        invoke(jobj, "findSynonymsArray", word, num)
                      },
                      vectors = invoke(jobj, "getVectors"),
-                     subclass = "ml_word2vec_model")
+                     class = "ml_word2vec_model")
 }
 
-ml_validator_word2vec <- function(.args) {
+validator_ml_word2vec <- function(.args) {
   .args <- validate_args_transformer(.args)
   .args[["vector_size"]] <- cast_scalar_integer(.args[["vector_size"]])
   .args[["min_count"]] <- cast_scalar_integer(.args[["min_count"]])

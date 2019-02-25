@@ -4,6 +4,7 @@
 #' @template roxlate-ml-algo
 #' @template roxlate-ml-formula-params
 #' @template roxlate-ml-predictor-params
+#' @template roxlate-ml-probabilistic-classifier-params
 #' @param layers A numeric vector describing the layers -- each element in the vector gives the size of a layer. For example, \code{c(4, 5, 2)} would imply three layers, with an input (feature) layer of size 4, an intermediate layer of size 5, and an output (class) layer of size 2.
 #' @template roxlate-ml-tol
 #' @template roxlate-ml-max-iter
@@ -27,7 +28,7 @@
 #' mlp_model <- iris_training %>%
 #'   ml_multilayer_perceptron_classifier(Species ~ ., layers = c(4,3,3))
 #'
-#' pred <- sdf_predict(iris_test, mlp_model)
+#' pred <- ml_predict(mlp_model, iris_test)
 #'
 #' ml_multiclass_classification_evaluator(pred)
 #' }
@@ -37,9 +38,12 @@
 ml_multilayer_perceptron_classifier <- function(x, formula = NULL, layers = NULL, max_iter = 100,
                                                 step_size = 0.03, tol = 1e-06, block_size = 128,
                                                 solver = "l-bfgs", seed = NULL, initial_weights = NULL,
+                                                thresholds = NULL,
                                                 features_col = "features", label_col = "label",
-                                                prediction_col = "prediction",
+                                                prediction_col = "prediction", probability_col = "probability",
+                                                raw_prediction_col = "rawPrediction",
                                                 uid = random_string("multilayer_perceptron_classifier_"), ...) {
+  check_dots_used()
   UseMethod("ml_multilayer_perceptron_classifier")
 }
 
@@ -47,8 +51,10 @@ ml_multilayer_perceptron_classifier <- function(x, formula = NULL, layers = NULL
 ml_multilayer_perceptron_classifier.spark_connection <- function(x, formula = NULL, layers = NULL, max_iter = 100,
                                                                  step_size = 0.03, tol = 1e-06, block_size = 128,
                                                                  solver = "l-bfgs", seed = NULL, initial_weights = NULL,
+                                                                 thresholds = NULL,
                                                                  features_col = "features", label_col = "label",
-                                                                 prediction_col = "prediction",
+                                                                 prediction_col = "prediction", probability_col = "probability",
+                                                                 raw_prediction_col = "rawPrediction",
                                                                  uid = random_string("multilayer_perceptron_classifier_"), ...) {
 
   .args <- list(
@@ -62,21 +68,29 @@ ml_multilayer_perceptron_classifier.spark_connection <- function(x, formula = NU
     initial_weights = initial_weights,
     features_col = features_col,
     label_col = label_col,
-    prediction_col = prediction_col
+    prediction_col = prediction_col,
+    probability_col = probability_col,
+    raw_prediction_col = raw_prediction_col,
+    thresholds = thresholds
   ) %>%
     c(rlang::dots_list(...)) %>%
-    ml_validator_multilayer_perceptron_classifier()
+    validator_ml_multilayer_perceptron_classifier()
 
-  jobj <- ml_new_predictor(
+  jobj <- spark_pipeline_stage(
     x, "org.apache.spark.ml.classification.MultilayerPerceptronClassifier", uid,
-    .args[["features_col"]], .args[["label_col"]], .args[["prediction_col"]]) %>%
-    maybe_set_param("setLayers", .args[["layers"]]) %>%
+    features_col = .args[["features_col"]], label_col = .args[["label_col"]],
+    prediction_col = .args[["prediction_col"]]
+  ) %>%
+    jobj_set_param("setLayers", .args[["layers"]]) %>%
     invoke("setMaxIter", .args[["max_iter"]]) %>%
-    maybe_set_param("setStepSize", .args[["step_size"]], "2.0.0", 0.03) %>%
+    jobj_set_param("setStepSize", .args[["step_size"]], "2.0.0", 0.03) %>%
     invoke("setTol", .args[["tol"]]) %>%
     invoke("setBlockSize", .args[["block_size"]]) %>%
-    maybe_set_param("setSolver", .args[["solver"]], "2.0.0", "l-bfgs") %>%
-    maybe_set_param("setSeed", .args[["seed"]])
+    jobj_set_param("setSolver", .args[["solver"]], "2.0.0", "l-bfgs") %>%
+    jobj_set_param("setSeed", .args[["seed"]]) %>%
+    jobj_set_param("setThresholds", .args[["thresholds"]], "2.3.0") %>%
+    jobj_set_param("setProbabilityCol", .args[["probability_col"]], "2.3.0", "probability") %>%
+    jobj_set_param("setRawPredictionCol", .args[["raw_prediction_col"]], "2.3.0", "rawPrediction")
 
 
   if(!is.null(initial_weights) && spark_version(x) >= "2.0.0")
@@ -92,8 +106,10 @@ ml_multilayer_perceptron_classifier.spark_connection <- function(x, formula = NU
 ml_multilayer_perceptron_classifier.ml_pipeline <- function(x, formula = NULL, layers = NULL, max_iter = 100,
                                                             step_size = 0.03, tol = 1e-06, block_size = 128,
                                                             solver = "l-bfgs", seed = NULL, initial_weights = NULL,
+                                                            thresholds = NULL,
                                                             features_col = "features", label_col = "label",
-                                                            prediction_col = "prediction",
+                                                            prediction_col = "prediction", probability_col = "probability",
+                                                            raw_prediction_col = "rawPrediction",
                                                             uid = random_string("multilayer_perceptron_classifier_"), ...) {
   stage <- ml_multilayer_perceptron_classifier.spark_connection(
     x = spark_connection(x),
@@ -119,12 +135,14 @@ ml_multilayer_perceptron_classifier.ml_pipeline <- function(x, formula = NULL, l
 ml_multilayer_perceptron_classifier.tbl_spark <- function(x, formula = NULL, layers = NULL, max_iter = 100,
                                                           step_size = 0.03, tol = 1e-06, block_size = 128,
                                                           solver = "l-bfgs", seed = NULL, initial_weights = NULL,
+                                                          thresholds = NULL,
                                                           features_col = "features", label_col = "label",
-                                                          prediction_col = "prediction",
+                                                          prediction_col = "prediction", probability_col = "probability",
+                                                          raw_prediction_col = "rawPrediction",
                                                           uid = random_string("multilayer_perceptron_classifier_"),
                                                           response = NULL, features = NULL,
                                                           predicted_label_col = "predicted_label", ...) {
-  ml_formula_transformation()
+  formula <- ml_standardize_formula(formula, response, features)
 
   stage <- ml_multilayer_perceptron_classifier.spark_connection(
     x = spark_connection(x),
@@ -148,10 +166,15 @@ ml_multilayer_perceptron_classifier.tbl_spark <- function(x, formula = NULL, lay
     stage %>%
       ml_fit(x)
   } else {
-    ml_generate_ml_model(x, stage, formula, features_col, label_col,
-                         "classification",
-                         new_ml_model_multilayer_perceptron_classification,
-                         predicted_label_col)
+    ml_construct_model_supervised(
+      new_ml_model_multilayer_perceptron_classification,
+      predictor = stage,
+      formula = formula,
+      dataset = x,
+      features_col = features_col,
+      label_col = label_col,
+      predicted_label_col = predicted_label_col
+    )
   }
 }
 
@@ -162,15 +185,16 @@ ml_multilayer_perceptron_classifier.tbl_spark <- function(x, formula = NULL, lay
 ml_multilayer_perceptron <- function(x, formula = NULL, layers, max_iter = 100, step_size = 0.03,
                                      tol = 1e-06, block_size = 128, solver = "l-bfgs", seed = NULL,
                                      initial_weights = NULL, features_col = "features", label_col = "label",
-                                     prediction_col = "prediction",
+                                     thresholds = NULL,
+                                     prediction_col = "prediction", probability_col = "probability",
+                                     raw_prediction_col = "rawPrediction",
                                      uid = random_string("multilayer_perceptron_classifier_"),
                                      response = NULL, features = NULL, ...) {
   .Deprecated("ml_multilayer_perceptron_classifier")
   UseMethod("ml_multilayer_perceptron_classifier")
 }
 
-ml_validator_multilayer_perceptron_classifier <- function(.args) {
-  .args <- ml_backwards_compatibility(.args, list(iter.max = "max_iter"))
+validator_ml_multilayer_perceptron_classifier <- function(.args) {
   .args[["max_iter"]] <- cast_scalar_integer(.args[["max_iter"]])
   .args[["step_size"]] <- cast_scalar_double(.args[["step_size"]])
   .args[["layers"]] <- cast_nullable_integer_list(.args[["layers"]])
@@ -183,16 +207,33 @@ ml_validator_multilayer_perceptron_classifier <- function(.args) {
 }
 
 new_ml_multilayer_perceptron_classifier <- function(jobj) {
-  new_ml_classifier(jobj, subclass = "ml_multilayer_perceptron_classifier")
+  v <- jobj %>%
+    spark_connection() %>%
+    spark_version()
+  if (v < "2.3.0") {
+    new_ml_predictor(jobj, class = "ml_multilayer_perceptron_classifier")
+  } else {
+    new_ml_probabilistic_classifier(jobj, class = "ml_multilayer_perceptron_classifier")
+  }
 }
 
 new_ml_multilayer_perceptron_classification_model <- function(jobj) {
-  new_ml_prediction_model(
-    jobj,
-    layers = invoke(jobj, "layers"),
-    num_features = invoke(jobj, "numFeatures"),
-    features_col = invoke(jobj, "getFeaturesCol"),
-    prediction_col = invoke(jobj, "getPredictionCol"),
-    weights = read_spark_vector(jobj, "weights"),
-    subclass = "ml_multilayer_perceptron_classification_model")
+  v <- jobj %>%
+    spark_connection() %>%
+    spark_version()
+  if (v < "2.3.0") {
+    layers <- invoke(jobj, "layers")
+    num_classes <- dplyr::last(layers)
+    new_ml_prediction_model(
+      jobj,
+      layers = layers,
+      weights = read_spark_vector(jobj, "weights"),
+      class = "ml_multilayer_perceptron_classification_model")
+  } else {
+    new_ml_probabilistic_classification_model(
+      jobj,
+      weights = read_spark_vector(jobj, "weights"),
+      layers = invoke(jobj, "layers"),
+      class = "ml_multilayer_perceptron_classification_model")
+  }
 }

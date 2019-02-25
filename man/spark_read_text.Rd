@@ -4,8 +4,9 @@
 \alias{spark_read_text}
 \title{Read a Text file into a Spark DataFrame}
 \usage{
-spark_read_text(sc, name, path, repartition = 0, memory = TRUE,
-  overwrite = TRUE, ...)
+spark_read_text(sc, name = NULL, path = name, repartition = 0,
+  memory = TRUE, overwrite = TRUE, options = list(), whole = FALSE,
+  ...)
 }
 \arguments{
 \item{sc}{A \code{spark_connection}.}
@@ -23,6 +24,10 @@ is, should the table be cached?)}
 
 \item{overwrite}{Boolean; overwrite the table with the given name if it
 already exists?}
+
+\item{options}{A list of strings with additional options.}
+
+\item{whole}{Read the entire text file as a single entry? Defaults to \code{FALSE}.}
 
 \item{...}{Optional arguments; currently unused.}
 }

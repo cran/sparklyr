@@ -9,14 +9,17 @@
 #'
 #' @export
 ft_vector_indexer <- function(x, input_col = NULL, output_col = NULL,
-                              max_categories = 20, dataset = NULL,
+                              max_categories = 20,
                               uid = random_string("vector_indexer_"), ...) {
+  check_dots_used()
   UseMethod("ft_vector_indexer")
 }
 
+ml_vector_indexer <- ft_vector_indexer
+
 #' @export
 ft_vector_indexer.spark_connection <- function(x, input_col = NULL, output_col = NULL,
-                                               max_categories = 20, dataset = NULL,
+                                               max_categories = 20,
                                                uid = random_string("vector_indexer_"), ...) {
 
   .args <- list(
@@ -26,23 +29,20 @@ ft_vector_indexer.spark_connection <- function(x, input_col = NULL, output_col =
     uid = uid
   ) %>%
     c(rlang::dots_list(...)) %>%
-    ml_validator_vector_indexer()
+    validator_ml_vector_indexer()
 
-  estimator <- ml_new_transformer(
+  estimator <- spark_pipeline_stage(
     x, "org.apache.spark.ml.feature.VectorIndexer",
     input_col = .args[["input_col"]], output_col = .args[["output_col"]], uid = .args[["uid"]]) %>%
     invoke("setMaxCategories", .args[["max_categories"]]) %>%
     new_ml_vector_indexer()
 
-  if (is.null(dataset))
-    estimator
-  else
-    ml_fit(estimator, dataset)
+  estimator
 }
 
 #' @export
 ft_vector_indexer.ml_pipeline <- function(x, input_col = NULL, output_col = NULL,
-                                          max_categories = 20, dataset = NULL,
+                                          max_categories = 20,
                                           uid = random_string("vector_indexer_"), ...) {
 
   stage <- ft_vector_indexer.spark_connection(
@@ -50,7 +50,6 @@ ft_vector_indexer.ml_pipeline <- function(x, input_col = NULL, output_col = NULL
     input_col = input_col,
     output_col = output_col,
     max_categories = max_categories,
-    dataset = dataset,
     uid = uid,
     ...
   )
@@ -60,14 +59,13 @@ ft_vector_indexer.ml_pipeline <- function(x, input_col = NULL, output_col = NULL
 
 #' @export
 ft_vector_indexer.tbl_spark <- function(x, input_col = NULL, output_col = NULL,
-                                        max_categories = 20, dataset = NULL,
+                                        max_categories = 20,
                                         uid = random_string("vector_indexer_"), ...) {
   stage <- ft_vector_indexer.spark_connection(
     x = spark_connection(x),
     input_col = input_col,
     output_col = output_col,
     max_categories = max_categories,
-    dataset = dataset,
     uid = uid,
     ...
   )
@@ -79,14 +77,14 @@ ft_vector_indexer.tbl_spark <- function(x, input_col = NULL, output_col = NULL,
 }
 
 new_ml_vector_indexer <- function(jobj) {
-  new_ml_estimator(jobj, subclass = "ml_vector_indexer")
+  new_ml_estimator(jobj, class = "ml_vector_indexer")
 }
 
 new_ml_vector_indexer_model <- function(jobj) {
-  new_ml_transformer(jobj, subclass = "ml_vector_indexer_model")
+  new_ml_transformer(jobj, class = "ml_vector_indexer_model")
 }
 
-ml_validator_vector_indexer <- function(.args) {
+validator_ml_vector_indexer <- function(.args) {
   .args <- validate_args_transformer(.args)
   .args[["max_categories"]] <- cast_scalar_integer(.args[["max_categories"]])
   .args

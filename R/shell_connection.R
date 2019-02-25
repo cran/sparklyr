@@ -143,7 +143,7 @@ start_shell <- function(master,
                         spark_version = NULL,
                         app_name = "sparklyr",
                         config = list(),
-                        extensions = sparklyr::registered_extensions(),
+                        extensions,
                         jars = NULL,
                         packages = NULL,
                         environment = NULL,
@@ -241,11 +241,7 @@ start_shell <- function(master,
              gsub("[-_a-zA-Z]", "", spark_version)
       )
     )
-    if (spark_version < "2.0")
-      scala_version <- numeric_version("2.10")
-    else
-      scala_version <- numeric_version("2.11")
-    extensions <- spark_dependencies_from_extensions(spark_version, scala_version, extensions)
+    extensions <- spark_dependencies_from_extensions(spark_version, extensions, config)
 
     # combine passed jars and packages with extensions
     all_jars <- c(jars, extensions$jars)
@@ -428,13 +424,15 @@ start_shell <- function(master,
     app_name = app_name,
     config = config,
     state = new.env(),
+    extensions = extensions,
     # spark_shell_connection
     spark_home = spark_home,
     backend = backend,
     monitoring = monitoring,
     gateway = gatewayInfo$gateway,
     output_file = output_file,
-    sessionId = sessionId
+    sessionId = sessionId,
+    home_version = versionSparkHome
   ))
 
   # stop shell on R exit
@@ -586,15 +584,10 @@ initialize_connection.spark_shell_connection <- function(sc) {
       apply_config(conf, default_config, "set", "spark.")
 
       # create the spark context and assign the connection to it
-
-      sc$state$spark_context <- invoke_static(
-        sc,
-        "org.apache.spark.SparkContext",
-        "getOrCreate",
-        conf
-      )
-
-      if (spark_version(sc) >= "2.0") {
+      # use spark home version since spark context is not yet initialized in shell connection
+      # but spark_home might not be initialized in submit_batch while spark context is available
+      if ((!identical(sc$home_version, NULL) && sc$home_version >= "2.0") ||
+          (!identical(spark_context(sc), NULL) && spark_version(sc) >= "2.0")) {
         # For Spark 2.0+, we create a `SparkSession`.
         session <- invoke_static(
           sc,
@@ -610,6 +603,14 @@ initialize_connection.spark_shell_connection <- function(sc) {
 
         # Set the `SparkContext`.
         sc$state$spark_context <- invoke(session, "sparkContext")
+      }
+      else {
+        sc$state$spark_context <- invoke_static(
+          sc,
+          "org.apache.spark.SparkContext",
+          "getOrCreate",
+          conf
+        )
       }
 
       invoke(backend, "setSparkContext", spark_context(sc))

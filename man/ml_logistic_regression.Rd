@@ -72,7 +72,7 @@ The bounds vector size must be equal with 1 for binomial regression, or the numb
 The object returned depends on the class of \code{x}.
 
 \itemize{
-  \item \code{spark_connection}: When \code{x} is a \code{spark_connection}, the function returns an instance of a \code{ml_predictor} object. The object contains a pointer to
+  \item \code{spark_connection}: When \code{x} is a \code{spark_connection}, the function returns an instance of a \code{ml_estimator} object. The object contains a pointer to
   a Spark \code{Predictor} object and can be used to compose
   \code{Pipeline} objects.
 
@@ -109,7 +109,7 @@ mtcars_test <- partitions$test
 lr_model <- mtcars_training \%>\%
   ml_logistic_regression(am ~ gear + carb)
 
-pred <- sdf_predict(mtcars_test, lr_model)
+pred <- ml_predict(lr_model, mtcars_test)
 
 ml_binary_classification_evaluator(pred)
 }

@@ -28,8 +28,8 @@ Named list with configuration data
 Create a Spark Configuration for Livy
 }
 \details{
-Extends a Spark \code{"spark_config"} configuration with settings
-for Livy. For instance, \code{"username"} and \code{"password"}
+Extends a Spark \code{spark_config()} configuration with settings
+for Livy. For instance, \code{username} and \code{password}
 define the basic authentication settings for a Livy session.
 
 The default value of \code{"custom_headers"} is set to \code{list("X-Requested-By" = "sparklyr")}

@@ -26,7 +26,7 @@
 #' lm_model <- mtcars_training %>%
 #'   ml_linear_regression(mpg ~ .)
 #'
-#' pred <- sdf_predict(mtcars_test, lm_model)
+#' pred <- ml_predict(lm_model, mtcars_test)
 #'
 #' ml_regression_evaluator(pred, label_col = "mpg")
 #' }
@@ -39,6 +39,7 @@ ml_linear_regression <- function(x, formula = NULL, fit_intercept = TRUE,
                                  features_col = "features", label_col = "label",
                                  prediction_col = "prediction",
                                  uid = random_string("linear_regression_"), ...) {
+  check_dots_used()
   UseMethod("ml_linear_regression")
 }
 
@@ -67,11 +68,13 @@ ml_linear_regression.spark_connection <- function(x, formula = NULL, fit_interce
     prediction_col = prediction_col
   ) %>%
     c(rlang::dots_list(...)) %>%
-    ml_validator_linear_regression()
+    validator_ml_linear_regression()
 
-  jobj <- ml_new_regressor(
+  jobj <- spark_pipeline_stage(
     x, "org.apache.spark.ml.regression.LinearRegression", uid,
-    .args[["features_col"]], .args[["label_col"]], .args[["prediction_col"]]
+    features_col = .args[["features_col"]],
+    label_col = .args[["label_col"]],
+    prediction_col = .args[["prediction_col"]]
   ) %>%
     invoke("setElasticNetParam", .args[["elastic_net_param"]]) %>%
     invoke("setFitIntercept", .args[["fit_intercept"]]) %>%
@@ -80,8 +83,8 @@ ml_linear_regression.spark_connection <- function(x, formula = NULL, fit_interce
     invoke("setSolver", .args[["solver"]]) %>%
     invoke("setStandardization", .args[["standardization"]]) %>%
     invoke("setTol", .args[["tol"]]) %>%
-    maybe_set_param("setLoss", .args[["loss"]], "2.3.0", "squaredError") %>%
-    maybe_set_param("setWeightCol", .args[["weight_col"]])
+    jobj_set_param("setLoss", .args[["loss"]], "2.3.0", "squaredError") %>%
+    jobj_set_param("setWeightCol", .args[["weight_col"]])
 
   new_ml_linear_regression(jobj)
 }
@@ -126,7 +129,7 @@ ml_linear_regression.tbl_spark <- function(x, formula = NULL, fit_intercept = TR
                                            prediction_col = "prediction",
                                            uid = random_string("linear_regression_"),
                                            response = NULL, features = NULL, ...) {
-  ml_formula_transformation()
+  formula <- ml_standardize_formula(formula, response, features)
 
   stage <- ml_linear_regression.spark_connection(
     x = spark_connection(x),
@@ -151,24 +154,19 @@ ml_linear_regression.tbl_spark <- function(x, formula = NULL, fit_intercept = TR
     stage %>%
       ml_fit(x)
   } else {
-    ml_generate_ml_model(
-      x, stage, formula, features_col, label_col,
-      "regression", new_ml_model_linear_regression
+    ml_construct_model_supervised(
+      new_ml_model_linear_regression,
+      predictor = stage,
+      formula = formula,
+      dataset = x,
+      features_col = features_col,
+      label_col = label_col
     )
   }
 }
 
 # Validator
-ml_validator_linear_regression <- function(.args) {
-  .args <- ml_backwards_compatibility(.args, list(
-    intercept = "fit_intercept",
-    alpha = "elastic_net_param",
-    lambda = "reg_param",
-    weights.column = "weight_col",
-    iter.max = "max_iter",
-    max.iter = "max_iter"
-  ))
-
+validator_ml_linear_regression <- function(.args) {
   .args[["elastic_net_param"]] <- cast_scalar_double(.args[["elastic_net_param"]])
   .args[["reg_param"]] <- cast_scalar_double(.args[["reg_param"]])
   .args[["max_iter"]] <- cast_scalar_integer(.args[["max_iter"]])
@@ -181,7 +179,7 @@ ml_validator_linear_regression <- function(.args) {
 }
 
 new_ml_linear_regression <- function(jobj) {
-  new_ml_predictor(jobj, subclass = "ml_linear_regression")
+  new_ml_predictor(jobj, class = "ml_linear_regression")
 }
 
 new_ml_linear_regression_model <- function(jobj) {
@@ -194,12 +192,9 @@ new_ml_linear_regression_model <- function(jobj) {
     jobj,
     coefficients = read_spark_vector(jobj, "coefficients"),
     intercept = invoke(jobj, "intercept"),
-    num_features = invoke(jobj, "numFeatures"),
-    features_col = invoke(jobj, "getFeaturesCol"),
-    prediction_col = invoke(jobj, "getPredictionCol"),
     scale = if (spark_version(spark_connection(jobj)) >= "2.3.0") invoke(jobj, "scale"),
     summary = summary,
-    subclass = "ml_linear_regression_model")
+    class = "ml_linear_regression_model")
 }
 
 new_ml_summary_linear_regression_model <- function(jobj, fit_intercept) {
@@ -208,8 +203,10 @@ new_ml_summary_linear_regression_model <- function(jobj, fit_intercept) {
   new_ml_summary(
     jobj,
     # `lazy val coefficientStandardErrors`
-    coefficient_standard_errors = function() try_null(invoke(jobj, "coefficientStandardErrors")) %>%
-      arrange_stats(),
+    coefficient_standard_errors = possibly_null(
+      ~ invoke(jobj, "coefficientStandardErrors") %>%
+        arrange_stats()
+    ),
     degrees_of_freedom = if (spark_version(spark_connection(jobj)) >= "2.2.0")
       invoke(jobj, "degreesOfFreedom") else NULL,
     # `lazy val devianceResiduals`
@@ -222,16 +219,20 @@ new_ml_summary_linear_regression_model <- function(jobj, fit_intercept) {
     # `lazy val numInstances`
     num_instances = function() invoke(jobj, "numInstances"),
     # `lazy val pValues`
-    p_values = try_null(invoke(jobj, "pValues")) %>%
-      arrange_stats(),
+    p_values = possibly_null(
+      ~ invoke(jobj, "pValues") %>%
+        arrange_stats()
+    ),
     prediction_col = invoke(jobj, "predictionCol"),
     predictions = invoke(jobj, "predictions") %>% sdf_register(),
     r2 = invoke(jobj, "r2"),
     # `lazy val residuals`
-    residuals = invoke(jobj, "residuals") %>% sdf_register(),
+    residuals = function() invoke(jobj, "residuals") %>% sdf_register(),
     root_mean_squared_error = invoke(jobj, "rootMeanSquaredError"),
     # `lazy val tValues`
-    t_values = try_null(invoke(jobj, "tValues")) %>%
-      arrange_stats(),
-    subclass = "ml_summary_linear_regression")
+    t_values = possibly_null(
+      ~ invoke(jobj, "tValues") %>%
+        arrange_stats()
+    ),
+    class = "ml_summary_linear_regression")
 }
