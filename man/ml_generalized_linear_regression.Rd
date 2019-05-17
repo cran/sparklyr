@@ -95,7 +95,7 @@ sc <- spark_connect(master = "local")
 mtcars_tbl <- sdf_copy_to(sc, mtcars, name = "mtcars_tbl", overwrite = TRUE)
 
 partitions <- mtcars_tbl \%>\%
-  sdf_partition(training = 0.7, test = 0.3, seed = 1111)
+  sdf_random_split(training = 0.7, test = 0.3, seed = 1111)
 
 mtcars_training <- partitions$training
 mtcars_test <- partitions$test
@@ -107,14 +107,15 @@ family_link <- expand.grid(family = family, link = link, stringsAsFactors = FALS
 family_link <- data.frame(family_link, rmse = 0)
 
 # Train the models
-for(i in 1:nrow(family_link)){
+for (i in 1:nrow(family_link)) {
   glm_model <- mtcars_training \%>\%
     ml_generalized_linear_regression(mpg ~ .,
-                                    family = family_link[i, 1],
-                                    link = family_link[i, 2])
+      family = family_link[i, 1],
+      link = family_link[i, 2]
+    )
 
   pred <- ml_predict(glm_model, mtcars_test)
-  family_link[i,3] <- ml_regression_evaluator(pred, label_col = "mpg")
+  family_link[i, 3] <- ml_regression_evaluator(pred, label_col = "mpg")
 }
 
 family_link
