@@ -10,7 +10,7 @@
 \title{Manage Spark Connections}
 \usage{
 spark_connect(master, spark_home = Sys.getenv("SPARK_HOME"),
-  method = c("shell", "livy", "databricks", "test"),
+  method = c("shell", "livy", "databricks", "test", "qubole"),
   app_name = "sparklyr", version = NULL, config = spark_config(),
   extensions = sparklyr::registered_extensions(), ...)
 
@@ -31,7 +31,7 @@ connect to a local instance of Spark installed via
 
 \item{spark_home}{The path to a Spark installation. Defaults to the path
 provided by the \code{SPARK_HOME} environment variable. If
-\code{SPARK_HOME} is defined, it will be always be used unless the
+\code{SPARK_HOME} is defined, it will always be used unless the
 \code{version} parameter is specified to force the use of a locally
 installed version.}
 
@@ -43,8 +43,8 @@ Databricks clusters.}
 \item{app_name}{The application name to be used while running in the Spark
 cluster.}
 
-\item{version}{The version of Spark to use. Only applicable to
-\code{"local"} Spark connections.}
+\item{version}{The version of Spark to use. Required for \code{"local"} Spark
+connections, optional otherwise.}
 
 \item{config}{Custom configuration for the generated Spark connection. See
 \code{\link{spark_config}} for details.}

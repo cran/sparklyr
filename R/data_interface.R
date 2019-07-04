@@ -6,12 +6,18 @@ spark_read_compat_param <- function(sc, name, path) {
     stop("The 'path' parameter must be specified.")
   }
   else if (identical(name, path)) {
-    # This is an invalid use case, for 'spark_read_*(cs, "hello")';
+    # This is an invalid use case, for 'spark_read_*(sc, "hello")';
     # however, for convenience and backwards compatibility we allow
     # to use the second parameter as the path.
     c(
       spark_sanitize_names(tools::file_path_sans_ext(basename(name)), sc$config),
       name
+    )
+  }
+  else if (identical(name, NULL)) {
+    c(
+      spark_sanitize_names(tools::file_path_sans_ext(basename(path)), sc$config),
+      path
     )
   }
   else {
@@ -55,7 +61,7 @@ spark_csv_options <- function(header,
 #'   Defaults to \code{TRUE}.
 #' @param columns A vector of column names or a named vector of column types.
 #' @param infer_schema Boolean; should column types be automatically inferred?
-#'   Requires one extra pass over the data. Defaults to \code{TRUE}.
+#'   Requires one extra pass over the data. Defaults to \code{is.null(columns)}.
 #' @param delimiter The character used to delimit each column. Defaults to \samp{','}.
 #' @param quote The character used as a quote. Defaults to \samp{'"'}.
 #' @param escape The character used to escape other characters. Defaults to \samp{'\'}.
@@ -91,7 +97,7 @@ spark_read_csv <- function(sc,
                            path = name,
                            header = TRUE,
                            columns = NULL,
-                           infer_schema = TRUE,
+                           infer_schema = is.null(columns),
                            delimiter = ",",
                            quote = "\"",
                            escape = "\\",

@@ -37,7 +37,7 @@ spark_default_app_jar <- function(version) {
 #'   \code{\link{spark_install}}.
 #' @param spark_home The path to a Spark installation. Defaults to the path
 #'   provided by the \code{SPARK_HOME} environment variable. If
-#'   \code{SPARK_HOME} is defined, it will be always be used unless the
+#'   \code{SPARK_HOME} is defined, it will always be used unless the
 #'   \code{version} parameter is specified to force the use of a locally
 #'   installed version.
 #' @param method The method used to connect to Spark. Default connection method
@@ -46,8 +46,8 @@ spark_default_app_jar <- function(version) {
 #'   Databricks clusters.
 #' @param app_name The application name to be used while running in the Spark
 #'   cluster.
-#' @param version The version of Spark to use. Only applicable to
-#'   \code{"local"} Spark connections.
+#' @param version The version of Spark to use. Required for \code{"local"} Spark
+#'   connections, optional otherwise.
 #' @param extensions Extension packages to enable for this connection. By
 #'   default, all packages enabled through the use of
 #'   \code{\link[=register_extension]{sparklyr::register_extension}} will be passed here.
@@ -99,7 +99,7 @@ spark_config_shell_args <- function(config, master) {
 #' @export
 spark_connect <- function(master,
                           spark_home = Sys.getenv("SPARK_HOME"),
-                          method = c("shell", "livy", "databricks", "test"),
+                          method = c("shell", "livy", "databricks", "test", "qubole"),
                           app_name = "sparklyr",
                           version = NULL,
                           config = spark_config(),
@@ -118,6 +118,9 @@ spark_connect <- function(master,
   if (missing(master)) {
     if (identical(method, "databricks")) {
       master <- "databricks"
+    } else if(identical(method, "qubole")) {
+      master <- "yarn-client"
+      spark_home <- "/usr/lib/spark"
     } else {
       master <- spark_config_value(config, "spark.master", NULL)
       if (is.null(master))
@@ -162,7 +165,7 @@ spark_connect <- function(master,
     method <- "gateway"
 
   # spark-shell (local install of spark)
-  if (method == "shell") {
+  if (method == "shell" || method == "qubole") {
     scon <- shell_connection(master = master,
                              spark_home = spark_home,
                              app_name = app_name,
@@ -215,8 +218,13 @@ spark_connect <- function(master,
   }
 
   # register mapping tables for spark.ml
-
   register_mapping_tables()
+
+  # custom initializers for connection methods
+  scon <- initialize_method(structure(scon, class = method), scon)
+
+  # cache spark web
+  scon$state$spark_web <- tryCatch(spark_web(scon), error = function(e) NULL)
 
   # notify connection viewer of connection
   libs <- c("sparklyr", extensions)
@@ -380,3 +388,10 @@ spark_inspect <- function(jobj) {
   jobj
 }
 
+initialize_method <- function(method, scon) {
+   UseMethod("initialize_method")
+}
+
+initialize_method.default <- function(method, scon) {
+   scon
+}

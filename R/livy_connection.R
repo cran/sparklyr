@@ -409,7 +409,8 @@ livy_post_statement <- function(sc, code) {
   commandStart <- Sys.time()
 
   sleepTime <- 0.001
-  while ((statementReponse$state == "running" || statementReponse$state == "waiting" ) &&
+  while ((statementReponse$state == "running" || statementReponse$state == "waiting" ||
+         (statementReponse$state == "available" && is.null(statementReponse$output))) &&
          Sys.time() < commandStart + waitTimeout) {
     statementReponse <- livy_get_statement(sc, statementReponse$id)
 
@@ -564,7 +565,7 @@ livy_connection_jars <- function(config, version) {
     target_jar <- dir(system.file("java", package = "sparklyr"), pattern = paste0("sparklyr-", target_version))
 
     livy_jars <- list(paste0(
-      "https://github.com/rstudio/sparklyr/blob/feature/sparklyr-1.0.1/inst/java/",
+      "https://github.com/rstudio/sparklyr/blob/feature/sparklyr-1.0.2/inst/java/",
       target_jar,
       "?raw=true"
     ))
@@ -696,7 +697,7 @@ connection_is_open.livy_connection <- function(sc) {
 spark_disconnect.livy_connection <- function(sc, ...) {
   terminate <- list(...)$terminate
   if (!identical(terminate, FALSE)) {
-    livy_destroy_session(sc)
+    invisible(livy_destroy_session(sc))
   }
 }
 

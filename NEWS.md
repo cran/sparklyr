@@ -1,3 +1,36 @@
+# Sparklyr 1.0.2
+
+### Connections
+
+- Support for Qubole connections using `mode = "quobole"` (@vipul1409, #2039).
+
+### Extensions
+
+- When `invoke()` fails due to mismatched parameters, warning with info is logged.
+
+### RStudio
+
+- Spark UI path can now be accessed even when the R session and Spark are bussy.
+
+### Distributed
+
+- Configuration setting `sparklyr.apply.serializer` can be used to select serializer version in `spark_apply()`.
+
+### ML
+
+- `ml_corr()` retrieve a `tibble` for better formatting.
+
+### Misc
+
+- Support for Spark 2.3.3 and 2.4.3.
+
+### Data
+
+- The `infer_schema` parameter now defaults to `is.null(column)`.
+
+- The `spark_read_()` functions support loading data with named `path`
+  but no explicit `name`.
+
 # Sparklyr 1.0.1
 
 ### ML
@@ -21,8 +54,6 @@
 - Added `sdf_crosstab()` to create contingency tables.
 
 - Fix `tibble::as.tibble()` deprecation warning.
-
-- Support for Spark 2.3.3 and 2.4.3.
 
 ### Connections
 

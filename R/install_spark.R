@@ -248,19 +248,24 @@ spark_install <- function(version = NULL,
     })
   }
 
-  if (!is.null(hivePath)) {
-    tryCatch({
-      spark_conf_file_set_value(
-        installInfo,
-        list(
-          "spark.sql.warehouse.dir" = paste0("spark.sql.warehouse.dir          ", hivePath)
-        ),
-        reset
-      )
-    }, error = function(e) {
-      warning("Failed to set spark-defaults.conf settings")
-    })
+  spark_conf <- list()
+  if (.Platform$OS.type == "windows") {
+    spark_conf[["spark.local.dir"]] <- normalizePath(file.path(installInfo$sparkVersionDir, "tmp", "local"), mustWork = FALSE, winslash = "/")
   }
+
+  if (!is.null(hivePath)) {
+    spark_conf[["spark.sql.warehouse.dir"]] <- hivePath
+  }
+
+  tryCatch({
+    spark_conf_file_set_value(
+      installInfo,
+      spark_conf,
+      reset
+    )
+  }, error = function(e) {
+    warning("Failed to set spark-defaults.conf settings")
+  })
 
   invisible(installInfo)
 }
@@ -273,7 +278,12 @@ spark_uninstall <- function(version, hadoop_version) {
   sparkDir <- file.path(c(spark_install_old_dir(), spark_install_dir()), info$componentName)
   if (any(dir.exists(sparkDir))) {
     unlink(sparkDir, recursive = TRUE)
-    message(info$componentName, " successfully uninstalled.")
+
+    if (!dir.exists(sparkDir))
+      message(info$componentName, " successfully uninstalled.")
+    else
+      stop("Failed to completely uninstall ", info$componentName)
+
     invisible(TRUE)
   } else {
     message(info$componentName, " not found (no uninstall performed)")
@@ -389,7 +399,7 @@ spark_conf_file_set_value <- function(installInfo, properties, reset) {
   lines[[length(lines) + 1]] <- ""
 
   lapply(names(properties), function(property) {
-    value <- properties[[property]]
+    value <- paste0(property, "     ", properties[[property]])
     pattern <- paste(property, ".*", sep = "")
 
     if (length(grep(pattern, lines)) > 0) {
