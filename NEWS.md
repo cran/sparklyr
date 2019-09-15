@@ -1,3 +1,21 @@
+# Sparklyr 1.0.3
+
+### Kuberenetes
+
+- Support for port forwarding in Windows using RStudio terminal.
+
+### dplyr
+
+- Fix support for `compute()` in Spark 1.6 (#2099)
+
+### Data
+
+- The `spark_read_()` functions now support multiple parameters (@jozefhajnala, #2118).
+
+### Connections
+
+- Fix for Qubole connections for single user and multiple sessions (@vipul1409, #2128).
+
 # Sparklyr 1.0.2
 
 ### Connections
@@ -15,6 +33,8 @@
 ### Distributed
 
 - Configuration setting `sparklyr.apply.serializer` can be used to select serializer version in `spark_apply()`.
+
+- Fix for `spark_apply_log()` and use `RClosure` as logging component.
 
 ### ML
 
