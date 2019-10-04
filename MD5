@@ -1,7 +1,7 @@
-e1d80c11d8e24abbd39d3f01983a6838 *DESCRIPTION
+6913358674fcae461c04bf3c3cdf15f8 *DESCRIPTION
 3c340760b90af6b5cd5c7a9cc32bb228 *LICENSE
 dffe4a9efe5238c2366a6da6d364635f *NAMESPACE
-ccfba18d6bd766b26991cd7db641dbe0 *NEWS.md
+6ea4f050ced0bfe3073d3e49eacc9ca2 *NEWS.md
 2ae775c6e235d784fce7c3d41c210572 *R/arrow_data.R
 6eead0af1ce7ff40e1959df11390cd28 *R/config_settings.R
 faa9395937e31ef039bb846cc537d7a4 *R/config_spark.R
@@ -10,7 +10,7 @@ ada8d16d3afc3121c37f330cbe508aeb *R/connection_progress.R
 4a2889f4763ca54dd73823471b2dbff4 *R/connection_shinyapp.R
 381c958b43f1bfbc108646cdc9582749 *R/connection_spark.R
 07fd7d16502ccdb520fcd6938b03d1ac *R/connection_viewer.R
-e131bf153ff1a896d7d4b96855b25683 *R/core_arrow.R
+8ec2d34160109b688c67142431f1f299 *R/core_arrow.R
 eeaa7172a10116a7dc03df5aadff6af8 *R/core_config.R
 0f39dd96111bd6921a29dadc6054a0ad *R/core_connection.R
 2be2c7d5410252eed0bd896cd1bc77ad *R/core_deserialize.R
@@ -42,7 +42,7 @@ ad96f2b51229600d8b0ead7c5f049092 *R/dplyr_spark_data.R
 216bac853fb511c600e1e571833c2847 *R/java.R
 70ed2d7fdf057d6ed5b159e9ffdba2e1 *R/jobs_api.R
 aacbf9b79dcae2ac6fdddff4144989c0 *R/kubernetes_config.R
-ebd979ae32e884f363db4c2ff90cb318 *R/livy_connection.R
+35b3107a4b4ef4ea126ebaa792256de4 *R/livy_connection.R
 93489e747c12ddae4e109710d5615342 *R/livy_install.R
 d254d3490812d5594c5ecbf84b01f464 *R/livy_invoke.R
 5c457dc2bdaac0e6a5d1e0301a0e0e2e *R/livy_service.R
@@ -228,10 +228,10 @@ fe44c93fe2fa4b04ec110ca22874fd03 *inst/java/commons-csv-1.1.jar
 8e11b04e6025a0598e96f3e45957596d *inst/java/commons-csv-1.5.jar
 fe76483feb3ee42f62a891d26434802b *inst/java/spark-csv_2.10-1.5.0.jar
 a5af4e8d7933163cf3589d7378dab4dc *inst/java/spark-csv_2.11-1.5.0.jar
-48e8746828d87cac4005727952e9adc2 *inst/java/sparklyr-1.5-2.10.jar
-819d13af1a11af2157dc6487a725ba18 *inst/java/sparklyr-1.6-2.10.jar
-4ae882b6d8acfed5e3f8111e661b850f *inst/java/sparklyr-2.0-2.11.jar
-bbe9a808ba237acc8b947417c797ef4d *inst/java/sparklyr-2.3-2.11.jar
+cf622a89f591ec41162b248a466aace7 *inst/java/sparklyr-1.5-2.10.jar
+aa5936d09142a1949db0c781fa4c10fb *inst/java/sparklyr-1.6-2.10.jar
+438841661bf2c63107cebf3be5b60fa5 *inst/java/sparklyr-2.0-2.11.jar
+c897da1bd4780bdb6b6e672957f59fd1 *inst/java/sparklyr-2.3-2.11.jar
 1fe7361210174ca5f2f51a602a50af49 *inst/java/univocity-parsers-1.5.1.jar
 ad891735f2bfe70e55e9c08d1e403bbd *inst/livy/spark-1.5.2/backend.scala
 44f1f48f128f17487638eeb036a2fc33 *inst/livy/spark-1.5.2/channel.scala
@@ -251,7 +251,7 @@ bddabaa38febe6cfaaa20cf58eb93b9b *inst/livy/spark-1.6.0/classutils.scala
 a8530f442cf8d2ddb2f5c4838b68adb0 *inst/livy/spark-1.6.0/fileutils.scala
 6864ce0daff79473b55bfbce6438cc27 *inst/livy/spark-1.6.0/livyutils.scala
 6561ef3ac7d34c7267c9e0c75e8d2f21 *inst/livy/spark-1.6.0/rscript.scala
-e1beeab6d306c32bef440a702df3fd40 *inst/livy/spark-1.6.0/sources.scala
+4e4dc27b6581f3ff8bc44b14ac1bf52a *inst/livy/spark-1.6.0/sources.scala
 f1e73f91264a361674ae3e9ad9bb4bab *inst/livy/spark-1.6.0/workerapply.scala
 0bbd152bb116a293b22e455c9f731407 *inst/livy/spark-1.6.0/workercontext.scala
 1fa657a60b2257439f44f5bb5354d31c *inst/livy/spark-1.6.0/workerhelper.scala
@@ -297,7 +297,7 @@ a54cf1195ed28fa42b142ac0337d9916 *java/spark-1.5.2/utils.scala
 b5a8e18b51efe6bdb597acecdf07124f *java/spark-1.6.0/fileutils.scala
 18dd728ff21eebe1ae7ac88c5d584609 *java/spark-1.6.0/livyutils.scala
 b53d023b6b786a7886cb8e6a8c9330dd *java/spark-1.6.0/rscript.scala
-17df42bd886888d75542098f0508a1b4 *java/spark-1.6.0/sources.scala
+808bc79b51542a5237a2fe6961ae4be9 *java/spark-1.6.0/sources.scala
 3e282c64bdcdcd5b920d9e50bd1b6574 *java/spark-1.6.0/workerapply.scala
 b3fbb68a2f7b07975ea1330c5ec63eab *java/spark-1.6.0/workercontext.scala
 c8789de981df97d36514dae91784f120 *java/spark-1.6.0/workerhelper.scala
