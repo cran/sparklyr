@@ -22,9 +22,12 @@ spark_config <- function(file = "config.yml", use_default = TRUE) {
   optionsConfig <- options()[optionsConfigCheck]
   baseConfig <- merge_lists(optionsConfig, baseConfig)
 
+  userEnvConfig <- tryCatch(config::get(file = Sys.getenv("SPARKLYR_CONFIG_FILE")), error = function(e) NULL)
+  baseEnvConfig <- merge_lists(baseConfig, userEnvConfig)
+
   userConfig <- tryCatch(config::get(file = file), error = function(e) NULL)
 
-  mergedConfig <- merge_lists(baseConfig, userConfig)
+  mergedConfig <- merge_lists(baseEnvConfig, userConfig)
 
   if (nchar(Sys.getenv("SPARK_DRIVER_CLASSPATH")) > 0 &&
       is.null(mergedConfig$master$`sparklyr.shell.driver-class-path`)) {
@@ -113,4 +116,44 @@ spark_config_value_retries <- function(config, name, default, retries) {
   }
 
   value
+}
+
+#' Creates Spark Configuration
+#'
+#' @param config The Spark configuration object.
+#' @param packages A list of named packages or versioned packagese to add.
+#' @param version The version of Spark being used.
+#'
+#' @keywords interenal
+#' @export
+spark_config_packages <- function(config, packages, version) {
+  version <- spark_version_latest(version)
+
+  if ("kafka" %in% packages) {
+    packages <- packages[-which(packages == "kafka")]
+
+    if (version < "2.0.0") stop("Kafka requires Spark 2.x")
+
+    kafka_package <- "org.apache.spark:spark-sql-kafka-0-10_2.11:"
+    if (version >= "2.4.1")
+      kafka_package <- "org.apache.spark:spark-sql-kafka-0-10_2.12:"
+
+    kafka_package <- paste0(kafka_package, version)
+
+    config$sparklyr.shell.packages <- c(config$sparklyr.shell.packages, kafka_package)
+  }
+
+  if ("delta" %in% packages) {
+    packages <- packages[-which(packages == "delta")]
+
+    if (version < "2.4.2") stop("Delta Lake requires Spark 2.4.2 or newer")
+
+    config$sparklyr.shell.packages <- c(config$sparklyr.shell.packages, "io.delta:delta-core_2.11:0.4.0")
+  }
+
+  if (!is.null(packages)) {
+    config$sparklyr.shell.packages <- c(config$sparklyr.shell.packages, packages)
+  }
+
+  config
 }

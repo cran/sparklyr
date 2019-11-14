@@ -1,3 +1,36 @@
+# Sparklyr 1.0.5
+
+### Serialization
+
+- R environments are now sent to Scala Maps rather than `java.util.Map[Object, Object]` (#1058).
+
+### Data
+
+- Allow `sdf_sql()` to accept glue strings (@yutannihilation, #2171).
+
+- Support to read and write from Delta Lake using `spark_read_delta()`
+  and `spark_write_delta()` (#2148).
+
+### Connections
+
+- `spark_connect()` supports new `packages` parameter to easily
+  enable `kafka` and `delta` (#2148).
+
+- `spark_disconnect()` returns invisibly (#2028).
+
+### Configuration
+
+- Support to specify config file location using the
+  `SPARKLYR_CONFIG_FILE` environment variable (@AgrawalAmey, #2153).
+
+### Compilation
+
+- Support for Scala 12 (@lu-wang-dl, #2154).
+
+### YARN
+
+- Fix `curl_fetch_memory` error when using YARN Cluster mode (#2157).
+
 # Sparklyr 1.0.4
 
 ### Arrow
