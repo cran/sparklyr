@@ -4,15 +4,20 @@
 \alias{ft_one_hot_encoder}
 \title{Feature Transformation -- OneHotEncoder (Transformer)}
 \usage{
-ft_one_hot_encoder(x, input_col = NULL, output_col = NULL,
-  drop_last = TRUE, uid = random_string("one_hot_encoder_"), ...)
+ft_one_hot_encoder(x, input_cols = NULL, output_cols = NULL,
+  handle_invalid = NULL, drop_last = TRUE,
+  uid = random_string("one_hot_encoder_"), ...)
 }
 \arguments{
 \item{x}{A \code{spark_connection}, \code{ml_pipeline}, or a \code{tbl_spark}.}
 
-\item{input_col}{The name of the input column.}
+\item{input_cols}{The name of the input columns.}
 
-\item{output_col}{The name of the output column.}
+\item{output_cols}{The name of the output columns.}
+
+\item{handle_invalid}{(Spark 2.1.0+) Param for how to handle invalid entries. Options are
+'skip' (filter out rows with invalid values), 'error' (throw an error), or
+'keep' (keep invalid values in a special additional bucket). Default: "error"}
 
 \item{drop_last}{Whether to drop the last category. Defaults to \code{TRUE}.}
 

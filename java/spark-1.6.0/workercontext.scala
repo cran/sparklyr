@@ -1,7 +1,13 @@
 package sparklyr
 
+import org.apache.spark._
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql._
+import org.apache.spark.sql.types.StructType
+import scala.collection.JavaConversions._
+
 class WorkerContext(
-  iterator: Iterator[org.apache.spark.sql.Row],
+  iterator: Iterator[Row],
   lock: AnyRef,
   closure: Array[Byte],
   columns: Array[String],
@@ -10,14 +16,9 @@ class WorkerContext(
   bundlePath: String,
   context: Array[Byte],
   timeZoneId: String,
-  schema: org.apache.spark.sql.types.StructType,
-  options: Map[String, String]) {
-
-  import org.apache.spark._
-  import org.apache.spark.rdd.RDD
-  import org.apache.spark.sql._
-  import org.apache.spark.sql.types.StructType
-  import scala.collection.JavaConversions._
+  schema: StructType,
+  options: Map[String, String],
+  barrier: Map[String, Any]) {
 
   private var result: Array[Row] = Array[Row]()
   private var sourceArray: Option[Array[Row]] = None
@@ -98,5 +99,9 @@ class WorkerContext(
 
   def getOptions() : Map[String, String] = {
     options
+  }
+
+  def getBarrier() : Map[String, Any] = {
+    barrier
   }
 }

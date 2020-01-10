@@ -33,7 +33,7 @@ printf <- function(fmt, ...) {
   cat(sprintf(fmt, ...))
 }
 
-spark_require_version <- function(sc, required, module = NULL) {
+spark_require_version <- function(sc, required, module = NULL, required_max = NULL) {
 
   # guess module based on calling function
   if (is.null(module)) {
@@ -47,9 +47,33 @@ spark_require_version <- function(sc, required, module = NULL) {
     fmt <- "%s requires Spark %s or higher."
     msg <- sprintf(fmt, module, required, version)
     stop(msg, call. = FALSE)
+  } else if (!is.null(required_max)) {
+    if (version >= required_max) {
+      fmt <- "%s is removed in Spark %s."
+      msg <- sprintf(fmt, module, required_max, version)
+      stop(msg, call. = FALSE)
+    }
   }
 
   TRUE
+}
+
+is_required_spark <- function(x, required_version) {
+  UseMethod("is_required_spark")
+}
+
+is_required_spark.spark_connection <- function(x, required_version) {
+  version <- spark_version(x)
+  version >= required_version
+}
+
+is_required_spark.spark_jobj <- function(x, required_version) {
+  sc <- spark_connection(x)
+  is_required_spark(sc, required_version)
+}
+
+spark_param_deprecated <- function(param, version = "3.x") {
+  warning("The '", param, "' parameter is deprecated in Spark ", version)
 }
 
 regex_replace <- function(string, ...) {

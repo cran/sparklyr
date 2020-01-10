@@ -15,7 +15,12 @@ Supports the \samp{"hdfs://"}, \samp{"s3a://"} and \samp{"file://"} protocols.}
 
 \item{name}{The name to assign to the newly generated stream.}
 
-\item{columns}{A vector of column names or a named vector of column types.}
+\item{columns}{A vector of column names or a named vector of column types.
+If specified, the elements can be \code{"binary"} for \code{BinaryType},
+\code{"boolean"} for \code{BooleanType}, \code{"byte"} for \code{ByteType},
+\code{"integer"} for \code{IntegerType}, \code{"integer64"} for \code{LongType},
+\code{"double"} for \code{DoubleType}, \code{"character"} for \code{StringType},
+\code{"timestamp"} for \code{TimestampType} and \code{"date"} for \code{DateType}.}
 
 \item{options}{A list of strings with additional options.}
 
@@ -43,13 +48,15 @@ stream_stop(stream)
 }
 \seealso{
 Other Spark stream serialization: \code{\link{stream_read_csv}},
+  \code{\link{stream_read_delta}},
   \code{\link{stream_read_kafka}},
   \code{\link{stream_read_orc}},
   \code{\link{stream_read_parquet}},
-  \code{\link{stream_read_scoket}},
+  \code{\link{stream_read_socket}},
   \code{\link{stream_read_text}},
   \code{\link{stream_write_console}},
   \code{\link{stream_write_csv}},
+  \code{\link{stream_write_delta}},
   \code{\link{stream_write_json}},
   \code{\link{stream_write_kafka}},
   \code{\link{stream_write_memory}},

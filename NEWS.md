@@ -1,3 +1,37 @@
+# Sparklyr 1.1.0
+
+### Distributed R
+
+- Add support for barrier execution mode with `barrier = TRUE` in `spark_apply()` (@samuelmacedo83, #2216).
+
+### Streaming
+
+- Add support for `stream_read_delta()` and `stream_write_delta()`.
+
+- Fixed typo in `stream_read_socket()`.
+
+### Data
+
+- Allow using Scala types in schema specifications. For example, `StringType` in the
+  `columns` parameter for `spark_read_csv()` (@jozefhajnala, #2226)
+
+- Add support for `DBI 1.1` to implement missing `dbQuoteLiteral` signature (#2227).
+
+### Livy
+
+- Add support for Livy 0.6.0.
+
+- Deprecate uploading sources to Livy, a jar is now always used and the `version`
+  parameter in `spark_connect()` is always required.
+
+- Add config `sparklyr.livy.branch` to specify the branch used for the sparklyr JAR.
+
+- Add config `sparklyr.livy.jar` to configure path or URL to sparklyr JAR.
+
+# Data
+
+- Add support for `partition_by` when using `spark_write_delta()` (#2228).
+
 # Sparklyr 1.0.5
 
 ### Serialization
@@ -344,6 +378,7 @@
   which would cause verbose column renames.
   
 - Fix to `stream_write_kafka()` and `stream_write_jdbc()`.
+
 # Sparklyr 0.9.0
 
 ### Streaming

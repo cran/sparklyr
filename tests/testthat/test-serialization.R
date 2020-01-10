@@ -44,6 +44,7 @@ test_that("primitive values survive Spark roundtrips", {
 })
 
 test_that("NA values survive Spark roundtrips", {
+  skip_on_spark_master()
   n <- 10
   df <- data.frame(
     int = as.integer(1:n),
@@ -325,6 +326,7 @@ test_that("collect() can retrieve specific dates without timezones", {
 })
 
 test_that("collect() can retrieve logical columns with NAs", {
+  skip_on_spark_master()
   expect_equal(
     logical_nas,
     logical_nas_tbl %>% dplyr::collect()

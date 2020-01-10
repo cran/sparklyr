@@ -25,6 +25,12 @@ spark_install_winutils <- function(version) {
 testthat_spark_connection <- function() {
   if (!exists(".testthat_latest_spark", envir = .GlobalEnv))
     assign(".testthat_latest_spark", "2.3.0", envir = .GlobalEnv)
+
+  livy_branch <- Sys.getenv("TRAVIS_PULL_REQUEST_BRANCH")
+  if (nchar(livy_branch) > 0) {
+    options(sparklyr.livy.branch = livy_branch)
+  }
+
   livy_version <- Sys.getenv("LIVY_VERSION")
   if (nchar(livy_version) > 0)
     testthat_livy_connection()
@@ -45,6 +51,12 @@ testthat_shell_connection <- function() {
   }
 
   spark_installed <- spark_installed_versions()
+  if (!is.null(version) && version == "master") {
+    assign(".test_on_spark_master", TRUE, envir = .GlobalEnv)
+    spark_installed <- spark_installed[with(spark_installed, order(spark, decreasing = TRUE)), ]
+    version <- spark_installed[1,]$spark
+  }
+
   if (nrow(spark_installed[spark_installed$spark == version, ]) == 0) {
     options(sparkinstall.verbose = TRUE)
     spark_install(version)
@@ -74,7 +86,6 @@ testthat_shell_connection <- function() {
     config[["sparklyr.shell.driver-memory"]] <- "3G"
     config[["sparklyr.apply.env.foo"]] <- "env-test"
 
-    setwd(tempdir())
     sc <- spark_connect(master = "local", version = version, config = config)
     assign(".testthat_spark_connection", sc, envir = .GlobalEnv)
   }
@@ -197,6 +208,7 @@ testthat_livy_connection <- function() {
         sparklyr.connect.timeout = 120,
         sparklyr.log.invoke = "cat"
       ),
+      version = version,
       sources = TRUE
     )
 
@@ -211,13 +223,20 @@ get_default_args <- function(fn, exclude = NULL) {
     (function(x) x[setdiff(names(x), c(exclude, c("x", "uid", "...", "formula")))])
 }
 
-test_requires_version <- function(min_version, comment = NULL) {
+test_requires_version <- function(min_version, comment = NULL, max_version = NULL) {
   sc <- testthat_spark_connection()
   if (spark_version(sc) < min_version) {
     msg <- paste0("test requires Spark version ", min_version)
     if (!is.null(comment))
       msg <- paste0(msg, ": ", comment)
     skip(msg)
+  } else if (!is.null(max_version)) {
+    if (spark_version(sc) >= max_version) {
+      msg <- paste0("test is not needed with Spark version ", max_version)
+      if (!is.null(comment))
+        msg <- paste0(msg, ": ", comment)
+      skip(msg)
+    }
   }
 }
 
@@ -313,4 +332,9 @@ skip_arrow_devel <- function(message) {
 skip_slow <- function(message) {
   skip_covr(message)
   skip_arrow_devel(message)
+}
+
+skip_on_spark_master <- function() {
+  is_on_master <- identical(Sys.getenv("SPARK_VERSION"), "master")
+  if (is_on_master) skip("Test skipped on spark master")
 }

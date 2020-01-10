@@ -155,9 +155,15 @@ compile_package_jars <- function(..., spec = NULL) {
 
     # try to automatically download + install Spark
     if (is.null(spark_home) && !is.null(spark_version)) {
-      message("==> downloading Spark ", spark_version)
-      spark_install(spark_version, verbose = TRUE)
-      spark_home <- spark_home_dir(spark_version)
+      if (spark_version == "master") {
+        installInfo <- spark_install_find(version = NULL, hadoop_version = NULL, installed_only = TRUE, latest = FALSE)
+        spark_version <- installInfo$sparkVersion
+        spark_home <- installInfo$sparkVersionDir
+      } else {
+        message("==> downloading Spark ", spark_version)
+        spark_install(spark_version, verbose = TRUE)
+        spark_home <- spark_home_dir(spark_version)
+      }
     }
 
     spark_compile(
@@ -308,6 +314,7 @@ download_scalac <- function(dest_path = NULL) {
   ext <- if (.Platform$OS.type == "windows") "zip" else "tgz"
 
   download_urls <- c(
+    paste0("http://downloads.lightbend.com/scala/2.12.10/scala-2.12.10.", ext),
     paste0("http://downloads.lightbend.com/scala/2.11.8/scala-2.11.8.", ext),
     paste0("http://downloads.lightbend.com/scala/2.10.6/scala-2.10.6.", ext)
   )
@@ -410,7 +417,10 @@ make_version_filter <- function(version_upper) {
         dplyr::last()
 
       if (grepl("([0-9]+\\.){2}[0-9]+", maybe_version)) {
-        use_file <- numeric_version(maybe_version) <= numeric_version(version_upper)
+        if (version_upper == "master")
+          use_file <- TRUE
+        else
+          use_file <- numeric_version(maybe_version) <= numeric_version(version_upper)
         file_name <- basename(file)
 
         # is there is more than one file with the same name
@@ -422,7 +432,7 @@ make_version_filter <- function(version_upper) {
             strsplit("-") %>%
             sapply(function(e) e[-1]) %>%
             numeric_version() %>%
-            Filter(function(e) e <= numeric_version(version_upper), .)
+            Filter(function(e) if (version_upper == "master") TRUE else e <= numeric_version(version_upper), .)
 
           # only use the file with the biggest version
           numeric_version(maybe_version) == max(other_versions)
