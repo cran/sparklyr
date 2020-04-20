@@ -150,6 +150,14 @@ spark_apply <- function(x,
                         ...) {
   memory <- force(memory)
   args <- list(...)
+  # If columns is of the form c("col_name1", "col_name2", ...)
+  # then leave it as-is
+  # Otherwise if it is of the form c(col_name1 = "col_type1", ...)
+  # or list(col_name1 = "col_type1", ...), etc, then make sure it gets coerced
+  # into a list instead of a character vector with names
+  if (!identical(names(columns), NULL)) {
+    columns <- as.list(columns)
+  }
   assert_that(is.function(f) || is.raw(f) || is.language(f))
   if (is.language(f)) f <- rlang::as_closure(f)
 
@@ -290,9 +298,9 @@ spark_apply <- function(x,
   }
   else if (isTRUE(packages) || is.character(packages)) {
     bundle_base <- spark_apply_bundle_path()
-    bundle_path <- spark_apply_bundle_file(packages, bundle_base)
+    bundle_path <- spark_apply_bundle_file(packages, bundle_base, sc$sessionId)
     if (!file.exists(bundle_path)) {
-      bundle_path <- spark_apply_bundle(packages, bundle_base)
+      bundle_path <- spark_apply_bundle(packages, bundle_base, sc$sessionId)
     }
 
     if (!is.null(bundle_path)) {

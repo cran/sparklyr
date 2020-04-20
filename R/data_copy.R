@@ -129,6 +129,8 @@ spark_data_translate_columns <- function(df) {
       "character"
     else if ("POSIXct" %in% class(e))
       "timestamp"
+    else if (inherits(e, "Date"))
+      "date"
     else
       typeof(e)
   })
@@ -199,7 +201,8 @@ spark_data_copy <- function(
   df,
   name,
   repartition,
-  serializer = NULL) {
+  serializer = NULL,
+  struct_columns = list()) {
 
   if (!is.numeric(repartition)) {
     stop("The repartition parameter must be an integer")
@@ -208,6 +211,21 @@ spark_data_copy <- function(
   if (!spark_connection_is_local(sc) && identical(serializer, "csv_file")) {
     stop("Using a local file to copy data is not supported for remote clusters")
   }
+
+  if (length(struct_columns) > 0 && spark_version(sc) < "2.4") {
+    stop("Parameter 'struct_columns' requires Spark 2.4+")
+  }
+
+  additional_struct_columns <- list()
+  if ("list" %in% sapply(df, class)) {
+    for (column in colnames(df)) {
+      if (class(df[[column]]) == "list") {
+        df[[column]] <- sapply(df[[column]], function(e) rjson::toJSON(as.list(e)))
+        additional_struct_columns <- append(additional_struct_columns, column)
+      }
+    }
+  }
+  struct_columns <- union(struct_columns, additional_struct_columns)
 
   serializer <- ifelse(
                   is.null(serializer),
@@ -230,7 +248,18 @@ spark_data_copy <- function(
     "arrow" = spark_serialize_arrow
   )
 
+
   df <- spark_data_perform_copy(sc, serializers[[serializer]], df, repartition)
+
+  if (length(struct_columns) > 0 && spark_version(sc) >= "2.4") {
+    df <- invoke_static(
+      sc,
+      "sparklyr.StructColumnUtils",
+      "parseJsonColumns",
+      df,
+      struct_columns
+    )
+  }
 
   if (spark_version(sc) < "2.0.0")
     invoke(df, "registerTempTable", name)
