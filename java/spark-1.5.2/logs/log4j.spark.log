@@ -1,0 +1,208 @@
+20/06/01 14:41:55 WARN Utils: Your hostname, debian resolves to a loopback address: 127.0.1.1; using 192.168.0.24 instead (on interface wlan0)
+20/06/01 14:41:55 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+20/06/01 14:41:56 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+20/06/01 14:41:56 INFO SecurityManager: Changing view acls to: yitaoli
+20/06/01 14:41:56 INFO SecurityManager: Changing modify acls to: yitaoli
+20/06/01 14:41:56 INFO SecurityManager: Changing view acls groups to: 
+20/06/01 14:41:56 INFO SecurityManager: Changing modify acls groups to: 
+20/06/01 14:41:56 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(yitaoli); groups with view permissions: Set(); users  with modify permissions: Set(yitaoli); groups with modify permissions: Set()
+20/06/01 14:41:57 INFO HiveConf: Found configuration file file:/mnt/sda7/spark/spark-3.0.0-preview2-bin-hadoop3.2/conf/hive-site.xml
+20/06/01 14:41:58 INFO SessionState: Created HDFS directory: /tmp/hive/yitaoli/e914b66a-7cd7-4831-b35e-1c247e4e00e6
+20/06/01 14:41:58 INFO SessionState: Created local directory: /tmp/yitaoli/e914b66a-7cd7-4831-b35e-1c247e4e00e6
+20/06/01 14:41:58 INFO SessionState: Created HDFS directory: /tmp/hive/yitaoli/e914b66a-7cd7-4831-b35e-1c247e4e00e6/_tmp_space.db
+20/06/01 14:41:58 INFO SparkContext: Running Spark version 3.0.0-preview2
+20/06/01 14:41:58 INFO ResourceUtils: ==============================================================
+20/06/01 14:41:58 INFO ResourceUtils: Resources for spark.driver:
+
+20/06/01 14:41:58 INFO ResourceUtils: ==============================================================
+20/06/01 14:41:58 INFO SparkContext: Submitted application: SparkSQL::192.168.0.24
+20/06/01 14:41:58 INFO SecurityManager: Changing view acls to: yitaoli
+20/06/01 14:41:58 INFO SecurityManager: Changing modify acls to: yitaoli
+20/06/01 14:41:58 INFO SecurityManager: Changing view acls groups to: 
+20/06/01 14:41:58 INFO SecurityManager: Changing modify acls groups to: 
+20/06/01 14:41:58 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(yitaoli); groups with view permissions: Set(); users  with modify permissions: Set(yitaoli); groups with modify permissions: Set()
+20/06/01 14:41:58 INFO Utils: Successfully started service 'sparkDriver' on port 38603.
+20/06/01 14:41:59 INFO SparkEnv: Registering MapOutputTracker
+20/06/01 14:41:59 INFO SparkEnv: Registering BlockManagerMaster
+20/06/01 14:41:59 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+20/06/01 14:41:59 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+20/06/01 14:41:59 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+20/06/01 14:41:59 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-5b2a732b-8bd4-41eb-a41f-6d9b8f8d5fd6
+20/06/01 14:41:59 INFO MemoryStore: MemoryStore started with capacity 366.3 MiB
+20/06/01 14:41:59 INFO SparkEnv: Registering OutputCommitCoordinator
+20/06/01 14:41:59 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+20/06/01 14:41:59 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+20/06/01 14:41:59 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://192.168.0.24:4041
+20/06/01 14:42:00 INFO Executor: Starting executor ID driver on host 192.168.0.24
+20/06/01 14:42:00 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 36007.
+20/06/01 14:42:00 INFO NettyBlockTransferService: Server created on 192.168.0.24:36007
+20/06/01 14:42:00 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+20/06/01 14:42:00 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.0.24, 36007, None)
+20/06/01 14:42:00 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.0.24:36007 with 366.3 MiB RAM, BlockManagerId(driver, 192.168.0.24, 36007, None)
+20/06/01 14:42:00 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.0.24, 36007, None)
+20/06/01 14:42:00 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 192.168.0.24, 36007, None)
+20/06/01 14:42:00 INFO SharedState: loading hive config file: file:/mnt/sda7/spark/spark-3.0.0-preview2-bin-hadoop3.2/conf/hive-site.xml
+20/06/01 14:42:00 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir ('file:/mnt/sda7/Downloads/sparklyr/sparklyr_yitaoli/java/spark-1.5.2/spark-warehouse').
+20/06/01 14:42:00 INFO SharedState: Warehouse path is 'file:/mnt/sda7/Downloads/sparklyr/sparklyr_yitaoli/java/spark-1.5.2/spark-warehouse'.
+20/06/01 14:42:02 INFO HiveUtils: Initializing HiveMetastoreConnection version 2.3.6 using Spark classes.
+20/06/01 14:42:02 INFO HiveClientImpl: Warehouse location for Hive client (version 2.3.6) is file:/mnt/sda7/Downloads/sparklyr/sparklyr_yitaoli/java/spark-1.5.2/spark-warehouse
+20/06/01 14:42:04 WARN HiveConf: HiveConf of name hive.stats.jdbc.timeout does not exist
+20/06/01 14:42:04 WARN HiveConf: HiveConf of name hive.stats.retries.wait does not exist
+20/06/01 14:42:04 INFO HiveMetaStore: 0: Opening raw store with implementation class:org.apache.hadoop.hive.metastore.ObjectStore
+20/06/01 14:42:04 INFO ObjectStore: ObjectStore, initialize called
+20/06/01 14:42:04 INFO Persistence: Property hive.metastore.integral.jdo.pushdown unknown - will be ignored
+20/06/01 14:42:04 INFO Persistence: Property datanucleus.cache.level2 unknown - will be ignored
+20/06/01 14:42:07 INFO ObjectStore: Setting MetaStore object pin classes with hive.metastore.cache.pinobjtypes="Table,StorageDescriptor,SerDeInfo,Partition,Database,Type,FieldSchema,Order"
+20/06/01 14:42:11 INFO MetaStoreDirectSql: Using direct SQL, underlying DB is DERBY
+20/06/01 14:42:11 INFO ObjectStore: Initialized ObjectStore
+20/06/01 14:42:11 WARN ObjectStore: Version information not found in metastore. hive.metastore.schema.verification is not enabled so recording the schema version 2.3.0
+20/06/01 14:42:11 WARN ObjectStore: setMetaStoreSchemaVersion called but recording version is disabled: version = 2.3.0, comment = Set by MetaStore yitaoli@127.0.1.1
+20/06/01 14:42:11 WARN ObjectStore: Failed to get database default, returning NoSuchObjectException
+20/06/01 14:42:11 INFO HiveMetaStore: Added admin role in metastore
+20/06/01 14:42:11 INFO HiveMetaStore: Added public role in metastore
+20/06/01 14:42:12 INFO HiveMetaStore: No user is added in admin role, since config is empty
+20/06/01 14:42:12 INFO HiveMetaStore: 0: get_all_functions
+20/06/01 14:42:12 INFO audit: ugi=yitaoli	ip=unknown-ip-addr	cmd=get_all_functions	
+20/06/01 14:42:12 INFO HiveMetaStore: 0: get_database: default
+20/06/01 14:42:12 INFO audit: ugi=yitaoli	ip=unknown-ip-addr	cmd=get_database: default	
+20/06/01 14:42:13 INFO SparkSQLCLIDriver: Spark master: local[*], Application Id: local-1591022520131
+20/06/01 14:42:19 INFO SparkUI: Stopped Spark web UI at http://192.168.0.24:4041
+20/06/01 14:42:19 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+20/06/01 14:42:20 INFO MemoryStore: MemoryStore cleared
+20/06/01 14:42:20 INFO BlockManager: BlockManager stopped
+20/06/01 14:42:20 INFO BlockManagerMaster: BlockManagerMaster stopped
+20/06/01 14:42:20 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+20/06/01 14:42:20 INFO SparkContext: Successfully stopped SparkContext
+20/06/01 14:42:20 INFO ShutdownHookManager: Shutdown hook called
+20/06/01 14:42:20 INFO ShutdownHookManager: Deleting directory /tmp/spark-bdac33d7-73ef-43bf-805f-7b090dc68063
+20/06/01 14:42:20 INFO ShutdownHookManager: Deleting directory /tmp/spark-2eedb8f0-dc5b-4f40-8455-1905699e51ac
+20/06/01 14:42:23 WARN Utils: Your hostname, debian resolves to a loopback address: 127.0.1.1; using 192.168.0.24 instead (on interface wlan0)
+20/06/01 14:42:23 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+20/06/01 14:42:24 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+20/06/01 14:42:24 INFO SecurityManager: Changing view acls to: yitaoli
+20/06/01 14:42:24 INFO SecurityManager: Changing modify acls to: yitaoli
+20/06/01 14:42:24 INFO SecurityManager: Changing view acls groups to: 
+20/06/01 14:42:24 INFO SecurityManager: Changing modify acls groups to: 
+20/06/01 14:42:24 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(yitaoli); groups with view permissions: Set(); users  with modify permissions: Set(yitaoli); groups with modify permissions: Set()
+20/06/01 14:42:24 INFO HiveConf: Found configuration file file:/mnt/sda7/spark/spark-3.0.0-preview2-bin-hadoop3.2/conf/hive-site.xml
+20/06/01 14:42:25 INFO SessionState: Created HDFS directory: /tmp/hive/yitaoli/dd7168ad-e97a-4424-867b-9523972b608f
+20/06/01 14:42:25 INFO SessionState: Created local directory: /tmp/yitaoli/dd7168ad-e97a-4424-867b-9523972b608f
+20/06/01 14:42:25 INFO SessionState: Created HDFS directory: /tmp/hive/yitaoli/dd7168ad-e97a-4424-867b-9523972b608f/_tmp_space.db
+20/06/01 14:42:25 INFO SparkContext: Running Spark version 3.0.0-preview2
+20/06/01 14:42:25 INFO ResourceUtils: ==============================================================
+20/06/01 14:42:25 INFO ResourceUtils: Resources for spark.driver:
+
+20/06/01 14:42:25 INFO ResourceUtils: ==============================================================
+20/06/01 14:42:25 INFO SparkContext: Submitted application: SparkSQL::192.168.0.24
+20/06/01 14:42:25 INFO SecurityManager: Changing view acls to: yitaoli
+20/06/01 14:42:25 INFO SecurityManager: Changing modify acls to: yitaoli
+20/06/01 14:42:25 INFO SecurityManager: Changing view acls groups to: 
+20/06/01 14:42:25 INFO SecurityManager: Changing modify acls groups to: 
+20/06/01 14:42:25 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(yitaoli); groups with view permissions: Set(); users  with modify permissions: Set(yitaoli); groups with modify permissions: Set()
+20/06/01 14:42:26 INFO Utils: Successfully started service 'sparkDriver' on port 39413.
+20/06/01 14:42:26 INFO SparkEnv: Registering MapOutputTracker
+20/06/01 14:42:26 INFO SparkEnv: Registering BlockManagerMaster
+20/06/01 14:42:26 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+20/06/01 14:42:26 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+20/06/01 14:42:26 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+20/06/01 14:42:26 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-4ff10c99-4071-48c9-a306-5fa39fb92b5a
+20/06/01 14:42:26 INFO MemoryStore: MemoryStore started with capacity 366.3 MiB
+20/06/01 14:42:26 INFO SparkEnv: Registering OutputCommitCoordinator
+20/06/01 14:42:26 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+20/06/01 14:42:26 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+20/06/01 14:42:26 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://192.168.0.24:4041
+20/06/01 14:42:27 INFO Executor: Starting executor ID driver on host 192.168.0.24
+20/06/01 14:42:27 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 34133.
+20/06/01 14:42:27 INFO NettyBlockTransferService: Server created on 192.168.0.24:34133
+20/06/01 14:42:27 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+20/06/01 14:42:27 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.0.24, 34133, None)
+20/06/01 14:42:27 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.0.24:34133 with 366.3 MiB RAM, BlockManagerId(driver, 192.168.0.24, 34133, None)
+20/06/01 14:42:27 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.0.24, 34133, None)
+20/06/01 14:42:27 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 192.168.0.24, 34133, None)
+20/06/01 14:42:28 INFO SharedState: loading hive config file: file:/mnt/sda7/spark/spark-3.0.0-preview2-bin-hadoop3.2/conf/hive-site.xml
+20/06/01 14:42:28 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir ('file:/mnt/sda7/Downloads/sparklyr/sparklyr_yitaoli/java/spark-1.5.2/spark-warehouse').
+20/06/01 14:42:28 INFO SharedState: Warehouse path is 'file:/mnt/sda7/Downloads/sparklyr/sparklyr_yitaoli/java/spark-1.5.2/spark-warehouse'.
+20/06/01 14:42:29 INFO HiveUtils: Initializing HiveMetastoreConnection version 2.3.6 using Spark classes.
+20/06/01 14:42:29 INFO HiveClientImpl: Warehouse location for Hive client (version 2.3.6) is file:/mnt/sda7/Downloads/sparklyr/sparklyr_yitaoli/java/spark-1.5.2/spark-warehouse
+20/06/01 14:42:30 WARN HiveConf: HiveConf of name hive.stats.jdbc.timeout does not exist
+20/06/01 14:42:30 WARN HiveConf: HiveConf of name hive.stats.retries.wait does not exist
+20/06/01 14:42:30 INFO HiveMetaStore: 0: Opening raw store with implementation class:org.apache.hadoop.hive.metastore.ObjectStore
+20/06/01 14:42:30 INFO ObjectStore: ObjectStore, initialize called
+20/06/01 14:42:31 INFO Persistence: Property hive.metastore.integral.jdo.pushdown unknown - will be ignored
+20/06/01 14:42:31 INFO Persistence: Property datanucleus.cache.level2 unknown - will be ignored
+20/06/01 14:42:33 INFO ObjectStore: Setting MetaStore object pin classes with hive.metastore.cache.pinobjtypes="Table,StorageDescriptor,SerDeInfo,Partition,Database,Type,FieldSchema,Order"
+20/06/01 14:42:37 INFO MetaStoreDirectSql: Using direct SQL, underlying DB is DERBY
+20/06/01 14:42:37 INFO ObjectStore: Initialized ObjectStore
+20/06/01 14:42:37 WARN ObjectStore: Version information not found in metastore. hive.metastore.schema.verification is not enabled so recording the schema version 2.3.0
+20/06/01 14:42:37 WARN ObjectStore: setMetaStoreSchemaVersion called but recording version is disabled: version = 2.3.0, comment = Set by MetaStore yitaoli@127.0.1.1
+20/06/01 14:42:37 WARN ObjectStore: Failed to get database default, returning NoSuchObjectException
+20/06/01 14:42:37 INFO HiveMetaStore: Added admin role in metastore
+20/06/01 14:42:37 INFO HiveMetaStore: Added public role in metastore
+20/06/01 14:42:38 INFO HiveMetaStore: No user is added in admin role, since config is empty
+20/06/01 14:42:38 INFO HiveMetaStore: 0: get_all_functions
+20/06/01 14:42:38 INFO audit: ugi=yitaoli	ip=unknown-ip-addr	cmd=get_all_functions	
+20/06/01 14:42:38 INFO HiveMetaStore: 0: get_database: default
+20/06/01 14:42:38 INFO audit: ugi=yitaoli	ip=unknown-ip-addr	cmd=get_database: default	
+20/06/01 14:42:39 INFO SparkSQLCLIDriver: Spark master: local[*], Application Id: local-1591022547119
+20/06/01 14:42:59 INFO CodeGenerator: Code generated in 444.67552 ms
+20/06/01 14:42:59 INFO SparkContext: Starting job: main at NativeMethodAccessorImpl.java:0
+20/06/01 14:42:59 INFO DAGScheduler: Got job 0 (main at NativeMethodAccessorImpl.java:0) with 1 output partitions
+20/06/01 14:42:59 INFO DAGScheduler: Final stage: ResultStage 0 (main at NativeMethodAccessorImpl.java:0)
+20/06/01 14:42:59 INFO DAGScheduler: Parents of final stage: List()
+20/06/01 14:42:59 INFO DAGScheduler: Missing parents: List()
+20/06/01 14:42:59 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[2] at main at NativeMethodAccessorImpl.java:0), which has no missing parents
+20/06/01 14:43:00 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 6.3 KiB, free 366.3 MiB)
+20/06/01 14:43:00 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 3.2 KiB, free 366.3 MiB)
+20/06/01 14:43:00 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on 192.168.0.24:34133 (size: 3.2 KiB, free: 366.3 MiB)
+20/06/01 14:43:00 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:1206
+20/06/01 14:43:00 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[2] at main at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+20/06/01 14:43:00 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks
+20/06/01 14:43:00 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, 192.168.0.24, executor driver, partition 0, PROCESS_LOCAL, 7561 bytes)
+20/06/01 14:43:00 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+20/06/01 14:43:00 INFO Executor: Finished task 0.0 in stage 0.0 (TID 0). 1498 bytes result sent to driver
+20/06/01 14:43:00 INFO TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 656 ms on 192.168.0.24 (executor driver) (1/1)
+20/06/01 14:43:01 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+20/06/01 14:43:01 INFO DAGScheduler: ResultStage 0 (main at NativeMethodAccessorImpl.java:0) finished in 1.058 s
+20/06/01 14:43:01 INFO DAGScheduler: Job 0 is finished. Cancelling potential speculative or zombie tasks for this job
+20/06/01 14:43:01 INFO TaskSchedulerImpl: Killing all running tasks in stage 0: Stage finished
+20/06/01 14:43:01 INFO DAGScheduler: Job 0 finished: main at NativeMethodAccessorImpl.java:0, took 1.199401 s
+20/06/01 14:43:01 INFO SparkSQLCLIDriver: Time taken: 6.718 seconds, Fetched 1 row(s)
+20/06/01 14:43:55 INFO CodeGenerator: Code generated in 17.30956 ms
+20/06/01 14:43:55 INFO SparkContext: Starting job: main at NativeMethodAccessorImpl.java:0
+20/06/01 14:43:55 INFO DAGScheduler: Got job 1 (main at NativeMethodAccessorImpl.java:0) with 1 output partitions
+20/06/01 14:43:55 INFO DAGScheduler: Final stage: ResultStage 1 (main at NativeMethodAccessorImpl.java:0)
+20/06/01 14:43:55 INFO DAGScheduler: Parents of final stage: List()
+20/06/01 14:43:55 INFO DAGScheduler: Missing parents: List()
+20/06/01 14:43:55 INFO DAGScheduler: Submitting ResultStage 1 (MapPartitionsRDD[4] at main at NativeMethodAccessorImpl.java:0), which has no missing parents
+20/06/01 14:43:55 INFO MemoryStore: Block broadcast_1 stored as values in memory (estimated size 6.4 KiB, free 366.3 MiB)
+20/06/01 14:43:55 INFO MemoryStore: Block broadcast_1_piece0 stored as bytes in memory (estimated size 3.3 KiB, free 366.3 MiB)
+20/06/01 14:43:55 INFO BlockManagerInfo: Added broadcast_1_piece0 in memory on 192.168.0.24:34133 (size: 3.3 KiB, free: 366.3 MiB)
+20/06/01 14:43:55 INFO SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:1206
+20/06/01 14:43:55 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 1 (MapPartitionsRDD[4] at main at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+20/06/01 14:43:55 INFO TaskSchedulerImpl: Adding task set 1.0 with 1 tasks
+20/06/01 14:43:55 INFO TaskSetManager: Starting task 0.0 in stage 1.0 (TID 1, 192.168.0.24, executor driver, partition 0, PROCESS_LOCAL, 7561 bytes)
+20/06/01 14:43:55 INFO Executor: Running task 0.0 in stage 1.0 (TID 1)
+20/06/01 14:43:55 INFO Executor: Finished task 0.0 in stage 1.0 (TID 1). 1478 bytes result sent to driver
+20/06/01 14:43:55 INFO TaskSetManager: Finished task 0.0 in stage 1.0 (TID 1) in 27 ms on 192.168.0.24 (executor driver) (1/1)
+20/06/01 14:43:55 INFO DAGScheduler: ResultStage 1 (main at NativeMethodAccessorImpl.java:0) finished in 0.068 s
+20/06/01 14:43:55 INFO DAGScheduler: Job 1 is finished. Cancelling potential speculative or zombie tasks for this job
+20/06/01 14:43:55 INFO TaskSchedulerImpl: Removed TaskSet 1.0, whose tasks have all completed, from pool 
+20/06/01 14:43:55 INFO TaskSchedulerImpl: Killing all running tasks in stage 1: Stage finished
+20/06/01 14:43:55 INFO DAGScheduler: Job 1 finished: main at NativeMethodAccessorImpl.java:0, took 0.080985 s
+20/06/01 14:43:55 INFO SparkSQLCLIDriver: Time taken: 0.241 seconds, Fetched 1 row(s)
+20/06/01 14:51:56 INFO SessionState: Deleted directory: /tmp/hive/yitaoli/dd7168ad-e97a-4424-867b-9523972b608f on fs with scheme file
+20/06/01 14:51:56 INFO SessionState: Deleted directory: /tmp/yitaoli/dd7168ad-e97a-4424-867b-9523972b608f on fs with scheme file
+20/06/01 14:51:56 INFO HiveMetaStore: 0: Cleaning up thread local RawStore...
+20/06/01 14:51:56 INFO audit: ugi=yitaoli	ip=unknown-ip-addr	cmd=Cleaning up thread local RawStore...	
+20/06/01 14:51:56 INFO HiveMetaStore: 0: Done cleaning up thread local RawStore
+20/06/01 14:51:56 INFO audit: ugi=yitaoli	ip=unknown-ip-addr	cmd=Done cleaning up thread local RawStore	
+20/06/01 14:51:56 INFO SparkUI: Stopped Spark web UI at http://192.168.0.24:4041
+20/06/01 14:51:56 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+20/06/01 14:51:56 INFO MemoryStore: MemoryStore cleared
+20/06/01 14:51:56 INFO BlockManager: BlockManager stopped
+20/06/01 14:51:56 INFO BlockManagerMaster: BlockManagerMaster stopped
+20/06/01 14:51:56 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+20/06/01 14:51:56 INFO SparkContext: Successfully stopped SparkContext
+20/06/01 14:51:56 INFO ShutdownHookManager: Shutdown hook called
+20/06/01 14:51:56 INFO ShutdownHookManager: Deleting directory /tmp/spark-d9fd3405-c318-4905-aaec-2d4e302416ff
+20/06/01 14:51:56 INFO ShutdownHookManager: Deleting directory /tmp/spark-2ae06bba-59ac-49fe-b54e-107bfa8f83d7

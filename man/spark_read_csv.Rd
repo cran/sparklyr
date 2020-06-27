@@ -89,6 +89,7 @@ When \code{header} is \code{FALSE}, the column names are generated with a
 \seealso{
 Other Spark serialization routines: 
 \code{\link{spark_load_table}()},
+\code{\link{spark_read_avro}()},
 \code{\link{spark_read_delta}()},
 \code{\link{spark_read_jdbc}()},
 \code{\link{spark_read_json}()},
@@ -98,7 +99,9 @@ Other Spark serialization routines:
 \code{\link{spark_read_source}()},
 \code{\link{spark_read_table}()},
 \code{\link{spark_read_text}()},
+\code{\link{spark_read}()},
 \code{\link{spark_save_table}()},
+\code{\link{spark_write_avro}()},
 \code{\link{spark_write_csv}()},
 \code{\link{spark_write_delta}()},
 \code{\link{spark_write_jdbc}()},

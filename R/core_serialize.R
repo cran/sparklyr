@@ -73,7 +73,8 @@ writeObject <- function(con, object, writeType = TRUE) {
          POSIXct = writeTime(con, object),
          factor = writeFactor(con, object),
          `data.frame` = writeList(con, object),
-         stop("Unsupported type '", type, "' for serialization"))
+         spark_apply_binary_result = writeList(con, object),
+         stop("Unsupported type '", serdeType, "' for serialization"))
 }
 
 writeVoid <- function(con) {
@@ -88,7 +89,7 @@ writeJobj <- function(con, value) {
 }
 
 writeString <- function(con, value) {
-  utfVal <- enc2utf8(value)
+  utfVal <- enc2utf8(as.character(value))
   writeInt(con, as.integer(nchar(utfVal, type = "bytes") + 1))
   writeBin(utfVal, con, endian = "big", useBytes = TRUE)
 }
@@ -130,7 +131,8 @@ writeType <- function(con, class) {
                  POSIXct = "t",
                  factor = "c",
                  `data.frame` = "l",
-                 stop("Unsupported type '", type, "' for serialization"))
+                 spark_apply_binary_result = "l",
+                 stop("Unsupported type '", class, "' for serialization"))
   writeBin(charToRaw(type), con)
 }
 

@@ -52,7 +52,15 @@ spark_worker_init_packages <- function(sc, context) {
   }
 }
 
-spark_worker_execute_closure <- function(closure, df, funcContext, grouped_by, barrier_map) {
+spark_worker_execute_closure <- function(
+  closure,
+  df,
+  funcContext,
+  grouped_by,
+  barrier_map,
+  fetch_result_as_sdf,
+  partition_index
+) {
   if (nrow(df) == 0) {
     worker_log("found that source has no rows to be proceesed")
     return(NULL)
@@ -66,12 +74,19 @@ spark_worker_execute_closure <- function(closure, df, funcContext, grouped_by, b
   }
 
   closure_params <- length(formals(closure))
+  has_partition_index_param <- (
+    !is.null(funcContext$partition_index_param) &&
+    nchar(funcContext$partition_index_param) > 0
+  )
+  if (has_partition_index_param) closure_params <- closure_params - 1
   closure_args <- c(
     list(df),
     if (!is.null(funcContext$user_context)) list(funcContext$user_context) else NULL,
     lapply(grouped_by, function(group_by_name) df[[group_by_name]][[1]]),
     barrier_arg
   )[0:closure_params]
+  if (has_partition_index_param)
+    closure_args[[funcContext$partition_index_param]] <- partition_index
 
   worker_log("computing closure")
   result <- do.call(closure, closure_args)
@@ -79,15 +94,19 @@ spark_worker_execute_closure <- function(closure, df, funcContext, grouped_by, b
 
   as_factors <- getOption("stringsAsFactors")
   on.exit(options(stringsAsFactors = as_factors))
-  options(stringsAsFactors = F)
+  options(stringsAsFactors = FALSE)
+
+  if (identical(fetch_result_as_sdf, FALSE)) {
+    result <- lapply(result, function(x) serialize(x, NULL))
+    class(result) <- c("spark_apply_binary_result", class(result))
+    result <- tibble::tibble(spark_apply_binary_result = result)
+  }
 
   if (!"data.frame" %in% class(result)) {
     worker_log("data.frame expected but ", class(result), " found")
 
     result <- as.data.frame(result)
   }
-
-  if (!is.data.frame(result)) stop("Result from closure is not a data.frame")
 
   result
 }
@@ -100,15 +119,49 @@ spark_worker_clean_factors <- function(result) {
   result
 }
 
-spark_worker_apply_maybe_schema <- function(result, config) {
-  firstClass <- function(e) class(e)[[1]]
+spark_worker_maybe_serialize_list_cols_as_json <- function(config, result) {
+  if (identical(config$fetch_result_as_sdf, TRUE) &&
+      config$spark_version >= "2.4.0" &&
+      any(sapply(result, is.list))) {
+    result <- do.call(tibble::tibble,
+      lapply(
+        result,
+        function(x) {
+          if (is.list(x)) {
+            x <- sapply(x, function(e) rjson::toJSON(e))
+            class(x) <- c(class(x), "list_col_as_json")
+          }
+          x
+        }
+      )
+    )
+  }
 
+  result
+}
+
+spark_worker_apply_maybe_schema <- function(config, result) {
   if (identical(config$schema, TRUE)) {
     worker_log("updating schema")
+
+    col_names <- colnames(result)
+    types <- list()
+    json_cols <- list()
+
+    for (i in seq_along(result)) {
+      if ("list_col_as_json" %in% class(result[[i]])) {
+        json_cols <- append(json_cols, col_names[[i]])
+        types <- append(types, "character")
+      } else {
+        types <- append(types, class(result[[i]])[[1]])
+      }
+    }
+
     result <- data.frame(
-      names = paste(names(result), collapse = "|"),
-      types = paste(lapply(result, firstClass), collapse = "|"),
-      stringsAsFactors = F
+      names = paste(col_names, collapse = "|"),
+      types = paste(types, collapse = "|"),
+      json_cols = paste(json_cols, collapse = "|"),
+      stringsAsFactors = FALSE
     )
   }
 
@@ -165,6 +218,7 @@ spark_worker_apply_arrow <- function(sc, config) {
   time_zone <- worker_invoke(context, "getTimeZoneId")
   options_map <- worker_invoke(context, "getOptions")
   barrier_map <- as.list(worker_invoke(context, "getBarrier"))
+  partition_index <- worker_invoke(context, "getPartitionIndex")
 
   if (grouped) {
     record_batch_raw_groups <- worker_invoke(context, "getSourceArray")
@@ -202,21 +256,30 @@ spark_worker_apply_arrow <- function(sc, config) {
     if (!is.null(df)) {
       colnames(df) <- columnNames[1: length(colnames(df))]
 
-      result <- spark_worker_execute_closure(closure, df, funcContext, grouped_by, barrier_map)
+      result <- spark_worker_execute_closure(
+                  closure,
+                  df,
+                  funcContext,
+                  grouped_by,
+                  barrier_map,
+                  config$fetch_result_as_sdf,
+                  partition_index
+                )
 
       result <- spark_worker_add_group_by_column(df, result, grouped, grouped_by)
 
       result <- spark_worker_clean_factors(result)
 
-      result <- spark_worker_apply_maybe_schema(result, config)
+      result <- spark_worker_maybe_serialize_list_cols_as_json(config, result)
+
+      result <- spark_worker_apply_maybe_schema(config, result)
     }
 
     if (!is.null(result)) {
       if (is.null(schema_output)) {
         schema_output <- spark_worker_build_types(context, lapply(result, class))
       }
-
-      raw_batch <- arrow_write_record_batch(result)
+      raw_batch <- arrow_write_record_batch(result, config$spark_version)
 
       all_batches[[length(all_batches) + 1]] <- raw_batch
       total_rows <- total_rows + nrow(result)
@@ -284,6 +347,7 @@ spark_worker_apply <- function(sc, config) {
 
   columnNames <- worker_invoke(context, "getColumns")
   barrier_map <- as.list(worker_invoke(context, "getBarrier"))
+  partition_index <- worker_invoke(context, "getPartitionIndex")
 
   if (!grouped) groups <- list(list(groups))
 
@@ -321,13 +385,23 @@ spark_worker_apply <- function(sc, config) {
 
     colnames(df) <- columnNames[1: length(colnames(df))]
 
-    result <- spark_worker_execute_closure(closure, df, funcContext, grouped_by, barrier_map)
+    result <- spark_worker_execute_closure(
+                closure,
+                df,
+                funcContext,
+                grouped_by,
+                barrier_map,
+                config$fetch_result_as_sdf,
+                partition_index
+              )
 
     result <- spark_worker_add_group_by_column(df, result, grouped, grouped_by)
 
     result <- spark_worker_clean_factors(result)
 
-    result <- spark_worker_apply_maybe_schema(result, config)
+    result <- spark_worker_maybe_serialize_list_cols_as_json(config, result)
+
+    result <- spark_worker_apply_maybe_schema(config, result)
 
     all_results <- rbind(all_results, result)
   }

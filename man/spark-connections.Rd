@@ -18,6 +18,7 @@ spark_connect(
   config = spark_config(),
   extensions = sparklyr::registered_extensions(),
   packages = NULL,
+  scala_version = NULL,
   ...
 )
 
@@ -35,6 +36,7 @@ spark_submit(
   version = NULL,
   config = spark_config(),
   extensions = sparklyr::registered_extensions(),
+  scala_version = NULL,
   ...
 )
 }
@@ -71,8 +73,14 @@ default, all packages enabled through the use of
 \code{"kafka"} to enable Delta Lake or Kafka. Also supports full versions like
 \code{"io.delta:delta-core_2.11:0.4.0"}. This is similar to adding packages into the
 \code{sparklyr.shell.packages} configuration option. Notice that the \code{version}
-parameter is used to choose the correect package, otherwise assumes the latest version
+parameter is used to choose the correct package, otherwise assumes the latest version
 is being used.}
+
+\item{scala_version}{Load the sparklyr jar file that is built with the version of
+Scala specified (this currently only makes sense for Spark 2.4, where sparklyr will
+by default assume Spark 2.4 on current host is built with Scala 2.11, and therefore
+`scala_version = '2.12'` is needed if sparklyr is connecting to Spark 2.4 built with
+Scala 2.12)}
 
 \item{...}{Optional arguments; currently unused.}
 

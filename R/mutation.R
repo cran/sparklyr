@@ -97,7 +97,7 @@ sdf_bind_rows <- function(..., id = NULL) {
       lapply(function(x) invoke(x, "dataType")) %>%
       lapply(function(x) invoke(x, "typeName")) %>%
       unlist()
-    dplyr::data_frame(name = col_names, type = col_types)
+    dplyr::tibble(name = col_names, type = col_types)
   })
 
   master_schema <- schemas %>%
@@ -172,6 +172,7 @@ cbind.tbl_spark <- function(..., deparse.level = 1, name = random_string("sparkl
 
     Reduce(function(x, y) dplyr::inner_join(x, y, by = id),
            dots_with_ids) %>%
+      dplyr::arrange(!!rlang::sym(id)) %>%
       spark_dataframe() %>%
       invoke("drop", id) %>%
       sdf_register()

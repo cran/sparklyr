@@ -1,5 +1,11 @@
 #' Read Spark Configuration
 #'
+#' Read Spark Configuration
+#'
+#' @include avro_utils.R
+
+#' Read Spark Configuration
+#'
 #' @export
 #' @param file Name of the configuration file
 #' @param use_default TRUE to use the built-in defaults provided in this package
@@ -123,10 +129,11 @@ spark_config_value_retries <- function(config, name, default, retries) {
 #' @param config The Spark configuration object.
 #' @param packages A list of named packages or versioned packagese to add.
 #' @param version The version of Spark being used.
+#' @param scala_version Acceptable Scala version of packages to be loaded
 #'
 #' @keywords interenal
 #' @export
-spark_config_packages <- function(config, packages, version) {
+spark_config_packages <- function(config, packages, version, scala_version = NULL) {
   version <- spark_version_latest(version)
 
   if ("kafka" %in% packages) {
@@ -134,10 +141,10 @@ spark_config_packages <- function(config, packages, version) {
 
     if (version < "2.0.0") stop("Kafka requires Spark 2.x")
 
-    kafka_package <- "org.apache.spark:spark-sql-kafka-0-10_2.11:"
-    if (version >= "2.4.1")
-      kafka_package <- "org.apache.spark:spark-sql-kafka-0-10_2.12:"
-
+    kafka_package <- sprintf(
+      "org.apache.spark:spark-sql-kafka-0-10_%s:",
+      if (version >= "2.4.1") "2.12" else scala_version %||% "2.11"
+    )
     kafka_package <- paste0(kafka_package, version)
 
     config$sparklyr.shell.packages <- c(config$sparklyr.shell.packages, kafka_package)
@@ -148,7 +155,26 @@ spark_config_packages <- function(config, packages, version) {
 
     if (version < "2.4.2") stop("Delta Lake requires Spark 2.4.2 or newer")
 
-    config$sparklyr.shell.packages <- c(config$sparklyr.shell.packages, "io.delta:delta-core_2.11:0.4.0")
+    config$sparklyr.shell.packages <- c(
+      config$sparklyr.shell.packages,
+      sprintf(
+        "io.delta:delta-core_%s:0.4.0",
+        if (version >= "3.0.0") "2.12" else scala_version %||% "2.11"
+      )
+    )
+  }
+
+  if ("avro" %in% packages) {
+    packages <- packages[-which(packages == "avro")]
+
+    if (is.null(version))
+      stop("`package = \"avro\")` requires Spark version to be specified via ",
+           "`spark_connect(..., version = <Spark version>)`")
+
+    config$sparklyr.shell.packages <- c(
+      config$sparklyr.shell.packages,
+      spark_avro_package_name(version, scala_version)
+    )
   }
 
   if (!is.null(packages)) {

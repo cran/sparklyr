@@ -3,6 +3,7 @@ package sparklyr
 import java.io.{DataInputStream, DataOutputStream}
 import java.io.{File, FileOutputStream, IOException, FileWriter}
 import java.net.{InetAddress, InetSocketAddress, NetworkInterface, ServerSocket, Socket}
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.TimeUnit
 
 import org.apache.spark.SparkConf
@@ -64,7 +65,7 @@ class Backend() {
 
   private[this] var hostContext: String = null
 
-  private[this] var isRunning: Boolean = true
+  private[this] val isRunning: AtomicBoolean = new AtomicBoolean(true)
   private[this] var isRegistered: Boolean = false
   private[this] var gatewayPort: Int = 0
 
@@ -82,7 +83,7 @@ class Backend() {
 
   private[this] var logger: Logger = new Logger("Session", 0);
 
-  private[this] var oneConnection: Boolean = false;
+  private[this] var oneConnection: AtomicBoolean = new AtomicBoolean(false);
 
   private[this] var defaultTracker: Option[JVMObjectTracker] = None
 
@@ -281,7 +282,7 @@ class Backend() {
       }
 
       initMonitor()
-      while(isRunning) {
+      while (isRunning.get) {
         bind()
       }
     } catch {
@@ -298,7 +299,7 @@ class Backend() {
     new Thread("starting init monitor thread") {
       override def run(): Unit = {
         Thread.sleep(connectionTimeout * 1000)
-        if (!oneConnection && !isService) {
+        if (!oneConnection.get && !isService) {
           val hostAddress: String = try {
             " to " + InetAddress.getLocalHost.getHostAddress.toString + "/" + getPort()
           } catch {
@@ -338,7 +339,7 @@ class Backend() {
     }
     val gatewaySocket = gatewayServerSocket.accept()
 
-    oneConnection = true
+    oneConnection.set(true)
 
     logger.log("accepted connection")
     val buf = new Array[Byte](1024)
@@ -415,7 +416,7 @@ class Backend() {
                   // workers should always terminate but without exceptions
                   if (isWorker) {
                     logger.log("is terminating backend")
-                    isRunning = false
+                    isRunning.set(false)
                     gatewayServerSocket.close()
                   }
                 }
@@ -527,7 +528,8 @@ class Backend() {
     }
 
     if (!isService || isWorker) {
-      isRunning = false
+      isRunning.set(false)
+      gatewayServerSocket.close()
     }
   }
 

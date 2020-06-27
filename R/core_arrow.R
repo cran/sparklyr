@@ -1,88 +1,35 @@
-# Changing this file requires running configure.R to rebuild sources and jars.
+# Changing this file requires running update_embedded_sources.R to rebuild sources and jars.
 
-arrow_write_record_batch <- function(df) {
-  record_batch <- get("record_batch", envir = as.environment(asNamespace("arrow")))
-
-  if (packageVersion("arrow") < "0.12") {
-    write_record_batch <- get("write_record_batch", envir = as.environment(asNamespace("arrow")))
-
-    record <- record_batch(df)
-    write_record_batch(record, raw())
+arrow_write_record_batch <- function(df, spark_version_number = NULL) {
+  arrow_env_vars <- list()
+  if (!is.null(spark_version_number) && spark_version_number < "3.0") {
+    # Spark < 3 uses an old version of Arrow, so send data in the legacy format
+    arrow_env_vars$ARROW_PRE_0_15_IPC_FORMAT <- 1
   }
-  else if (packageVersion("arrow") <= "0.13") {
-    record <- record_batch(df)
 
-    write_arrow <- get("write_arrow", envir = as.environment(asNamespace("arrow")))
-    write_arrow(record, raw())
-  }
-  else {
-    environment <- list()
-    if (packageVersion("arrow") > "0.14") {
-      environment <- list(ARROW_PRE_0_15_IPC_FORMAT = 1)
+  withr::with_envvar(arrow_env_vars, {
+    # New in arrow 0.17: takes a data.frame and returns a raw buffer with Arrow data
+    if ("write_to_raw" %in% ls(envir = asNamespace("arrow"))) {
+      # Fixed in 0.17: arrow doesn't hardcode a GMT timezone anymore
+      # so set the local timezone to any POSIXt columns that don't have one set
+      # https://github.com/sparklyr/sparklyr/issues/2439
+      df[] <- lapply(df, function(x) {
+        if (inherits(x, "POSIXt") && is.null(attr(x, "tzone"))) {
+          attr(x, "tzone") <- Sys.timezone()
+        }
+        x
+      })
+      arrow::write_to_raw(df, format = "stream")
+    } else {
+      arrow::write_arrow(arrow::record_batch(!!!df), raw())
     }
-
-    withr::with_envvar(environment, {
-      record <- record_batch(!!!df)
-
-      write_arrow <- get("write_arrow", envir = as.environment(asNamespace("arrow")))
-      write_arrow(record, raw())
-    })
-  }
+  })
 }
 
 arrow_record_stream_reader <- function(stream) {
-  environment <- list()
-
-  if (packageVersion("arrow") < "0.12") {
-    record_batch_stream_reader <- get("record_batch_stream_reader", envir = as.environment(asNamespace("arrow")))
-  }
-  else {
-    record_batch_stream_reader <- get("RecordBatchStreamReader", envir = as.environment(asNamespace("arrow")))
-  }
-
-  if (packageVersion("arrow") > "0.14") {
-    record_batch_stream_reader <- record_batch_stream_reader$create
-    environment <- list(ARROW_PRE_0_15_IPC_FORMAT = 1)
-  }
-
-  withr::with_envvar(environment, {
-    record_batch_stream_reader(stream)
-  })
+  arrow::RecordBatchStreamReader$create(stream)
 }
 
-arrow_read_record_batch <- function(reader) {
-  environment <- list()
+arrow_read_record_batch <- function(reader) reader$read_next_batch()
 
-  if (packageVersion("arrow") < "0.12") {
-    read_record_batch <- get("read_record_batch", envir = as.environment(asNamespace("arrow")))
-  }
-  else {
-    read_record_batch <- function(reader) reader$read_next_batch()
-  }
-
-  if (packageVersion("arrow") > "0.14") {
-    environment <- list(ARROW_PRE_0_15_IPC_FORMAT = 1)
-  }
-
-  withr::with_envvar(environment, {
-    read_record_batch(reader)
-  })
-}
-
-arrow_as_tibble <- function(record) {
-  environment <- list()
-
-  if (packageVersion("arrow") <= "0.13")
-    as_tibble <- get("as_tibble", envir = as.environment(asNamespace("arrow")))
-  else {
-    as_tibble <- get("as.data.frame", envir = as.environment(asNamespace("arrow")))
-  }
-
-  if (packageVersion("arrow") > "0.14") {
-    environment <- list(ARROW_PRE_0_15_IPC_FORMAT = 1)
-  }
-
-  withr::with_envvar(environment, {
-    as_tibble(record)
-  })
-}
+arrow_as_tibble <- function(record) as.data.frame(record)

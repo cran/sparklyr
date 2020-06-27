@@ -48,6 +48,7 @@ spark_worker_connect <- function(
     method = "shell",
     app_name = NULL,
     config = NULL,
+    state = new.env(),
     # spark_shell_connection
     spark_home = NULL,
     backend = backend,

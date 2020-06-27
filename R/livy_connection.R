@@ -573,7 +573,7 @@ livy_connection_jars <- function(config, version) {
 
     target_jar <- dir(system.file("java", package = "sparklyr"), pattern = paste0("sparklyr-", target_version))
 
-    livy_branch <- spark_config_value(config, "sparklyr.livy.branch", "feature/sparklyr-1.2.0")
+    livy_branch <- spark_config_value(config, "sparklyr.livy.branch", "feature/sparklyr-1.3.0")
 
     livy_jars <- list(paste0(
       "https://github.com/sparklyr/sparklyr/blob/",
@@ -592,7 +592,8 @@ livy_connection <- function(master,
                             app_name,
                             version,
                             hadoop_version,
-                            extensions) {
+                            extensions,
+                            scala_version = NULL) {
 
   if (is.null(version)) {
     stop("Livy connections now require the Spark version to be specified.", call. = FALSE)
@@ -612,7 +613,7 @@ livy_connection <- function(master,
   livy_validate_master(master, config)
 
   if (!spark_config_value(config, "sparklyr.livy.sources", FALSE)) {
-    extensions <- spark_dependencies_from_extensions(version, extensions, config)
+    extensions <- spark_dependencies_from_extensions(version, scala_version, extensions, config)
 
     config$livy.jars <- as.character(c(livy_connection_jars(config, version), extensions$catalog_jars))
 
@@ -830,7 +831,7 @@ livy_load_scala_sources <- function(sc) {
 
 #' @export
 initialize_connection.livy_connection <- function(sc) {
-  tryCatch({
+  withCallingHandlers({
 
     if (spark_config_value(sc$config, "sparklyr.livy.sources", TRUE)) {
       livy_load_scala_sources(sc)
@@ -878,7 +879,11 @@ initialize_connection.livy_connection <- function(sc) {
 
     sc
   }, error = function(err) {
-    stop("Failed to initialize livy connection: ", err$message)
+    stop("Failed to initialize livy connection: ",
+         err$message,
+         "\n\ncallstack:\n",
+         paste(sys.calls(), collapse = "\n")
+    )
   })
 }
 

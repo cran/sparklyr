@@ -14,6 +14,8 @@
 #' @param jar The path to the \code{jar} program to be used, for
 #'   generating of the resulting \code{jar}.
 #' @param jar_dep An optional list of additional \code{jar} dependencies.
+#' @param embedded_srcs Embedded source file(s) under \code{<R package root>/java} to
+#'   be included in the root of the resulting jar file as resources
 #'
 #' @import rprojroot
 #' @import digest
@@ -25,7 +27,8 @@ spark_compile <- function(jar_name,
                           filter = NULL,
                           scalac = NULL,
                           jar = NULL,
-                          jar_dep = NULL)
+                          jar_dep = NULL,
+                          embedded_srcs = "embedded_sources.R")
 {
   default_install <- spark_install_find()
   spark_home <- if (is.null(spark_home) && !is.null(default_install))
@@ -95,6 +98,12 @@ spark_compile <- function(jar_name,
   inst_java_path <- file.path(root, "inst/java")
   ensure_directory(inst_java_path)
 
+  # copy embedded sources to current working directory
+  message("==> embedded source(s): ", paste(embedded_srcs, collapse = ", "), "\n")
+  ensure_directory("sparklyr")
+  for (src in embedded_srcs)
+    file.copy(file.path(scala_path, src), "sparklyr")
+
   # call 'scalac' with CLASSPATH set
   classpath <- Sys.getenv("CLASSPATH")
   Sys.setenv(CLASSPATH = CLASSPATH)
@@ -152,6 +161,7 @@ compile_package_jars <- function(..., spec = NULL) {
     filter        <- el$scala_filter
     jar_path      <- el$jar_path
     jar_dep       <- el$jar_dep
+    embedded_srcs <- el$embedded_srcs
 
     # try to automatically download + install Spark
     if (is.null(spark_home) && !is.null(spark_version)) {
@@ -172,7 +182,8 @@ compile_package_jars <- function(..., spec = NULL) {
       filter = filter,
       scalac = scalac_path,
       jar = jar_path,
-      jar_dep = jar_dep
+      jar_dep = jar_dep,
+      embedded_srcs = embedded_srcs
     )
 
   }
@@ -206,6 +217,8 @@ compile_package_jars <- function(..., spec = NULL) {
 #' @param jar_path The path to the \code{jar} tool to be used
 #'   during compilation of your Spark extension.
 #' @param jar_dep An optional list of additional \code{jar} dependencies.
+#' @param embedded_srcs Embedded source file(s) under \code{<R package root>/java} to
+#'   be included in the root of the resulting jar file as resources
 #'
 #' @export
 spark_compilation_spec <- function(spark_version = NULL,
@@ -214,7 +227,8 @@ spark_compilation_spec <- function(spark_version = NULL,
                                    scala_filter = NULL,
                                    jar_name = NULL,
                                    jar_path = NULL,
-                                   jar_dep = NULL)
+                                   jar_dep = NULL,
+                                   embedded_srcs = "embedded_sources.R")
 {
   spark_home    <- spark_home %||% spark_home_dir(spark_version)
   spark_version <- spark_version %||% spark_version_from_home(spark_home)
@@ -225,7 +239,8 @@ spark_compilation_spec <- function(spark_version = NULL,
        scala_filter = scala_filter,
        jar_name = jar_name,
        jar_path = jar_path,
-       jar_dep = jar_dep)
+       jar_dep = jar_dep,
+       embedded_srcs = embedded_srcs)
 }
 
 find_jar <- function() {
@@ -249,41 +264,58 @@ find_jar <- function() {
 spark_default_compilation_spec <- function(
   pkg = infer_active_package_name(),
   locations = NULL) {
-  list(
-    spark_compilation_spec(
-      spark_version = "1.5.2",
-      scalac_path = find_scalac("2.10", locations),
-      jar_name = sprintf("%s-1.5-2.10.jar", pkg),
-      jar_path = find_jar(),
-      scala_filter = make_version_filter("1.5.2")
+  c(
+    list(
+      spark_compilation_spec(
+        spark_version = "1.5.2",
+        scalac_path = find_scalac("2.10", locations),
+        jar_name = sprintf("%s-1.5-2.10.jar", pkg),
+        jar_path = find_jar(),
+        scala_filter = make_version_filter("1.5.2"),
+        embedded_srcs = c(),
+      ),
+      spark_compilation_spec(
+        spark_version = "1.6.0",
+        scalac_path = find_scalac("2.10", locations),
+        jar_name = sprintf("%s-1.6-2.10.jar", pkg),
+        jar_path = find_jar(),
+        scala_filter = make_version_filter("1.6.1")
+      ),
+      spark_compilation_spec(
+        spark_version = "2.0.0",
+        scalac_path = find_scalac("2.11", locations),
+        jar_name = sprintf("%s-2.0-2.11.jar", pkg),
+        jar_path = find_jar(),
+        scala_filter = make_version_filter("2.0.0")
+      ),
+      spark_compilation_spec(
+        spark_version = "2.3.0",
+        scalac_path = find_scalac("2.11", locations),
+        jar_name = sprintf("%s-2.3-2.11.jar", pkg),
+        jar_path = find_jar(),
+        scala_filter = make_version_filter("2.3.0")
+      )
     ),
-    spark_compilation_spec(
-      spark_version = "1.6.0",
-      scalac_path = find_scalac("2.10", locations),
-      jar_name = sprintf("%s-1.6-2.10.jar", pkg),
-      jar_path = find_jar(),
-      scala_filter = make_version_filter("1.6.1")
+    lapply(
+      c("2.11", "2.12"),
+      function(scala_version) {
+        spark_compilation_spec(
+          spark_version = "2.4.0",
+          scalac_path = find_scalac(scala_version, locations),
+          jar_name = sprintf("%s-2.4-%s.jar", pkg, scala_version),
+          jar_path = find_jar(),
+          scala_filter = make_version_filter("2.4.0")
+        )
+      }
     ),
-    spark_compilation_spec(
-      spark_version = "2.0.0",
-      scalac_path = find_scalac("2.11", locations),
-      jar_name = sprintf("%s-2.0-2.11.jar", pkg),
-      jar_path = find_jar(),
-      scala_filter = make_version_filter("2.0.0")
-    ),
-    spark_compilation_spec(
-      spark_version = "2.3.0",
-      scalac_path = find_scalac("2.11", locations),
-      jar_name = sprintf("%s-2.3-2.11.jar", pkg),
-      jar_path = find_jar(),
-      scala_filter = make_version_filter("2.3.0")
-    ),
-    spark_compilation_spec(
-      spark_version = "2.4.0",
-      scalac_path = find_scalac("2.11", locations),
-      jar_name = sprintf("%s-2.4-2.11.jar", pkg),
-      jar_path = find_jar(),
-      scala_filter = make_version_filter("2.4.0")
+    list(
+      spark_compilation_spec(
+        spark_version = "3.0.0",
+        scalac_path = find_scalac("2.12", locations),
+        jar_name = sprintf("%s-3.0-2.12.jar", pkg),
+        jar_path = find_jar(),
+        scala_filter = make_version_filter("3.0.0")
+      )
     )
   )
 }
@@ -445,4 +477,19 @@ make_version_filter <- function(version_upper) {
       }
     }, files)
   }
+}
+
+#' list all sparklyr-*.jar files that have been built
+list_sparklyr_jars <- function() {
+  pkg_root <- rprojroot::find_package_root_file()
+
+  sparklyr_jars <- normalizePath(
+    dir(
+      file.path(pkg_root, "inst", "java"),
+      full.names = TRUE,
+      pattern = "sparklyr-.+\\.jar"
+    )
+  )
+
+  sparklyr_jars
 }

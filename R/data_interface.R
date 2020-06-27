@@ -1,3 +1,6 @@
+#' @include avro_utils.R
+#' @include spark_apply.R
+
 # This function handles backward compatibility to support
 # unnamed datasets while not breaking sparklyr 0.9 param
 # signature. Returns a c(name, path) tuple.
@@ -441,7 +444,8 @@ spark_data_write_generic <- function(df,
                                      mode = NULL,
                                      writeOptions = list(),
                                      partition_by = NULL,
-                                     is_jdbc = FALSE) {
+                                     is_jdbc = FALSE,
+                                     save_args = list()) {
   options <- invoke(df, "write")
 
   options <- spark_data_apply_mode(options, mode)
@@ -470,7 +474,7 @@ spark_data_write_generic <- function(df,
   else {
     options <- invoke(options, fileMethod, path)
     # Need to call save explicitly in case of generic 'format'
-    if(fileMethod == "format") invoke(options, "save")
+    if (fileMethod == "format") do.call(invoke, c(options, "save", save_args))
   }
 
   invisible(TRUE)
@@ -746,7 +750,7 @@ spark_write_source.tbl_spark <- function(x,
                                          partition_by = NULL,
                                          ...) {
   sqlResult <- spark_sqlresult_from_dplyr(x)
-  spark_data_write_generic(sqlResult, source, "format", mode, options, partition_by)
+  spark_data_write_generic(sqlResult, source, "format", mode, options, partition_by, ...)
 }
 
 #' @export
@@ -757,7 +761,7 @@ spark_write_source.spark_jobj <- function(x,
                                           partition_by = NULL,
                                           ...) {
   spark_expect_jobj_class(x, "org.apache.spark.sql.DataFrame")
-  spark_data_write_generic(x, source, "format", mode, options, partition_by)
+  spark_data_write_generic(x, source, "format", mode, options, partition_by, ...)
 }
 
 #' Read a Text file into a Spark DataFrame
@@ -990,4 +994,313 @@ spark_read_delta <- function(sc,
                     repartition = repartition,
                     memory = memory,
                     overwrite = overwrite)
+}
+
+#' Read Apache Avro data into a Spark DataFrame.
+#'
+#' Read Apache Avro data into a Spark DataFrame.
+#' Notice this functionality requires the Spark connection \code{sc} to be instantiated with either
+#' an explicitly specified Spark version (i.e.,
+#' \code{spark_connect(..., version = <version>, packages = c("avro", <other package(s)>), ...)})
+#' or a specific version of Spark avro package to use (e.g.,
+#' \code{spark_connect(..., packages = c("org.apache.spark:spark-avro_2.12:3.0.0", <other package(s)>), ...)}).
+#'
+#' @inheritParams spark_read_csv
+#' @param avro_schema Optional Avro schema in JSON format
+#' @param ignore_extension If enabled, all files with and without .avro extension
+#'   are loaded (default: \code{TRUE})
+#'
+#' @family Spark serialization routines
+#'
+#' @export
+spark_read_avro <- function(sc,
+                            name = NULL,
+                            path = name,
+                            avro_schema = NULL,
+                            ignore_extension = TRUE,
+                            repartition = 0,
+                            memory = TRUE,
+                            overwrite = TRUE) {
+  validate_spark_avro_pkg_version(sc)
+
+  options <- list()
+  if (!is.null(avro_schema)) {
+    if (!is.character(avro_schema))
+      stop("Expect Avro schema to be a JSON string")
+
+    options$avroSchema <- avro_schema
+  }
+  options$ignoreExtension <- ignore_extension
+
+  spark_read_source(sc,
+                    name = name,
+                    path = path,
+                    source = "avro",
+                    options = options,
+                    repartition = repartition,
+                    memory = memory,
+                    overwrite = overwrite)
+}
+
+#' Serialize a Spark DataFrame into Apache Avro format
+#'
+#' Serialize a Spark DataFrame into Apache Avro format.
+#' Notice this functionality requires the Spark connection \code{sc} to be instantiated with either
+#' an explicitly specified Spark version (i.e.,
+#' \code{spark_connect(..., version = <version>, packages = c("avro", <other package(s)>), ...)})
+#' or a specific version of Spark avro package to use (e.g.,
+#' \code{spark_connect(..., packages = c("org.apache.spark:spark-avro_2.12:3.0.0", <other package(s)>), ...)}).
+#'
+#' @inheritParams spark_write_csv
+#' @param avro_schema Optional Avro schema in JSON format
+#' @param record_name Optional top level record name in write result (default: "topLevelRecord")
+#' @param record_namespace Record namespace in write result (default: "")
+#' @param compression Compression codec to use (default: "snappy")
+#'
+#' @family Spark serialization routines
+#'
+#' @export
+spark_write_avro <- function(x,
+                             path,
+                             avro_schema = NULL,
+                             record_name = "topLevelRecord",
+                             record_namespace = "",
+                             compression = "snappy",
+                             partition_by = NULL) {
+  validate_spark_avro_pkg_version(spark_connection(x))
+
+  options <- list()
+  if (!is.null(avro_schema)) {
+    if (!is.character(avro_schema))
+      stop("Expect Avro schema to be a JSON string")
+
+    options$avroSchema <- avro_schema
+  }
+  options$recordName <- record_name
+  options$recordNamespace <- record_namespace
+  options$compression <- compression
+
+  spark_write_source(
+    x,
+    "avro",
+    options = options,
+    partition_by = partition_by,
+    save_args = list(path)
+  )
+}
+
+#' Read file(s) into a Spark DataFrame using a custom reader
+#'
+#' Run a custom R function on Spark workers to ingest data from one or more files
+#' into a Spark DataFrame, assuming all files follow the same schema.
+#'
+#' @param sc A \code{spark_connection}.
+#' @param paths A character vector of one or more file URIs (e.g.,
+#'   c("hdfs://localhost:9000/file.txt", "hdfs://localhost:9000/file2.txt"))
+#' @param reader A self-contained R function that takes a single file URI as
+#'   argument and returns the data read from that file as a data frame.
+#' @param columns a named list of column names and column types of the resulting
+#'   data frame (e.g., list(column_1 = "integer", column_2 = "character")), or a
+#'   list of column names only if column types should be inferred from the data
+#'   (e.g., list("column_1", "column_2"), or NULL if column types should be
+#'   inferred and resulting data frame can have arbitrary column names
+#' @param packages A list of R packages to distribute to Spark workers
+#' @param ... Optional arguments; currently unused.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' library(sparklyr)
+#' sc <- spark_connect(
+#'   master = "yarn",
+#'   spark_home = "~/spark/spark-2.4.5-bin-hadoop2.7"
+#' )
+#'
+#' # This is a contrived example to show reader tasks will be distributed across
+#' # all Spark worker nodes
+#' spark_read(
+#'   sc,
+#'   rep("/dev/null", 10),
+#'   reader = function(path) system("hostname", intern = TRUE),
+#'   columns = c(hostname = "string")
+#' ) %>% sdf_collect()
+#' }
+#'
+#' @family Spark serialization routines
+#'
+#' @export
+spark_read <- function(sc,
+                       paths,
+                       reader,
+                       columns,
+                       packages = TRUE,
+                       ...) {
+  assert_that(is.function(reader) || is.language(reader))
+
+  args <- list(...)
+  paths <- lapply(paths, as.list)
+  if (!identical(names(columns), NULL)) {
+    # If columns is of the form c("col_name1", "col_name2", ...)
+    # then leave it as-is
+    # Otherwise if it is of the form c(col_name1 = "col_type1", ...)
+    # or list(col_name1 = "col_type1", ...), etc, then make sure it gets coerced
+    columns <- as.list(columns)
+  }
+
+  rdd_base <- invoke_static(
+    sc,
+    "sparklyr.Utils",
+    "createDataFrame",
+    spark_context(sc),
+    paths,
+    as.integer(length(paths))
+  )
+
+  if (is.language(reader)) f <- rlang::as_closure(reader)
+  reader <- serialize(reader, NULL)
+  worker_impl <- function(df, rdr) {
+    rdr <- unserialize(rdr)
+    do.call(rbind, lapply(df$path, function(path) rdr(path)))
+  }
+  worker_impl <- serialize(worker_impl, NULL)
+
+  worker_port <- as.integer(
+    spark_config_value(sc$config, "sparklyr.gateway.port", "8880")
+  )
+
+  # disable package distribution for local connections
+  if (spark_master_is_local(sc$master)) packages <- FALSE
+
+  bundle_path <- get_spark_apply_bundle_path(sc, packages)
+
+  serialized_worker_context <- serialize(
+    list(column_types = list("character"), user_context = reader), NULL
+  )
+
+  rdd <- invoke_static(
+    sc,
+    "sparklyr.WorkerHelper",
+    "computeRdd",
+    rdd_base,
+    worker_impl,
+    spark_apply_worker_config(
+      sc,
+      args$debug,
+      args$profile
+    ),
+    as.integer(worker_port),
+    list("path"),
+    list(),
+    raw(),
+    bundle_path,
+    new.env(),
+    as.integer(60),
+    serialized_worker_context,
+    new.env()
+  )
+  rdd <- invoke(rdd, "cache")
+  schema <- spark_schema_from_rdd(sc, rdd, columns)
+  sdf <- invoke(hive_context(sc), "createDataFrame", rdd, schema) %>%
+    sdf_register()
+
+  sdf
+}
+
+#' Write Spark DataFrame to file using a custom writer
+#'
+#' Run a custom R function on Spark worker to write a Spark DataFrame
+#' into file(s). If Spark's speculative execution feature is enabled (i.e.,
+#' `spark.speculation` is true), then each write task may be executed more than
+#' once and the user-defined writer function will need to ensure no concurrent
+#' writes happen to the same file path (e.g., by appending UUID to each file name).
+#'
+#' @param x A Spark Dataframe to be saved into file(s)
+#' @param writer A writer function with the signature function(partition, path)
+#'   where \code{partition} is a R dataframe containing all rows from one partition
+#'   of the original Spark Dataframe \code{x} and path is a string specifying the
+#'   file to write \code{partition} to
+#' @param paths A single destination path or a list of destination paths, each one
+#'   specifying a location for a partition from \code{x} to be written to. If
+#'   number of partition(s) in \code{x} is not equal to \code{length(paths)} then
+#'   \code{x} will be re-partitioned to contain \code{length(paths)} partition(s)
+#' @param packages Boolean to distribute \code{.libPaths()} packages to each node,
+#'   a list of packages to distribute, or a package bundle created with
+#'
+#' @examples
+#' \dontrun{
+#'
+#' library(sparklyr)
+#'
+#' sc <- spark_connect(master = "local[3]")
+#'
+#' # copy some test data into a Spark Dataframe
+#' sdf <- sdf_copy_to(sc, iris, overwrite = TRUE)
+#'
+#' # create a writer function
+#' writer <- function(df, path) {
+#'   write.csv(df, path)
+#' }
+#'
+#' spark_write(
+#'   sdf,
+#'   writer,
+#'   # re-partition sdf into 3 partitions and write them to 3 separate files
+#'   paths = list("file:///tmp/file1", "file:///tmp/file2", "file:///tmp/file3"),
+#' )
+#'
+#' spark_write(
+#'   sdf,
+#'   writer,
+#'   # save all rows into a single file
+#'   paths = list("file:///tmp/all_rows")
+#' )
+#' }
+#'
+#' @export
+spark_write <- function(x,
+                        writer,
+                        paths,
+                        packages = NULL) {
+  UseMethod("spark_write")
+}
+
+#' @export
+spark_write.tbl_spark <- function(x,
+                                  writer,
+                                  paths,
+                                  packages = NULL) {
+  if (length(paths) == 0)
+    stop("'paths' must contain at least 1 path")
+
+  assert_that(is.function(writer) || is.language(writer))
+
+  paths <- spark_normalize_path(paths)
+  dst_num_partitions <- length(paths)
+  src_num_partitions <- sdf_num_partitions(x)
+
+  if (!identical(src_num_partitions, dst_num_partitions))
+    x <- sdf_repartition(x, dst_num_partitions)
+
+  spark_apply(
+    x,
+    function(df, ctx, partition_index) {
+      # Spark partition index is 0-based
+      ctx$writer(df, ctx$paths[[partition_index + 1]])
+    },
+    context = list(writer = writer, paths = as.list(paths)),
+    packages = packages,
+    fetch_result_as_sdf = FALSE,
+    partition_index_param = "partition_index"
+  )
+}
+
+#' @export
+spark_write.spark_jobj <- function(x,
+                                   writer,
+                                   paths,
+                                   packages = NULL) {
+  spark_expect_jobj_class(x, "org.apache.spark.sql.DataFrame")
+  x %>%
+    sdf_register() %>%
+    spark_write(writer, paths, packages)
 }

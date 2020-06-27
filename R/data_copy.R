@@ -1,12 +1,4 @@
-
-spark_data_build_types <- function(sc, columns) {
-  names <- names(columns)
-  fields <- lapply(names, function(name) {
-    invoke_static(sc, "sparklyr.SQLUtils", "createStructField", name, columns[[name]][[1]], TRUE)
-  })
-
-  invoke_static(sc, "sparklyr.SQLUtils", "createStructType", fields)
-}
+#' @include spark_data_build_types.R
 
 spark_serialize_csv_file <- function(sc, df, columns, repartition) {
 
@@ -41,12 +33,16 @@ spark_serialize_csv_file <- function(sc, df, columns, repartition) {
 spark_serialize_csv_string <- function(sc, df, columns, repartition) {
   structType <- spark_data_build_types(sc, columns)
 
-  # Map date and time columns as standard doubles
+  # Map date and time columns as standard doubles or strings
   df <- as.data.frame(lapply(df, function(e) {
-    if (inherits(e, "POSIXt") || inherits(e, "Date"))
+    if (inherits(e, "POSIXt"))
       sapply(e, function(t) {
         class(t) <- NULL
         t
+      })
+    else if (inherits(e, "Date"))
+      sapply(e, function(t) {
+        as.character(t)
       })
     else
       e
@@ -75,12 +71,16 @@ spark_serialize_csv_string <- function(sc, df, columns, repartition) {
 spark_serialize_csv_scala <- function(sc, df, columns, repartition) {
   structType <- spark_data_build_types(sc, columns)
 
-  # Map date and time columns as standard doubles
+  # Map date and time columns as standard doubles or strings
   df <- as.data.frame(lapply(df, function(e) {
-    if (inherits(e, "POSIXt") || inherits(e, "Date"))
+    if (inherits(e, "POSIXt"))
       sapply(e, function(t) {
         class(t) <- NULL
         t
+      })
+    else if (inherits(e, "Date"))
+      sapply(e, function(t) {
+        as.character(t)
       })
     else
       e

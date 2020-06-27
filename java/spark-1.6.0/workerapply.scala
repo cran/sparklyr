@@ -22,15 +22,15 @@ class WorkerApply(
   options: Map[String, String],
   timeZoneId: String,
   schema: StructType,
-  genBarrierMap: () => Map[String, Any]
+  genBarrierMap: () => Map[String, Any],
+  genPartitionIndex: () => Int
   ) extends java.io.Serializable {
 
   private[this] var exception: Option[Exception] = None
   private[this] var backendPort: Int = 0
 
   def workerSourceFile(rscript: Rscript, sessionId: Int): String = {
-    val rsources = new Sources()
-    val source = rsources.sources
+    val source = Sources.sources
 
     val tempFile: File = new File(
       rscript.getScratchDir() + File.separator + "sparkworker_" + sessionId.toString + ".R")
@@ -62,7 +62,8 @@ class WorkerApply(
       timeZoneId,
       schema,
       options,
-      genBarrierMap()
+      genBarrierMap(),
+      genPartitionIndex()
     )
 
     val tracker = new JVMObjectTracker()

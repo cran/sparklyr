@@ -64,6 +64,7 @@ For instructions on how to configure \code{s3n://} check the hadoop documentatio
 \seealso{
 Other Spark serialization routines: 
 \code{\link{spark_load_table}()},
+\code{\link{spark_read_avro}()},
 \code{\link{spark_read_csv}()},
 \code{\link{spark_read_delta}()},
 \code{\link{spark_read_jdbc}()},
@@ -73,7 +74,9 @@ Other Spark serialization routines:
 \code{\link{spark_read_source}()},
 \code{\link{spark_read_table}()},
 \code{\link{spark_read_text}()},
+\code{\link{spark_read}()},
 \code{\link{spark_save_table}()},
+\code{\link{spark_write_avro}()},
 \code{\link{spark_write_csv}()},
 \code{\link{spark_write_delta}()},
 \code{\link{spark_write_jdbc}()},

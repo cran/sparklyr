@@ -4,6 +4,7 @@
 #'
 #' @name spark_connection-class
 #' @exportClass spark_connection
+#' @include spark_version.R
 NULL
 
 methods::setOldClass(c("livy_connection", "spark_connection"))
@@ -22,9 +23,9 @@ spark_version_numeric <- function(version) {
   numeric_version(gsub("[-_a-zA-Z]", "", version))
 }
 
-spark_default_app_jar <- function(version) {
+spark_default_app_jar <- function(version, scala_version = NULL) {
   version <- version %||% .spark_default_version
-  sparklyr_jar_path(spark_version_numeric(version))
+  sparklyr_jar_path(spark_version_numeric(version), scala_version)
 }
 
 #' Manage Spark Connections
@@ -57,8 +58,13 @@ spark_default_app_jar <- function(version) {
 #'   \code{"kafka"} to enable Delta Lake or Kafka. Also supports full versions like
 #'   \code{"io.delta:delta-core_2.11:0.4.0"}. This is similar to adding packages into the
 #'   \code{sparklyr.shell.packages} configuration option. Notice that the \code{version}
-#'   parameter is used to choose the correect package, otherwise assumes the latest version
+#'   parameter is used to choose the correct package, otherwise assumes the latest version
 #'   is being used.
+#' @param scala_version Load the sparklyr jar file that is built with the version of
+#'   Scala specified (this currently only makes sense for Spark 2.4, where sparklyr will
+#'   by default assume Spark 2.4 on current host is built with Scala 2.11, and therefore
+#'   `scala_version = '2.12'` is needed if sparklyr is connecting to Spark 2.4 built with
+#'   Scala 2.12)
 #'
 #' @param ... Optional arguments; currently unused.
 #'
@@ -114,6 +120,7 @@ spark_connect <- function(master,
                           config = spark_config(),
                           extensions = sparklyr::registered_extensions(),
                           packages = NULL,
+                          scala_version = NULL,
                           ...)
 {
   # validate method
@@ -146,7 +153,13 @@ spark_connect <- function(master,
   }
 
   # add packages to config
-  if (!is.null(packages)) config <- spark_config_packages(config, packages, version)
+  if (!is.null(packages))
+    config <- spark_config_packages(
+      config,
+      packages,
+      version %||% spark_version_from_home(spark_home),
+      scala_version
+    )
 
   if (is.null(spark_home) || !nzchar(spark_home)) spark_home <- spark_config_value(config, "spark.home", "")
 
@@ -202,17 +215,19 @@ spark_connect <- function(master,
                                "sparklyr.gateway.remote",
                                spark_master_is_yarn_cluster(master, config)),
                              extensions = extensions,
-                             batch = NULL)
+                             batch = NULL,
+                             scala_version = scala_version)
     if (method != "shell") {
       scon$method <- method
     }
   } else if (method == "livy") {
-    scon <- livy_connection(master = master,
-                            config = config,
+    scon <- livy_connection(master,
+                            config,
                             app_name,
                             version,
                             hadoop_version ,
-                            extensions)
+                            extensions,
+                            scala_version = scala_version)
   } else if (method == "gateway") {
     scon <- gateway_connection(master = master, config = config)
   } else if (method == "databricks") {
@@ -231,6 +246,11 @@ spark_connect <- function(master,
     stop("Unsupported connection method '", method, "'")
   }
 
+  scon$state$hive_support_enabled <- spark_config_value(
+    config,
+    name = "sparklyr.connect.enablehivesupport",
+    default = TRUE
+  )
   scon <- initialize_connection(scon)
 
   # initialize extensions
