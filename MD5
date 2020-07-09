@@ -1,7 +1,7 @@
-eb77308d57a3e89946eb3602e144d557 *DESCRIPTION
+29cea5ca87353dc3cbc18a7493af3f4f *DESCRIPTION
 3c340760b90af6b5cd5c7a9cc32bb228 *LICENSE
 fb1d7b0251a4a660c9e491bb0b643d80 *NAMESPACE
-d15b784efc13539e2bd0d8f0e514cdd0 *NEWS.md
+8b2c5544f5f9dea75a0226ff27d37f22 *NEWS.md
 66cd958b5b6efe0ba5cd63747ced86c9 *R/arrow_data.R
 a47b9a3da657488c252c82caeabced04 *R/avro_utils.R
 063538fece1f383c3610becf2fdff792 *R/config_settings.R
@@ -31,7 +31,7 @@ d9e42bd9e213b6786c3a9ef56c47e6a5 *R/dbi_spark_table.R
 86b8649208fff5c345e98174ddfd5e81 *R/dbi_spark_transactions.R
 00af6f20ee0f39f9efec5e05aeed7bec *R/do_spark.R
 c435f9ca3e4168ce4d6baca0a0c8965c *R/dplyr_do.R
-56342ebf90752332e5b14dfd0a183f71 *R/dplyr_hof.R
+8de593cc815c8127d66a4944358a358c *R/dplyr_hof.R
 99bf549ff1e497c27a722859cf683154 *R/dplyr_spark.R
 cd08074e66f5d8b79f7e0c5bef3bf264 *R/dplyr_spark_connection.R
 62aa6b126a903ece1c2e1a68f9535276 *R/dplyr_spark_data.R

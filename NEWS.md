@@ -1,3 +1,11 @@
+# Sparklyr 1.3.1
+
+### Distributed R
+
+- Fixed a bug in ordering of parameters for a lamba expression when the lambda
+  expression passed to a `hof_*` method is specified with a R formula and the
+  lambda takes 2 parameters
+
 # Sparklyr 1.3.0
 
 ### Spark ML
@@ -21,6 +29,8 @@
   column-by-column, and fetching rows using iterator instead of collecting all
   rows into memory
 
+- Support for `partition` when using barrier execution in `spark_apply` (#2454)
+
 ### Connections
 
 - Sparklyr can now connect with Spark 2.4 built with Scala 2.12 using
@@ -39,6 +49,8 @@
 
 - Embedded nul bytes are removed from strings when reading strings from Spark to R
   (#2250)
+
+- Support to collect objectts of type `SeqWrapper` (#2441)
 
 ### Data
 
@@ -74,17 +86,6 @@
 - A mechanism is created to verify embedded sources in `sparklyr-*.jar` files
   are in-sync with current R source files and this verification is now part of
   the Github CI workflow for `sparklyr`
-
-
-# Sparklyr 1.2.0.9000
-
-### Serialization
-
-- Support to collect objectts of type `SeqWrapper` (#2441)
-
-### Distributed R
-
-- Support for `partition` when using barrier execution in `spark_apply` (#2454)
 
 # Sparklyr 1.2.0
 
