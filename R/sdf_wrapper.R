@@ -26,23 +26,44 @@ spark_dataframe.spark_connection <- function(x, sql = NULL, ...) {
 #' \href{http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.types.package}{Spark Scala API Documentation}
 #' for information on what types are available and exposed by Spark.
 #'
+#' @param expand_nested_cols Whether to expand columns containing nested array
+#' of structs (which are usually created by tidyr::nest on a Spark data frame)
+#'
 #' @return An \R \code{list}, with each \code{list} element describing the
 #'   \code{name} and \code{type} of a column.
 #'
 #' @template roxlate-ml-x
 #'
 #' @export
-sdf_schema <- function(x) {
-  jobj <- spark_dataframe(x)
-  schema <- invoke(jobj, "schema")
-  fields <- invoke(schema, "fields")
-  list <- lapply(fields, function(field) {
-    type <- invoke(invoke(field, "dataType"), "toString")
+sdf_schema <- function(x, expand_nested_cols = FALSE) {
+  x %>%
+    spark_dataframe() %>%
+    invoke("schema") %>%
+    struct_type_to_schema(expand_nested_cols)
+}
+
+is_struct_type_arr <- function(data_type_obj) {
+  invoke(data_type_obj, "catalogString") %>%
+    grepl("^array<struct<.*>>$", ., ignore.case = TRUE)
+}
+
+struct_type_to_schema <- function(x, expand_nested_cols) {
+  fields <- invoke(x, "fields")
+  fields_list <- lapply(fields, function(field) {
+    type <- {
+      data_type_obj <- invoke(field, "dataType")
+      if (expand_nested_cols && is_struct_type_arr(data_type_obj)) {
+        struct_type_to_schema(data_type_obj %>% invoke("elementType"), TRUE)
+      } else {
+        invoke(data_type_obj, "toString")
+      }
+    }
     name <- invoke(field, "name")
     list(name = name, type = type)
   })
-  names(list) <- unlist(lapply(list, `[[`, "name"))
-  list
+  names(fields_list) <- unlist(lapply(fields_list, `[[`, "name"))
+
+  fields_list
 }
 
 sdf_deserialize_column <- function(column, sc) {
@@ -106,16 +127,19 @@ sdf_collect <- function(object, impl = c("row-wise", "row-wise-iter", "column-wi
   impl <- match.arg(impl)
   sc <- spark_connection(object)
 
-  if (sdf_is_streaming(object))
+  if (sdf_is_streaming(object)) {
     sdf_collect_stream(object, ...)
-  else if (arrow_enabled(sc, object) && !identical(args$arrow, FALSE))
+  } else if (arrow_enabled(sc, object) && !identical(args$arrow, FALSE)) {
     arrow_collect(object, ...)
-  else
+  } else {
     sdf_collect_static(object, impl, ...)
+  }
 }
 
 sdf_collect_data_frame <- function(sdf, collected) {
-  if (identical(collected, NULL)) return(invisible(NULL))
+  if (identical(collected, NULL)) {
+    return(invisible(NULL))
+  }
   sc <- spark_connection(sdf)
 
   # deserialize columns as needed (string columns will enter as
@@ -237,8 +261,7 @@ sdf_collect_static <- function(object, impl, ...) {
 # Split a Spark DataFrame
 sdf_split <- function(object,
                       weights = c(0.5, 0.5),
-                      seed = sample(.Machine$integer.max, 1))
-{
+                      seed = sample(.Machine$integer.max, 1)) {
   jobj <- spark_dataframe(object)
   invoke(jobj, "randomSplit", as.list(weights), as.integer(seed))
 }
@@ -258,8 +281,8 @@ sdf_split <- function(object,
 #'   to be called; a named \R list mapping column names to an aggregation method,
 #'   or an \R function that is invoked on the grouped dataset.
 #'
-#'@examples
-#'\dontrun{
+#' @examples
+#' \dontrun{
 #' library(sparklyr)
 #' library(dplyr)
 #'
@@ -268,16 +291,18 @@ sdf_split <- function(object,
 #'
 #' # aggregating by mean
 #' iris_tbl %>%
-#'   mutate(Petal_Width = ifelse(Petal_Width > 1.5, "High", "Low" )) %>%
+#'   mutate(Petal_Width = ifelse(Petal_Width > 1.5, "High", "Low")) %>%
 #'   sdf_pivot(Petal_Width ~ Species,
-#'             fun.aggregate = list(Petal_Length = "mean"))
+#'     fun.aggregate = list(Petal_Length = "mean")
+#'   )
 #'
 #' # aggregating all observations in a list
 #' iris_tbl %>%
-#'   mutate(Petal_Width = ifelse(Petal_Width > 1.5, "High", "Low" )) %>%
+#'   mutate(Petal_Width = ifelse(Petal_Width > 1.5, "High", "Low")) %>%
 #'   sdf_pivot(Petal_Width ~ Species,
-#'             fun.aggregate = list(Petal_Length = "collect_list"))
-#'}
+#'     fun.aggregate = list(Petal_Length = "collect_list")
+#'   )
+#' }
 #'
 #' @export
 sdf_pivot <- function(x, formula, fun.aggregate = "count") {
@@ -286,43 +311,50 @@ sdf_pivot <- function(x, formula, fun.aggregate = "count") {
   # parse formulas of form "abc + def ~ ghi + jkl"
   deparsed <- paste(deparse(formula), collapse = " ")
   splat <- strsplit(deparsed, "~", fixed = TRUE)[[1]]
-  if (length(splat) != 2)
+  if (length(splat) != 2) {
     stop("expected a two-sided formula; got '", deparsed, "'")
+  }
 
   grouped_cols <- trim_whitespace(strsplit(splat[[1]], "[+*]")[[1]])
   pivot_cols <- trim_whitespace(strsplit(splat[[2]], "[+*]", fixed = TRUE)[[1]])
 
   # ensure no duplication of variables on each side
   intersection <- intersect(grouped_cols, pivot_cols)
-  if (length(intersection))
+  if (length(intersection)) {
     stop("variables on both sides of forumla: ", paste(deparse(intersection), collapse = " "))
+  }
 
   # ensure variables exist in dataset
   nm <- as.character(invoke(sdf, "columns"))
   all_cols <- c(grouped_cols, pivot_cols)
   missing_cols <- setdiff(all_cols, nm)
-  if (length(missing_cols))
+  if (length(missing_cols)) {
     stop("missing variables in dataset: ", paste(deparse(missing_cols), collapse = " "))
+  }
 
   # ensure pivot is length one (for now)
-  if (length(pivot_cols) != 1)
+  if (length(pivot_cols) != 1) {
     stop("pivot column is not length one")
+  }
 
   # generate pivoted dataset
   grouped <- sdf %>%
-    invoke("%>%",
-           list("groupBy", grouped_cols[[1]], as.list(grouped_cols[-1])),
-           list("pivot", pivot_cols[[1]]))
+    invoke(
+      "%>%",
+      list("groupBy", grouped_cols[[1]], as.list(grouped_cols[-1])),
+      list("pivot", pivot_cols[[1]])
+    )
 
   # perform aggregation
   fun.aggregate <- fun.aggregate %||% "count"
   result <- if (is.function(fun.aggregate)) {
     fun.aggregate(grouped)
   } else if (is.character(fun.aggregate)) {
-    if (length(fun.aggregate) == 1)
+    if (length(fun.aggregate) == 1) {
       invoke(grouped, fun.aggregate[[1]])
-    else
+    } else {
       invoke(grouped, fun.aggregate[[1]], as.list(fun.aggregate[-1]))
+    }
   } else if (is.list(fun.aggregate)) {
     invoke(grouped, "agg", list2env(fun.aggregate))
   } else {
@@ -348,8 +380,7 @@ sdf_pivot <- function(x, formula, fun.aggregate = "count") {
 #' @export
 sdf_separate_column <- function(x,
                                 column,
-                                into = NULL)
-{
+                                into = NULL) {
   column <- cast_string(column)
 
   # extract spark dataframe reference, connection

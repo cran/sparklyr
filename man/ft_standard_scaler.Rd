@@ -64,11 +64,15 @@ iris_tbl <- sdf_copy_to(sc, iris, name = "iris_tbl", overwrite = TRUE)
 features <- c("Sepal_Length", "Sepal_Width", "Petal_Length", "Petal_Width")
 
 iris_tbl \%>\%
-  ft_vector_assembler(input_col = features,
-                      output_col = "features_temp") \%>\%
-  ft_standard_scaler(input_col = "features_temp",
-                     output_col = "features",
-                     with_mean = TRUE)
+  ft_vector_assembler(
+    input_col = features,
+    output_col = "features_temp"
+  ) \%>\%
+  ft_standard_scaler(
+    input_col = "features_temp",
+    output_col = "features",
+    with_mean = TRUE
+  )
 }
 
 }
@@ -102,6 +106,7 @@ Other feature transformers:
 \code{\link{ft_quantile_discretizer}()},
 \code{\link{ft_r_formula}()},
 \code{\link{ft_regex_tokenizer}()},
+\code{\link{ft_robust_scaler}()},
 \code{\link{ft_sql_transformer}()},
 \code{\link{ft_stop_words_remover}()},
 \code{\link{ft_string_indexer}()},

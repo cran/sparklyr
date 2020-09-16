@@ -53,13 +53,13 @@ implementing the associated method on \code{sdf_import}.
 
 sc <- spark_connect(master = "spark://HOST:PORT")
 sdf_copy_to(sc, iris)
-
 }
 \seealso{
 Other Spark data frames: 
 \code{\link{sdf_random_split}()},
 \code{\link{sdf_register}()},
 \code{\link{sdf_sample}()},
-\code{\link{sdf_sort}()}
+\code{\link{sdf_sort}()},
+\code{\link{sdf_weighted_sample}()}
 }
 \concept{Spark data frames}

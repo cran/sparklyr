@@ -1,7 +1,7 @@
 Package: sparklyr
 Type: Package
 Title: R Interface to Apache Spark
-Version: 1.3.1
+Version: 1.4.0
 Authors@R: c(
     person("Javier", "Luraschi", email = "javier@rstudio.com", role = "aut"),
     person("Kevin", "Kuo", role = "aut", email = "kevin.kuo@rstudio.com",
@@ -12,7 +12,8 @@ Authors@R: c(
     person("Hossein", "Falaki", role = "aut", email = "hossein@databricks.com"),
     person("Lu", "Wang", role = "aut", email = "lu.wang@databricks.com"),
     person("Andy", "Zhang", role = "aut", email = "yue.zhang@databricks.com"),
-    person("Yitao", "Li", role = c("aut", "cre"), email = "yitao@rstudio.com"),
+    person("Yitao", "Li", role = c("aut", "cre"), email = "yitao@rstudio.com",
+           comment = c(ORCID = "0000-0002-1261-905X")),
     person(family = "RStudio", role = c("cph")),
     person(family = "The Apache Software Foundation", role = c("aut", "cph"))
     )
@@ -23,20 +24,21 @@ Description: R interface to Apache Spark, a fast and general engine for big data
     and provides an interface to Spark's built-in machine learning algorithms.
 License: Apache License 2.0 | file LICENSE
 SystemRequirements: Spark: 1.6.x or 2.x
-URL: http://spark.rstudio.com
+URL: https://spark.rstudio.com/
 BugReports: https://github.com/sparklyr/sparklyr/issues
 LazyData: TRUE
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Depends: R (>= 3.2)
 Imports: assertthat, base64enc, config (>= 0.2), DBI (>= 0.6-1), dplyr
         (>= 0.7.2), dbplyr (>= 1.1.0), digest, forge, generics,
-        globals, httr (>= 1.2.1), jsonlite (>= 1.4), methods, openssl
-        (>= 0.8), purrr, r2d3, rappdirs, rjson (>= 0.2.20), rlang (>=
-        0.1.4), rprojroot, rstudioapi (>= 0.10), tibble, tidyr, uuid,
-        withr, xml2, ellipsis (>= 0.1.0)
+        globals, glue, httr (>= 1.2.1), jsonlite (>= 1.4), lifecycle,
+        methods, openssl (>= 0.8), purrr, r2d3, rappdirs, rjson (>=
+        0.2.20), rlang (>= 0.1.4), rprojroot, rstudioapi (>= 0.10),
+        stringr, tibble, tidyr, tidyselect, vctrs, uuid, withr, xml2,
+        ellipsis (>= 0.1.0)
 Suggests: arrow (>= 0.14.0), broom, diffobj, foreach, ggplot2,
         iterators, janeaustenr, Lahman, mlbench, nnet, nycflights13,
-        R6, RCurl, reshape2, shiny (>= 1.0.1), stringr, testthat
+        R6, RCurl, reshape2, shiny (>= 1.0.1), testthat
 Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'spark_connection.R' 'avro_utils.R' 'config_settings.R'
         'config_spark.R' 'connection_instances.R'
@@ -50,14 +52,16 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'spark_apply.R' 'data_interface.R' 'databricks_connection.R'
         'dbi_spark_connection.R' 'dbi_spark_result.R'
         'dbi_spark_table.R' 'dbi_spark_transactions.R' 'do_spark.R'
-        'dplyr_do.R' 'utils.R' 'dplyr_hof.R' 'dplyr_spark.R'
-        'dplyr_spark_connection.R' 'dplyr_spark_data.R'
-        'dplyr_spark_table.R' 'dplyr_sql.R' 'imports.R'
-        'install_spark.R' 'install_spark_versions.R'
-        'install_spark_windows.R' 'install_tools.R' 'java.R'
-        'jobs_api.R' 'kubernetes_config.R' 'shell_connection.R'
-        'livy_connection.R' 'livy_install.R' 'livy_invoke.R'
-        'livy_service.R' 'ml_classification_decision_tree_classifier.R'
+        'dplyr_do.R' 'utils.R' 'dplyr_hof.R' 'dplyr_join.R'
+        'dplyr_spark.R' 'dplyr_spark_connection.R' 'dplyr_spark_data.R'
+        'prng_utils.R' 'ml_feature_sql_transformer_utils.R'
+        'dplyr_spark_table.R' 'sdf_sql.R' 'sdf_interface.R'
+        'dplyr_sql.R' 'imports.R' 'install_spark.R'
+        'install_spark_versions.R' 'install_spark_windows.R'
+        'install_tools.R' 'java.R' 'jobs_api.R' 'kubernetes_config.R'
+        'shell_connection.R' 'livy_connection.R' 'livy_install.R'
+        'livy_invoke.R' 'livy_service.R'
+        'ml_classification_decision_tree_classifier.R'
         'ml_classification_gbt_classifier.R'
         'ml_classification_linear_svc.R'
         'ml_classification_logistic_regression.R'
@@ -73,6 +77,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'ml_feature_bucketed_random_projection_lsh.R'
         'ml_feature_bucketizer.R' 'ml_feature_chisq_selector.R'
         'ml_feature_count_vectorizer.R' 'ml_feature_dct.R'
+        'ml_feature_sql_transformer.R' 'ml_feature_dplyr_transformer.R'
         'ml_feature_elementwise_product.R'
         'ml_feature_feature_hasher.R' 'ml_feature_hashing_tf.R'
         'ml_feature_idf.R' 'ml_feature_imputer.R'
@@ -84,7 +89,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'ml_feature_one_hot_encoder_estimator.R' 'ml_feature_pca.R'
         'ml_feature_polynomial_expansion.R'
         'ml_feature_quantile_discretizer.R' 'ml_feature_r_formula.R'
-        'ml_feature_regex_tokenizer.R' 'ml_feature_sql_transformer.R'
+        'ml_feature_regex_tokenizer.R' 'ml_feature_robust_scaler.R'
         'ml_feature_standard_scaler.R'
         'ml_feature_stop_words_remover.R' 'ml_feature_string_indexer.R'
         'ml_feature_string_indexer_model.R' 'ml_feature_tokenizer.R'
@@ -117,11 +122,14 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'ml_tuning_train_validation_split.R' 'ml_utils.R'
         'ml_validator_utils.R' 'mutation.R' 'na_actions.R'
         'new_model_multilayer_perceptron.R' 'precondition.R'
-        'project_template.R' 'qubole_connection.R' 'reexports.R'
-        'sdf_dim.R' 'sdf_interface.R' 'sdf_ml.R' 'sdf_saveload.R'
-        'sdf_sequence.R' 'sdf_sql.R' 'sdf_stat.R' 'sdf_streaming.R'
-        'sdf_utils.R' 'sdf_wrapper.R' 'spark_compile.R'
-        'spark_context_config.R' 'spark_dataframe.R'
+        'project_template.R' 'qubole_connection.R' 'sql_utils.R'
+        'tidyr_utils.R' 'tidyr_unnest.R' 'tidyr_unite.R'
+        'tidyr_separate.R' 'tidyr_pivot_utils.R' 'tidyr_pivot_wider.R'
+        'tidyr_pivot_longer.R' 'tidyr_nest.R' 'tidyr_fill.R'
+        'test_connection.R' 'reexports.R' 'sdf_dim.R' 'sdf_ml.R'
+        'sdf_saveload.R' 'sdf_sequence.R' 'sdf_stat.R'
+        'sdf_streaming.R' 'sdf_utils.R' 'sdf_wrapper.R'
+        'spark_compile.R' 'spark_context_config.R' 'spark_dataframe.R'
         'spark_extensions.R' 'spark_gateway.R'
         'spark_gen_embedded_sources.R' 'spark_globals.R' 'spark_hive.R'
         'spark_home.R' 'spark_submit.R'
@@ -129,10 +137,9 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'spark_verify_embedded_sources.R' 'stream_data.R'
         'stream_job.R' 'stream_operations.R' 'stream_shiny.R'
         'stream_view.R' 'tables_spark.R' 'tbl_spark.R'
-        'test_connection.R' 'tidiers_ml_aft_survival_regression.R'
-        'tidiers_ml_als.R' 'tidiers_ml_isotonic_regression.R'
-        'tidiers_ml_lda.R' 'tidiers_ml_linear_models.R'
-        'tidiers_ml_logistic_regression.R'
+        'tidiers_ml_aft_survival_regression.R' 'tidiers_ml_als.R'
+        'tidiers_ml_isotonic_regression.R' 'tidiers_ml_lda.R'
+        'tidiers_ml_linear_models.R' 'tidiers_ml_logistic_regression.R'
         'tidiers_ml_multilayer_perceptron.R' 'tidiers_ml_naive_bayes.R'
         'tidiers_ml_svc_models.R' 'tidiers_ml_tree_models.R'
         'tidiers_ml_unsupervised_models.R' 'tidiers_pca.R'
@@ -141,7 +148,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
         'zzz.R'
 NeedsCompilation: no
-Packaged: 2020-07-09 15:13:24 UTC; yitaoli
+Packaged: 2020-09-16 10:27:31 UTC; yitaoli
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (<https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -150,8 +157,8 @@ Author: Javier Luraschi [aut],
   Hossein Falaki [aut],
   Lu Wang [aut],
   Andy Zhang [aut],
-  Yitao Li [aut, cre],
+  Yitao Li [aut, cre] (<https://orcid.org/0000-0002-1261-905X>),
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2020-07-09 20:00:03 UTC
+Date/Publication: 2020-09-16 13:30:03 UTC

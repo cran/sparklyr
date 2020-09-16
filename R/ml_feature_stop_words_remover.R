@@ -8,20 +8,24 @@
 #'
 #' @details Supported languages: danish, dutch, english, finnish, french,
 #'   german, hungarian, italian, norwegian, portuguese, russian, spanish,
-#'   swedish, turkish. Defaults to English. See \url{http://anoncvs.postgresql.org/cvsweb.cgi/pgsql/src/backend/snowball/stopwords/}
+#'   swedish, turkish. Defaults to English. See \url{https://anoncvs.postgresql.org/cvsweb.cgi/pgsql/src/backend/snowball/stopwords/}
 #'   for more details
 #'
 #' @return A list of stop words.
 #'
 #' @seealso \code{\link{ft_stop_words_remover}}
 #' @export
-ml_default_stop_words <- function(sc, language = c("english", "danish", "dutch", "finnish",
-                                                   "french", "german", "hungarian", "italian",
-                                                   "norwegian", "portuguese", "russian", "spanish",
-                                                   "swedish", "turkish"), ...) {
+ml_default_stop_words <- function(sc, language = c(
+                                    "english", "danish", "dutch", "finnish",
+                                    "french", "german", "hungarian", "italian",
+                                    "norwegian", "portuguese", "russian", "spanish",
+                                    "swedish", "turkish"
+                                  ), ...) {
   language <- rlang::arg_match(language)
-  invoke_static(sc, "org.apache.spark.ml.feature.StopWordsRemover",
-                "loadDefaultStopWords", language)
+  invoke_static(
+    sc, "org.apache.spark.ml.feature.StopWordsRemover",
+    "loadDefaultStopWords", language
+  )
 }
 
 #' Feature Transformation -- StopWordsRemover (Transformer)
