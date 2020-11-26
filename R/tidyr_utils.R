@@ -12,20 +12,6 @@ check_present <- function(x) {
   }
 }
 
-# helper method returning a minimal R dataframe containing the same set of
-# column names as `sdf` does
-replicate_colnames <- function(sdf) {
-  columns <- lapply(
-    colnames(sdf),
-    function(column) {
-      v <- list(NA)
-      names(v) <- column
-      v
-    }
-  )
-  do.call(data.frame, columns)
-}
-
 # helper method for updating dplyr group variables
 update_group_vars <- function(input, output, preserved) {
   incl <- dplyr::group_vars(input)
@@ -280,5 +266,32 @@ apply_ptype <- function(sdf, ptype) {
     )
 
     sdf %>% spark_dataframe() %>% invoke("select", cols) %>% sdf_register()
+  }
+}
+
+apply_transform <- function(sdf, transform) {
+  if (length(names(transform)) > 0) {
+    out <- list()
+    non_transformed_cols <- setdiff(colnames(sdf), names(transform))
+    if (length(non_transformed_cols) > 0) {
+      out <- append(
+        out,
+        list(sdf %>>% dplyr::select %@% lapply(non_transformed_cols, as.symbol))
+      )
+    }
+    for (i in seq_along(transform)) {
+      tgt <- names(transform[i])
+      transform_args <- list(
+        do.call(dplyr::vars, list(as.symbol(tgt))), transform[[i]]
+      )
+      out <- append(
+        out,
+        list(sdf %>>% dplyr::summarize_at %@% transform_args)
+      )
+    }
+    do.call(cbind, out) %>>%
+      dplyr::select %@% lapply(colnames(sdf), as.symbol)
+  } else {
+    sdf
   }
 }

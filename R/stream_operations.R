@@ -309,6 +309,141 @@ stream_watermark <- function(x, column = "timestamp", threshold = "10 minutes") 
   }
 
   sdf %>%
-    invoke("withWatermark", "timestamp", threshold) %>%
+    invoke("withWatermark", column, threshold) %>%
+    sdf_register()
+}
+
+to_milliseconds <- function(dur) {
+  if (is.numeric(dur)) {
+    dur
+  } else if (is.character(dur)) {
+    m <- regmatches(dur, regexec("^([0-9]+)\\s*([[:alpha:]]+)$", dur))[[1]]
+    conversions <- list(
+      ms = 1L,
+      msec = 1L,
+      msecs = 1L,
+      millisecond = 1L,
+      milliseconds = 1L,
+      s = 1000L,
+      sec = 1000L,
+      secs = 1000L,
+      second = 1000L,
+      seconds = 1000L,
+      m = 60000L,
+      min = 60000L,
+      mins = 60000L,
+      minute = 60000L,
+      minutes = 60000L,
+      h = 3600000L,
+      hr = 3600000L,
+      hrs = 3600000L,
+      hour = 3600000L,
+      hours = 3600000L,
+      d = 86400000L,
+      day = 86400000L,
+      days = 86400000L
+    )
+    if (length(m) == 0 || !(m[[3]] %in% names(conversions))) {
+      stop(dur, " is not a valid time duration specification")
+    }
+
+    as.integer(m[[2]]) * conversions[[m[[3]]]]
+  } else {
+    stop(
+      "time duration specification must be an integer (representing number of ",
+      "milliseconds) or a valid time duration string (e.g., '5s')"
+    )
+  }
+}
+
+#' Apply lag function to columns of a Spark Streaming DataFrame
+#'
+#' Given a streaming Spark dataframe as input, this function will return another
+#' streaming dataframe that contains all columns in the input and column(s) that
+#' are shifted behind by the offset(s) specified in `...` (see example)
+#'
+#' @param x An object coercable to a Spark Streaming DataFrame.
+#' @param cols A list of expressions of the form
+#'   <destination column> = <source column> ~ <offset>
+#'   (e.g., `prev_value = value ~ 1` will create a new column `prev_value`
+#'   containing all values from the source column `value` shifted behind by 1
+#' @param thresholds Optional named list of timestamp column(s) and
+#'   corresponding time duration(s) for deterimining whether a previous record
+#'   is sufficiently recent relative to the current record.
+#'   If the any of the time difference(s) between the current and a previous
+#'   record is greater than the maximal duration allowed, then the previous
+#'   record is discarded and will not be part of the query result.
+#'   The durations can be specified with numeric types (which will be
+#'   interpreted as max difference allowed in number of milliseconds between 2
+#'   UNIX timestamps) or time duration strings such as "5s", "5sec", "5min",
+#'   "5hour", etc.
+#'   Any timestamp column in `x` that is not of timestamp of date Spark SQL
+#'   types will be interepreted as number of milliseconds since the UNIX epoch.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' library(sparklyr)
+#'
+#' sc <- spark_connect(master = "local", version = "2.2.0")
+#'
+#' streaming_path <- tempfile("days_df_")
+#' days_df <- tibble::tibble(
+#'   today = weekdays(as.Date(seq(7), origin = "1970-01-01"))
+#' )
+#' num_iters <- 7
+#' stream_generate_test(
+#'   df = days_df,
+#'   path = streaming_path,
+#'   distribution = rep(nrow(days_df), num_iters),
+#'   iterations = num_iters
+#' )
+#'
+#' stream_read_csv(sc, streaming_path) %>%
+#'   stream_lag(cols = c(yesterday = today ~ 1, two_days_ago = today ~ 2)) %>%
+#'   collect() %>%
+#'   print(n = 10L)
+#' }
+#'
+#' @export
+stream_lag <- function(x, cols, thresholds = NULL) {
+  sc <- spark_connection(x)
+  if (spark_version(sc) < "2.0.0") {
+    stop("`stream_lag()` requires Spark 2.0.0 or above")
+  }
+  if (!sdf_is_streaming(x)) {
+    stop("expected a streaming dataframe as input")
+  }
+
+  exprs <- rlang::exprs(!!!cols)
+  src_cols <- NULL
+  offsets <- NULL
+  dst_cols <- NULL
+  for (i in seq_along(exprs)) {
+    dst <- names(exprs[i])
+
+    expr <- exprs[[i]]
+    if (length(expr) != 3 || as.character(expr[[1]]) != "~" ||
+        !is.numeric(expr[[3]])) {
+      stop("expected `...` to be a comma-separated list of expressions of form",
+           "<destination column> = <source column> ~ <offset>")
+    }
+
+    src_cols <- c(src_cols, as.character(expr[[2]]))
+    offsets <- c(offsets, as.integer(expr[[3]]))
+    dst_cols <- c(dst_cols, dst)
+  }
+
+  invoke_static(
+    sc,
+    "sparklyr.StreamUtils",
+    "lag",
+    x %>% spark_dataframe(),
+    as.list(src_cols),
+    as.list(offsets),
+    as.list(dst_cols),
+    as.list(names(thresholds)),
+    lapply(unname(thresholds), to_milliseconds)
+  ) %>%
     sdf_register()
 }

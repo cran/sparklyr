@@ -1,5 +1,34 @@
 #' @include dplyr_hof.R
+#' @include utils.R
 NULL
+
+fix_na_real_values <- function(dots) {
+  for (i in seq_along(dots)) {
+    if (identical(rlang::quo_get_expr(dots[[i]]), rlang::expr(NA_real_))) {
+      dots[[i]] <- rlang::quo(dbplyr::sql("CAST(NULL AS DOUBLE)"))
+    }
+  }
+
+  dots
+}
+
+#' @export
+#' @importFrom dplyr transmute
+transmute.tbl_spark <- function (.data, ...) {
+  dots <- rlang::enquos(..., .named = TRUE) %>%
+    fix_na_real_values()
+
+  do.call(NextMethod, dots)
+}
+
+#' @export
+#' @importFrom dplyr mutate
+mutate.tbl_spark <- function (.data, ...) {
+  dots <- rlang::enquos(..., .named = TRUE) %>%
+    fix_na_real_values()
+
+  do.call(NextMethod, dots)
+}
 
 #' @export
 #' @importFrom dplyr sql_escape_ident
@@ -75,6 +104,27 @@ sql_translate_env.spark_connection <- function(con) {
       )
     }
   }
+  sql_if_else <- function(cond, if_true, if_false, if_missing = NULL) {
+    dbplyr::build_sql(
+      "IF(ISNULL(", cond, "), ",
+      if_missing %||% dbplyr::sql("NULL"),
+      ", IF(", cond %||% dbplyr::sql("NULL"),
+      ", ", if_true %||% dbplyr::sql("NULL"), ", ",
+      if_false %||% dbplyr::sql("NULL"), "))"
+    )
+  }
+
+  weighted_mean_sql <- function(x, w) {
+    x <- dbplyr::build_sql(x)
+    w <- dbplyr::build_sql(w)
+    dbplyr::sql(
+      paste(
+        "CAST(SUM(IF(ISNULL(", w, "), 0, ", w, ") * IF(ISNULL(", x, "), 0, ", x, ")) AS DOUBLE)",
+        "/",
+        "CAST(SUM(IF(ISNULL(", w, "), 0, ", w, ") * IF(ISNULL(", x, "), 0, 1)) AS DOUBLE)"
+      )
+    )
+  }
 
   dbplyr::sql_variant(
     scalar = dbplyr::sql_translator(
@@ -96,7 +146,39 @@ sql_translate_env.spark_connection <- function(con) {
       `%like%` = function(x, y) dbplyr::build_sql(x, " LIKE ", y),
       `%rlike%` = function(x, y) dbplyr::build_sql(x, " RLIKE ", y),
       `%regexp%` = function(x, y) dbplyr::build_sql(x, " REGEXP ", y),
+      ifelse = sql_if_else,
+      if_else = sql_if_else,
       grepl = function(x, y) dbplyr::build_sql(y, " RLIKE ", x),
+      rowSums = function(x) {
+        x <- rlang::enexpr(x)
+        x <- rlang::eval_tidy(x)
+        if (!"tbl_spark" %in% class(x)) {
+          "unsupported subsetting expression"
+        }
+        col_names <- x %>% colnames()
+
+        if (length(col_names) == 0) {
+          dbplyr::sql("0")
+        } else {
+          sum_expr <- list(dbplyr::sql("(")) %>%
+            append(
+              lapply(
+                col_names[-length(col_names)],
+                function(x) {
+                  list(dbplyr::ident(x), dbplyr::sql(" + "))
+                }
+              ) %>%
+                unlist(recursive = FALSE)
+            ) %>%
+            append(
+              list(dbplyr::ident(col_names[length(col_names)]), dbplyr::sql(")"))
+            ) %>%
+            lapply(function(x)  dbplyr::escape(x, con = con))
+          args <- append(sum_expr, list(con = con))
+
+          do.call(dbplyr::build_sql, args)
+        }
+      },
       transform = function(expr, func) {
         sprintf(
           "TRANSFORM(%s, %s)", dbplyr::build_sql(expr), build_sql_fn(func)
@@ -177,31 +259,34 @@ sql_translate_env.spark_connection <- function(con) {
 
     aggregate = dbplyr::sql_translator(
       .parent = dbplyr::base_agg,
-      n = function() dbplyr::sql("count(*)"),
-      count = function() dbplyr::sql("count(*)"),
-      n_distinct = function(...) dbplyr::build_sql("count(DISTINCT", list(...), ")"),
-      cor = dbplyr::sql_prefix("corr"),
-      cov = dbplyr::sql_prefix("covar_samp"),
-      sd = dbplyr::sql_prefix("stddev_samp"),
-      var = dbplyr::sql_prefix("var_samp")
+      n = function() dbplyr::sql("COUNT(*)"),
+      count = function() dbplyr::sql("COUNT(*)"),
+      n_distinct = function(...) dbplyr::build_sql("COUNT(DISTINCT", list(...), ")"),
+      cor = dbplyr::sql_prefix("CORR"),
+      cov = dbplyr::sql_prefix("COVAR_SAMP"),
+      sd = dbplyr::sql_prefix("STDDEV_SAMP"),
+      var = dbplyr::sql_prefix("VAR_SAMP"),
+      weighted.mean = function(x, w) {
+        weighted_mean_sql(x, w)
+      }
     ),
 
     window = dbplyr::sql_translator(
       .parent = dbplyr::base_win,
-      lag = function(x, n = 1L, default = NA, order = NULL) {
+      lag = function(x, n = 1L, default = NA, order_by = NULL) {
         dbplyr::base_win$lag(
           x = x,
           n = as.integer(n),
           default = default,
-          order = order
+          order = order_by
         )
       },
-      lead = function(x, n = 1L, default = NA, order = NULL) {
+      lead = function(x, n = 1L, default = NA, order_by = NULL) {
         dbplyr::base_win$lead(
           x = x,
           n = as.integer(n),
           default = default,
-          order = order
+          order = order_by
         )
       },
       count = function() {
@@ -216,37 +301,16 @@ sql_translate_env.spark_connection <- function(con) {
       sd = dbplyr::win_recycled("stddev_samp"),
       var = dbplyr::win_recycled("var_samp"),
       cumprod = function(x) {
-        dbplyr::build_sql(
-          "exp(",
-          dbplyr::win_over(
-            dbplyr::build_sql(
-              "sum(if(", x,
-              "= 0, 0, ln(abs(", x,
-              "))))"
-            ),
-            partition = dbplyr::win_current_group(),
-            order = dbplyr::win_current_order()
-          ), ") * (1 - 2 * pmod(",
-          # count number of negatives up to current row
-          #   and adjust sign accordingly
-          dbplyr::win_over(
-            dbplyr::build_sql(
-              "sum(if(", x,
-              ">= 0, 0, 1))"
-            ),
-            partition = dbplyr::win_current_group(),
-            order = dbplyr::win_current_order()
-          ), ", 2)) * if(",
-          # if there's a zero then all cumprod after that row
-          #   vanish
-          dbplyr::win_over(
-            dbplyr::build_sql(
-              "min(abs(", x,
-              "))"
-            ),
-            partition = dbplyr::win_current_group(),
-            order = dbplyr::win_current_order()
-          ), "= 0, 0, 1)"
+        dbplyr::win_over(
+          dbplyr::build_sql("sparklyr_cumprod(", x, ")"),
+          partition = dbplyr::win_current_group(),
+          order = dbplyr::win_current_order()
+        )
+      },
+      weighted.mean = function(x, w) {
+        dbplyr::win_over(
+          weighted_mean_sql(x, w),
+          partition = dbplyr::win_current_group()
         )
       }
     )

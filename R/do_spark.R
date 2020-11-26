@@ -1,10 +1,17 @@
-#' Register a Prallel Backend
+#' @include utils.R
+NULL
+
+#' Register a Parallel Backend
 #'
 #' Registers a parallel backend using the \code{foreach} package.
 #'
-#' @param spark_conn spark connection to use
+#' @param spark_conn Spark connection to use
+#' @param parallelism Level of parallelism to use for task execution
+#'   (if unspecified, then it will take the value of
+#'    `SparkContext.defaultParallelism()` which by default is the number
+#'    of cores available to the `sparklyr` application)
 #' @param ... additional options for sparklyr parallel backend
-#'            (currently only the only valid option is nocompile = {T, F})
+#'   (currently only the only valid option is nocompile = {T, F})
 #'
 #' @return None
 #'
@@ -16,7 +23,18 @@
 #' }
 #'
 #' @export
-registerDoSpark <- function(spark_conn, ...) {
+registerDoSpark <- function(spark_conn, parallelism = NULL, ...) {
+  do_spark_parallelism <- as.integer(
+    parallelism %||%
+      tryCatch(
+        spark_context(spark_conn) %>% invoke("defaultParallelism"),
+        # return 0 as number of workers if there is an exception
+        error = function(e) {
+          0L
+        }
+      )
+  )
+
   # internal function to process registerDoSpark options
   .processOpts <- function(...) {
     opts <- list(...)
@@ -55,7 +73,6 @@ registerDoSpark <- function(spark_conn, ...) {
 
   # internal function called by foreach
   .doSpark <- function(obj, expr, envir, data) {
-    obj$packages <- unique(c(obj$packages, (.packages())))
     # internal function to compile an expression if possible
     .compile <- function(expr, ...) {
       if (getRversion() < "2.13.0" || isTRUE(.globals$do_spark$options$nocompile)) {
@@ -71,17 +88,18 @@ registerDoSpark <- function(spark_conn, ...) {
     # therefore the ~33% space overhead from base64 encode is still acceptable.
     # If this assumption were not true, then base64 would need to be replaced with another
     # more efficient binary-to-text encoding such as yEnc (which has only 1-2% space overhead).
-    .encode_item <- function(item) list(encoded = base64enc::base64encode(serialize(item, NULL)))
-    .decode_item <- function(item) unserialize(base64enc::base64decode(item))
+    .encode_item <- function(item) serialize(item, NULL)
+    .decode_item <- function(item) unserialize(item)
 
     expr_globals <- globals::globalsOf(expr, envir = envir, recursive = TRUE, mustExist = FALSE)
 
     # internal function to process spark data frames
-    .process_spark_items <- function(...) {
-      # load necessary packages
-      for (p in obj$packages) library(p, character.only = TRUE)
-
-      f <- function(item) {
+    .process_spark_items <- function(spark_items, ...) {
+      pkgs_to_attach <- (.packages())
+      worker_fn <- function(items) {
+        for (pkg in pkgs_to_attach) {
+          library(pkg, character.only = TRUE)
+        }
         enclos <- envir
         expr_globals <- as.list(expr_globals)
         for (k in names(expr_globals)) {
@@ -100,20 +118,20 @@ registerDoSpark <- function(spark_conn, ...) {
         # needed for evaluating `expr`
         tryCatch(
           {
-            res <- eval(
-              expr,
-              envir = as.list(.decode_item(item$encoded)),
-              enclos = enclos
+            lapply(
+              items$encoded,
+              function(item) {
+                eval(expr, envir = as.list(.decode_item(item)), enclos = enclos)
+              }
             )
-            .encode_item(res)
           },
           error = function(ex) {
-            .encode_item(ex)
+            list(ex)
           }
         )
       }
-      encoded_res <- sdf_collect(spark_items %>% spark_apply(f, ...))[[1]]
-      lapply(encoded_res, .decode_item)
+
+      spark_apply(spark_items, worker_fn, ...)
     }
 
     if (!inherits(obj, "foreach")) {
@@ -122,15 +140,25 @@ registerDoSpark <- function(spark_conn, ...) {
 
     spark_conn <- data$spark_conn
     spark_apply_args <- data$spark_apply_args
+    spark_apply_args$fetch_result_as_sdf <- FALSE
+    spark_apply_args$single_binary_column <- TRUE
+    spark_apply_args$packages <- obj$packages
 
     it <- iterators::iter(obj)
     accumulator <- foreach::makeAccum(it)
-    items <- it %>%
-      as.list() %>%
-      lapply(.encode_item)
-    spark_items <- sdf_copy_to(spark_conn, items, overwrite = TRUE)
+    items <- tibble::tibble(
+      encoded = it %>% as.list() %>% lapply(.encode_item)
+    )
+    spark_items <- sdf_copy_to(
+      spark_conn,
+      items,
+      name = random_string("spark_apply"),
+      repartition = do_spark_parallelism
+    )
     expr <- .compile(expr)
-    res <- do.call(.process_spark_items, spark_apply_args)
+    res <- do.call(
+      .process_spark_items, append(list(spark_items), as.list(spark_apply_args))
+    )
     tryCatch(
       accumulator(res, seq(along = res)),
       error = function(e) {
@@ -154,18 +182,7 @@ registerDoSpark <- function(spark_conn, ...) {
     switch(item,
       name = pkgName,
       version = packageDescription(pkgName, fields = "Version"),
-      workers = tryCatch(
-        {
-          spark_conf <- invoke(data$spark_conn$state$spark_context, "getConf")
-          # return an integer value greater than 1 as number of workers if
-          # "spark.executor.instances" is not set
-          invoke(spark_conf, "getInt", "spark.executor.instances", as.integer(2))
-        },
-        # return 0 as number of workers if there is an exception
-        error = function(e) {
-          0
-        }
-      ),
+      workers = do_spark_parallelism,
       NULL
     )
   }

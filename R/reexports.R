@@ -1,6 +1,7 @@
 #' @include dplyr_join.R
 #' @include dplyr_spark.R
 #' @include dplyr_spark_table.R
+#' @include dplyr_sql.R
 #' @include sdf_interface.R
 #' @include test_connection.R
 #' @include tidyr_fill.R
@@ -21,7 +22,6 @@ NULL
 #' @keywords internal
 #' @export
 #' @importFrom dplyr %>%
-#' @usage lhs \%>\% rhs
 NULL
 
 #' Copy To
@@ -141,4 +141,13 @@ NULL
 #' @name fill
 #' @export
 #' @importFrom tidyr fill
+NULL
+
+#' Distinct
+#'
+#' See \code{\link[dplyr:distinct]{distinct}} for more details.
+#'
+#' @name distinct
+#' @export
+#' @importFrom dplyr distinct
 NULL

@@ -1,14 +1,24 @@
 package sparklyr
 
+import java.util.concurrent.ConcurrentHashMap
+
+import org.apache.spark.TaskContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
+
 import scala.util.Random
 
 object SamplingUtils {
-  case class Sample(val priority: Double, val row: Row) extends Ordered[Sample] {
+  type SamplesPQ = BoundedPriorityQueue[Sample]
+
+  private[sparklyr] case class Sample(val priority: Double, val row: Row) extends Ordered[Sample] {
     override def compare(that: Sample): Int = {
       scala.math.signum(priority - that.priority).toInt
     }
+  }
+
+  private[this] case class PRNG() extends java.util.function.Function[Long, Random] {
+    override def apply(x: Long): Random = new Random(x)
   }
 
   def sampleWithoutReplacement(
@@ -21,34 +31,32 @@ object SamplingUtils {
     if (0 == k) {
       sc.emptyRDD
     } else {
-      val mapRDDs = rdd.mapPartitionsWithIndex { (index, iter) =>
-        val random = new Random(seed + index)
-        val pq = new BoundedPriorityQueue[Sample](k)
-
-        for (row <- iter) {
+      val prngState = new ConcurrentHashMap[Long, Random]
+      val samples = rdd.aggregate(
+        zeroValue = new SamplesPQ(k)
+      )(
+        seqOp = (pq: SamplesPQ, row: Row) => {
           var weight = extractWeightValue(row, weightColumn)
           if (weight > 0) {
+            val sampleSeed = seed + TaskContext.getPartitionId
+            val random = prngState.computeIfAbsent(
+              sampleSeed,
+              new PRNG
+            )
             val sample = Sample(genSamplePriority(weight, random), row)
             pq += sample
           }
+
+          pq
+        },
+        combOp = (pq1: SamplesPQ, pq2: SamplesPQ) => {
+          pq1 ++= pq2
+
+          pq1
         }
+      )
 
-        Iterator.single(pq)
-      }
-
-      if (0 == mapRDDs.partitions.length) {
-        sc.emptyRDD
-      } else {
-        sc.parallelize(
-          mapRDDs.reduce(
-            (pq1, pq2) => {
-              pq1 ++= pq2
-
-              pq1
-            }
-          ).toSeq.map(x => x.row)
-        )
-      }
+      sc.parallelize(samples.toSeq.map(x => x.row))
     }
   }
 
@@ -100,26 +108,15 @@ object SamplingUtils {
 
   // generate a sampling priority for a row given the sampling weight and
   // source of randomness
-  def genSamplePriority(weight: Double, random: Random): Double = {
+  private[sparklyr] def genSamplePriority(weight: Double, random: Random): Double = {
     scala.math.log(random.nextDouble) / weight
   }
 
-  def extractWeightValue(row: Row, weightColumn: String): Double = {
+  private[sparklyr] def extractWeightValue(row: Row, weightColumn: String): Double = {
     if (null == weightColumn || weightColumn.isEmpty) {
       1.0
     } else {
-      var weight = row.get(row.fieldIndex(weightColumn))
-      if (weight.isInstanceOf[java.lang.Integer] || weight.isInstanceOf[Int]) {
-        weight.asInstanceOf[Int].toDouble
-      } else if (weight.isInstanceOf[java.lang.Long] || weight.isInstanceOf[Long]) {
-        weight.asInstanceOf[Long].toDouble
-      } else if (weight.isInstanceOf[java.lang.Double] || weight.isInstanceOf[Double]) {
-        weight.asInstanceOf[Double]
-      } else if (weight.isInstanceOf[java.math.BigDecimal]) {
-        weight.asInstanceOf[java.math.BigDecimal].doubleValue
-      } else {
-        Double.NaN
-      }
+      Utils.asDouble(row.get(row.fieldIndex(weightColumn)))
     }
   }
 }
