@@ -1,3 +1,18 @@
+# Sparklyr 1.5.1
+
+### Connections
+
+- A bug in how multiple `--conf` values were handled in some scenarios within
+  the spark-submit shell args which was introduced in sparklyr 1.4 has been
+  fixed now.
+
+- A bug with `livy.jars` configuration was fixed
+
+### Data
+
+- `tbl()` methods were revised to be compatible with `dbplyr` 2.0 when handling
+  inputs of the form `"<schema name>.<table name>"`
+
 # Sparklyr 1.5.0
 
 ### Connections
@@ -74,6 +89,10 @@
   been revised to first perform aggregations on individual partitions before
   merging aggregated results from all partitions, which is more efficient than
   `mapPartitions()` followed by `reduce()`.
+
+- `sdf_unnest_longer()` and `sdf_unnest_wider()` were implemented and offer
+  the equivalents of `tidyr::unnest_longer()` and `tidyr::unnest_wider()` for
+  for Spark dataframes.
 
 ### Serialization
 

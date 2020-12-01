@@ -94,7 +94,8 @@ spark_config_shell_args <- function(config, master) {
   unlist(lapply(seq_along(shell_args), function(idx) {
     name <- names(shell_args)[[idx]]
     value <- shell_args[[idx]]
-    list(paste0("--", name), value)
+
+    lapply(as.list(value), function(x) list(paste0("--", name), x))
   }))
 }
 
@@ -112,8 +113,9 @@ no_databricks_guid <- function() {
 #' spark_disconnect(sc)
 #' @details
 #'
-#' When using \code{method = "livy"}, jars are downloaded from GitHub but the path
-#' to a local \code{sparklyr} JAR can also be specified through the \code{livy.jars} setting.
+#' By default, when using \code{method = "livy"}, jars are downloaded from GitHub. But
+#' an alternative path (local to Livy server or on HDFS or HTTP(s)) to \code{sparklyr}
+#' JAR can also be specified through the \code{sparklyr.livy.jar} setting.
 #'
 #' @export
 spark_connect <- function(master,

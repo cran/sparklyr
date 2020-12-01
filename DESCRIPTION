@@ -1,7 +1,7 @@
 Package: sparklyr
 Type: Package
 Title: R Interface to Apache Spark
-Version: 1.5.0
+Version: 1.5.1
 Authors@R: c(
     person("Javier", "Luraschi", email = "javier@rstudio.com", role = "aut"),
     person("Kevin", "Kuo", role = "aut", email = "kevin.kuo@rstudio.com",
@@ -153,7 +153,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
         'zzz.R'
 NeedsCompilation: no
-Packaged: 2020-11-25 16:07:17 UTC; yitaoli
+Packaged: 2020-11-30 19:38:26 UTC; yitaoli
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (<https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -169,4 +169,4 @@ Author: Javier Luraschi [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2020-11-26 03:00:02 UTC
+Date/Publication: 2020-12-01 05:50:14 UTC
