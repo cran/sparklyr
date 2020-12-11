@@ -1,3 +1,16 @@
+# Sparklyr 1.5.2
+
+### Connections
+
+- Fixed `op_vars()` specification in `dplyr::distinct()` verb for Spark
+  dataframes
+
+- `spark_disconnect()` now closes the Spark monitoring connection correctly
+
+### Data
+
+- Implement support for stratified sampling in `ft_dplyr_transformer()`
+
 # Sparklyr 1.5.1
 
 ### Connections
@@ -6,7 +19,7 @@
   the spark-submit shell args which was introduced in sparklyr 1.4 has been
   fixed now.
 
-- A bug with `livy.jars` configuration was fixed
+- A bug with `livy.jars` configuration was fixed (#2843)
 
 ### Data
 
