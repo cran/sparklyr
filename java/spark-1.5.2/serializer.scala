@@ -8,10 +8,22 @@ import java.util.Calendar
 import java.util.TimeZone
 
 import scala.collection.JavaConverters._
+import scala.collection.convert.Wrappers.SeqWrapper
 import scala.collection.mutable.WrappedArray
 import scala.Option
 
 object Serializer {
+  val dateFormat = ThreadLocal.withInitial[SimpleDateFormat](
+    new java.util.function.Supplier[SimpleDateFormat] {
+      override def get(): SimpleDateFormat = {
+        val fmt = new SimpleDateFormat("yyyy-MM-dd")
+        fmt.setTimeZone(TimeZone.getTimeZone("UTC"))
+
+        fmt
+      }
+    }
+  )
+
   def readObjectType(dis: DataInputStream): Char = {
     dis.readByte().toChar
   }
@@ -135,8 +147,7 @@ object Serializer {
   }
 
   def writeBoolean(out: DataOutputStream, value: Boolean): Unit = {
-    val intValue = if (value) 1 else 0
-    out.writeInt(intValue)
+    out.writeInt(value.compare(false))
   }
 
   def writeDate(out: DataOutputStream, value: Date): Unit = {
@@ -145,29 +156,28 @@ object Serializer {
       if (null == value)
         ""
       else {
-        val fmt = new SimpleDateFormat("yyyy-MM-dd")
-        fmt.setTimeZone(TimeZone.getTimeZone("UTC"))
-        fmt.format(value)
+        dateFormat.get.format(value)
       }
     )
   }
 
-  def writeTime(out: DataOutputStream, value: Time): Unit = {
-    out.writeDouble(
-      if (null == value)
-        Double.NaN
-      else
-        value.getTime.toDouble / 1000.0
-    )
+  def timestampToSeconds(value: java.util.Date): Double = {
+    if (null == value) {
+      Double.NaN
+    } else {
+      val seconds = value.getTime.toDouble / 1e3
+
+      value match {
+        case ts: Timestamp =>
+          seconds + ts.getNanos.toDouble / 1e9
+        case _ =>
+          seconds
+      }
+    }
   }
 
-  def writeTime(out: DataOutputStream, value: Timestamp): Unit = {
-    out.writeDouble(
-      if (null == value)
-        Double.NaN
-      else
-        (value.getTime / 1000).toDouble + value.getNanos.toDouble / 1e9
-    )
+  def writeTime(out: DataOutputStream, value: java.util.Date): Unit = {
+    out.writeDouble(timestampToSeconds(value))
   }
 
   def writeString(out: DataOutputStream, value: String): Unit = {
@@ -348,13 +358,16 @@ class Serializer(tracker: JVMObjectTracker) {
     if (obj == null) {
       Serializer.writeType(dos, "void")
     } else {
-      val value = if (obj.isInstanceOf[WrappedArray[_]]) {
-        obj.asInstanceOf[WrappedArray[_]].toArray
-      } else if (obj.isInstanceOf[scala.collection.convert.Wrappers.SeqWrapper[_]]) {
-        obj.asInstanceOf[scala.collection.convert.Wrappers.SeqWrapper[_]].toArray
-      } else {
-        obj
-      }
+      val value = (
+        if (obj.isInstanceOf[WrappedArray[_]]) {
+          obj.asInstanceOf[WrappedArray[_]].toArray
+        } else {
+          obj match {
+            case s @ SeqWrapper(_) => s.toArray
+            case _ => obj
+          }
+        }
+      )
 
       value match {
         case v: java.lang.Character =>
@@ -393,10 +406,10 @@ class Serializer(tracker: JVMObjectTracker) {
         case v: java.sql.Date =>
           Serializer.writeType(dos, "date")
           Serializer.writeDate(dos, v)
-        case v: java.sql.Time =>
+        case v: java.sql.Timestamp =>
           Serializer.writeType(dos, "time")
           Serializer.writeTime(dos, v)
-        case v: java.sql.Timestamp =>
+        case v: java.sql.Time =>
           Serializer.writeType(dos, "time")
           Serializer.writeTime(dos, v)
         case v: StructTypeAsJSON =>
@@ -446,7 +459,7 @@ class Serializer(tracker: JVMObjectTracker) {
           Serializer.writeType(dos, "list")
           Serializer.writeInt(dos, v.length)
           v.foreach(elem => writeObject(dos, elem))
-        case v: Tuple3[String, String, Any] =>
+        case v @ Tuple3(_: String, _: String, _: Any) =>
           // Tuple3
           Serializer.writeType(dos, "list")
           Serializer.writeInt(dos, v.productArity)

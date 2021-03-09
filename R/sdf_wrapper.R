@@ -29,17 +29,29 @@ spark_dataframe.spark_connection <- function(x, sql = NULL, ...) {
 #' @param expand_nested_cols Whether to expand columns containing nested array
 #' of structs (which are usually created by tidyr::nest on a Spark data frame)
 #'
+#' @param expand_struct_cols Whether to expand columns containing structs
+#'
 #' @return An \R \code{list}, with each \code{list} element describing the
 #'   \code{name} and \code{type} of a column.
 #'
 #' @template roxlate-ml-x
 #'
 #' @export
-sdf_schema <- function(x, expand_nested_cols = FALSE) {
+sdf_schema <- function(x,
+                       expand_nested_cols = FALSE,
+                       expand_struct_cols = FALSE) {
   x %>%
     spark_dataframe() %>%
     invoke("schema") %>%
-    struct_type_to_schema(expand_nested_cols)
+    struct_type_to_schema(
+      expand_nested_cols = expand_nested_cols,
+      expand_struct_cols = expand_struct_cols
+    )
+}
+
+is_struct_type <- function(data_type_obj) {
+  invoke(data_type_obj, "catalogString") %>%
+    grepl("^struct<.*>$", ., ignore.case = TRUE)
 }
 
 is_struct_type_arr <- function(data_type_obj) {
@@ -47,13 +59,26 @@ is_struct_type_arr <- function(data_type_obj) {
     grepl("^array<struct<.*>>$", ., ignore.case = TRUE)
 }
 
-struct_type_to_schema <- function(x, expand_nested_cols) {
+struct_type_to_schema <- function(x, expand_nested_cols, expand_struct_cols) {
   fields <- invoke(x, "fields")
   fields_list <- lapply(fields, function(field) {
     type <- {
       data_type_obj <- invoke(field, "dataType")
-      if (expand_nested_cols && is_struct_type_arr(data_type_obj)) {
-        struct_type_to_schema(data_type_obj %>% invoke("elementType"), TRUE)
+      if (expand_struct_cols && is_struct_type(data_type_obj)) {
+        struct_type_to_schema(
+          data_type_obj,
+          expand_nested_cols = expand_nested_cols,
+          expand_struct_cols = expand_struct_cols
+        )
+      } else if (expand_nested_cols && is_struct_type_arr(data_type_obj)) {
+        dtype <- "array"
+        attributes(dtype)$element_type <- struct_type_to_schema(
+          data_type_obj %>% invoke("elementType"),
+          expand_nested_cols = expand_nested_cols,
+          expand_struct_cols = expand_struct_cols
+        )
+
+        dtype
       } else {
         invoke(data_type_obj, "toString")
       }
@@ -134,6 +159,76 @@ sdf_collect <- function(object, impl = c("row-wise", "row-wise-iter", "column-wi
   } else {
     sdf_collect_static(object, impl, ...)
   }
+}
+
+#' Collect Spark data serialized in RDS format into R
+#'
+#' Deserialize Spark data that is serialized using `spark_write_rds()` into a R
+#' dataframe.
+#'
+#' @param path Path to a local RDS file that is produced by `spark_write_rds()`
+#'   (RDS files stored in HDFS will need to be downloaded to local filesystem
+#'   first (e.g., by running `hadoop fs -copyToLocal ...` or similar)
+#'
+#' @family Spark serialization routines
+#' @export
+collect_from_rds <- function(path) {
+  data <- readRDS(path)
+  col_names <- data[[1]]
+  timestamp_col_idxes <- data[[2]]
+  date_col_idxes <- data[[3]]
+  struct_col_idxes <- data[[4]]
+  col_data <- data[[5]]
+  names(col_data) <- col_names
+  df <- tibble::as_tibble(col_data)
+
+  apply_conversion <- function(df, idx, fn) {
+    if ("list" %in% class(df[[idx]])) {
+      df[[idx]] <- lapply(df[[idx]], fn)
+    } else {
+      df[[idx]] <- fn(df[[idx]])
+    }
+
+    df
+  }
+  for (idx in timestamp_col_idxes) {
+    df <- df %>%
+      apply_conversion(
+        idx,
+        function(x) {
+          as.POSIXct(x, origin = "1970-01-01")
+        }
+      )
+  }
+  for (idx in date_col_idxes) {
+    df <- df %>%
+      apply_conversion(
+        idx,
+        function(x) {
+          as.Date(x, origin = "1970-01-01")
+        }
+      )
+  }
+  for (idx in struct_col_idxes) {
+    df <- df %>%
+      apply_conversion(
+        idx,
+        function(x) {
+          x %>%
+            lapply(
+              function(v) {
+                jsonlite::fromJSON(
+                  v,
+                  simplifyDataFrame = FALSE,
+                  simplifyMatrix = FALSE
+                )
+              }
+            )
+        }
+      )
+  }
+
+  df
 }
 
 sdf_collect_data_frame <- function(sdf, collected) {

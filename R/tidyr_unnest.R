@@ -18,17 +18,22 @@ unnest.tbl_spark <- function(data,
     rlang::enquo(cols), replicate_colnames(data)
   ) %>%
     names()
-  if (length(cols) == 0) return(data)
+  if (length(cols) == 0) {
+    return(data)
+  }
 
   group_vars <- dplyr::group_vars(data)
-  data <- data %>% dplyr::compute() %>% dplyr::ungroup()
+  data <- data %>%
+    dplyr::compute() %>%
+    dplyr::ungroup()
   sc <- spark_connection(data)
   num_rows <- spark_dataframe(data) %>% invoke("count")
   schema <- data %>% sdf_schema(expand_nested_cols = TRUE)
 
   struct_fields <- list()
   for (col in cols) {
-    if (!is.list(schema[[col]]$type))
+    dtype <- schema[[col]]$type
+    if (!identical(as.character(dtype), "array")) {
       paste0(
         "`unnest.tbl_spark` is only supported for columns of type ",
         "`array<struct<.*>>` (i.e., a column produced by a previous ",
@@ -36,8 +41,10 @@ unnest.tbl_spark <- function(data,
         schema[[col]]$type
       ) %>%
         rlang::abort()
+    }
 
-    nested_cols <- lapply(schema[[col]]$type, function(field) field$name) %>%
+    nested_cols <- attributes(dtype)$element_type %>%
+      lapply(function(field) field$name) %>%
       list()
     names(nested_cols) <- col
     struct_fields <- append(struct_fields, nested_cols)
@@ -48,11 +55,11 @@ unnest.tbl_spark <- function(data,
     if (col %in% cols) {
       for (nested_col in struct_fields[[col]]) {
         dest_col <- (
-          if (is.null(names_sep))
+          if (is.null(names_sep)) {
             nested_col
-          else
+          } else {
             paste0(col, names_sep, nested_col)
-        )
+          })
         output_cols <- append(output_cols, dest_col)
       }
     } else {
@@ -108,7 +115,9 @@ unnest.tbl_spark <- function(data,
     out <- dplyr::filter(out, no_empty_value_sql)
   }
   out <- out %>% dplyr::compute()
-  out_tbl <- out %>% ensure_tmp_view() %>% quote_sql_name()
+  out_tbl <- out %>%
+    ensure_tmp_view() %>%
+    quote_sql_name()
 
   unnested_cols <- lapply(
     unnest_col_sqls,

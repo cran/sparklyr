@@ -322,7 +322,7 @@ livy_statement_compose <- function(sc, static, class, method, ...) {
   else {
     last_var <- "builder.toString"
     chunk_vars <- c(chunk_vars, "val builder = StringBuilder.newBuilder")
-    for (i in 1:length(chunks)) {
+    for (i in seq_along(chunks)) {
       chunk_vars <- c(chunk_vars, paste("builder.append(\"", chunks[i], "\") == \"\"", sep = ""))
     }
   }
@@ -588,8 +588,7 @@ livy_connection_jars <- function(config, version, scala_version) {
         paste0("sparklyr-", target_version)
       } else {
         paste0("sparklyr-", target_version, "-", scala_version)
-      }
-    )
+      })
     target_jar <- dir(system.file("java", package = "sparklyr"), pattern = target_jar_pattern)
     # Select the jar file built with the lowest version of Scala in case there is no
     # requirement for Scala version compatibility
@@ -597,7 +596,7 @@ livy_connection_jars <- function(config, version, scala_version) {
       target_jar <- stringr::str_sort(target_jar)[[1]]
     }
 
-    livy_branch <- spark_config_value(config, "sparklyr.livy.branch", "feature/sparklyr-1.4.0")
+    livy_branch <- spark_config_value(config, "sparklyr.livy.branch", "feature/sparklyr-1.6.0")
 
     livy_jars <- paste0(
       "https://github.com/sparklyr/sparklyr/blob/",

@@ -3,7 +3,7 @@ NULL
 
 arrow_enabled <- function(sc, object) {
   has_arrow <- "package:arrow" %in% search()
-  spark_config_value(sc, "sparklyr.arrow", has_arrow) &&
+  spark_config_value(sc$config, "sparklyr.arrow", has_arrow) &&
     arrow_enabled_object(object)
 }
 
@@ -20,7 +20,6 @@ arrow_enabled <- function(sc, object) {
 #'
 #' df <- tibble::tibble(x = seq(5))
 #' arrow_enabled_object(df)
-#'
 #' }
 #'
 #' @export
@@ -62,7 +61,7 @@ arrow_enabled_object.data.frame <- function(object) {
   enabled <- TRUE
   for (column in colnames(object)) {
     if ("list" %in% class(object[[column]]) &&
-        "raw" %in% lapply(object[[column]], class)) {
+      "raw" %in% lapply(object[[column]], class)) {
       unsupported <- c(unsupported, column)
       enabled <- FALSE
     }

@@ -3,153 +3,155 @@ package sparklyr
 import org.apache.spark.sql._
 
 import scala.Option
+import scala.reflect.ClassTag
 import scala.util.Try
 
 case class Numeric(value: Option[Double])
 
 object Collectors {
+  val ReDecimalType = "(^DecimalType(\\(.*\\)?)$)".r
+  val ReVectorType  = "(.*VectorUDT.*)".r
+  val ReBooleanArrayType = "(^ArrayType\\(BooleanType,(true|false)\\)$)".r
+  val ReByteArrayType = "(^ArrayType\\(ByteType,(true|false)\\)$)".r
+  val ReShortArrayType = "(^ArrayType\\(ShortType,(true|false)\\)$)".r
+  val ReIntegerArrayType = "(^ArrayType\\(IntegerType,(true|false)\\)$)".r
+  val ReLongArrayType = "(^ArrayType\\(LongType,(true|false)\\)$)".r
+  val ReDecimalArrayType = "(^ArrayType\\(DecimalType(\\(.*\\)?),(true|false)\\)$)".r
+  val ReFloatArrayType = "(^ArrayType\\(FloatType,(true|false)\\)$)".r
+  val ReDoubleArrayType = "(^ArrayType\\(DoubleType,(true|false)\\)$)".r
+  val ReStringArrayType = "(^ArrayType\\(StringType,(true|false)\\)$)".r
+  val ReTimestampArrayType = "(^ArrayType\\(TimestampType,(true|false)\\)$)".r
+  val ReDateArrayType = "(^ArrayType\\(DateType,(true|false)\\)$)".r
+
   def collectBoolean(row: Row, idx: Int): Int = {
-    val el = row(idx)
-    if (el.isInstanceOf[Boolean]) if (el.asInstanceOf[Boolean]) 1 else 0 else scala.Int.MinValue
+    extractBoolean(row(idx))
   }
 
   def collectBooleanArr(row: Row, idx: Int): Array[Int] = {
-    val el = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-    el.map(e => {
-      if (e.isInstanceOf[Boolean]) if (el.asInstanceOf[Boolean]) 1 else 0 else scala.Int.MinValue
-    }).toArray
+    val arr = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
+
+    arr.map(extractBoolean).toArray
   }
 
-  def collectInteger(row: Row, idx: Int): Int = {
-    val el = row(idx)
-    if (el.isInstanceOf[Int]) el.asInstanceOf[Int] else scala.Int.MinValue
+  private[this] def extractBoolean(x: Any): Int = {
+    x match {
+      case b: Boolean => b.compare(false)
+      case _ => scala.Int.MinValue
+    }
   }
 
-  def collectIntegerArr(row: Row, idx: Int): Array[Int] = {
-    val el = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-    el.map(e =>
-      if (e.isInstanceOf[Int]) e.asInstanceOf[Int] else scala.Int.MinValue
-    ).toArray
+  def collectIntegralType[T: scala.math.Integral](
+    row: Row,
+    idx: Int
+  )(implicit t: ClassTag[T]): Int = {
+    extractIntegralType[T](row(idx))
   }
 
-  def collectNumeric(row: Row, idx: Int): Numeric = {
-    val el = row(idx)
-    new Numeric(
-      if (null == el) {
+  def collectIntegralTypeArr[T: scala.math.Integral](
+    row: Row,
+    idx: Int
+  )(implicit t: ClassTag[T]): Array[Int] = {
+    val arr = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
+
+    arr.map(extractIntegralType[T]).toArray
+  }
+
+  private[this] def extractIntegralType[T: scala.math.Integral](
+    x: Any
+  )(implicit t: ClassTag[T]): Int = {
+    x match {
+      case i: T => implicitly[scala.math.Integral[T]].toInt(i)
+      case _=> scala.Int.MinValue
+    }
+  }
+
+  def collectNumericType[T: scala.math.Numeric](
+    row: Row,
+    idx: Int
+  )(implicit t: ClassTag[T]): Numeric = {
+    extractNumericType[T](row(idx))
+  }
+
+  def collectNumericTypeArr[T: scala.math.Numeric](
+    row: Row,
+    idx: Int
+  )(implicit t: ClassTag[T]): Array[Numeric] = {
+    val arr = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
+
+    arr.map(extractNumericType[T]).toArray
+  }
+
+  private[this] def extractNumericType[T: scala.math.Numeric](
+    x: Any
+  )(implicit t: ClassTag[T]): Numeric = {
+    Numeric(
+      if (x == null) {
         None
-      } else if (el.isInstanceOf[Double]) {
-        Some(el.asInstanceOf[Double])
       } else {
-        Some(scala.Double.NaN)
+        x match {
+          case v: T => Some(implicitly[scala.math.Numeric[T]].toDouble(v))
+          case _ => Some(scala.Double.NaN)
+        }
       }
     )
   }
 
-  def collectNumericArr(row: Row, idx: Int): Array[Numeric] = {
-    val el = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-    el.map(e =>
-      new Numeric(
-        if (null == e) {
-          None
-        } else if (e.isInstanceOf[Double])
-          Some(e.asInstanceOf[Double])
-        else
-          Some(scala.Double.NaN)
-      )
-    ).toArray
+  def collectBigDecimal(row: Row, idx: Int): Numeric = {
+    extractBigDecimal(row(idx))
   }
 
-  def collectFloat(row: Row, idx: Int): Double  = {
-    val el = row(idx)
-    if (el.isInstanceOf[Float]) el.asInstanceOf[Float].toDouble else scala.Double.NaN
+  def collectBigDecimalArr(row: Row, idx: Int): Array[Numeric] = {
+    val arr = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
+
+    arr.map(extractBigDecimal).toArray
   }
 
-  def collectFloatArr(row: Row, idx: Int): Array[Double] = {
-    val el = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-    el.map(e =>
-      if (e.isInstanceOf[Float]) e.asInstanceOf[Float].toDouble else scala.Double.NaN
-    ).toArray
-  }
-
-  def collectByte(row: Row, idx: Int): Int = {
-    val el = row(idx)
-    if (el.isInstanceOf[Byte]) el.asInstanceOf[Byte].toInt else scala.Int.MinValue
-  }
-
-  def collectByteArr(row: Row, idx: Int): Array[Int] = {
-    val el = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-    el.map(e =>
-      if (e.isInstanceOf[Byte]) e.asInstanceOf[Byte].toInt else scala.Int.MinValue
-    ).toArray
-  }
-
-  def collectShort(row: Row, idx: Int): Int = {
-    val el = row(idx)
-    if (el.isInstanceOf[Short]) el.asInstanceOf[Short].toInt else scala.Int.MinValue
-  }
-
-  def collectShortArr(row: Row, idx: Int): Array[Int] = {
-    val el = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-    el.map(e =>
-      if (e.isInstanceOf[Short]) e.asInstanceOf[Short].toInt else scala.Int.MinValue
-    ).toArray
-  }
-
-  def collectLong(row: Row, idx: Int): Double = {
-    val el = row(idx)
-    if (el.isInstanceOf[Long]) el.asInstanceOf[Long].toDouble else scala.Double.NaN
-  }
-
-  def collectLongArr(row: Row, idx: Int): Array[Double] = {
-    val el = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-    el.map(e =>
-      if (e.isInstanceOf[Long]) e.asInstanceOf[Long].toDouble else scala.Double.NaN
-    ).toArray
+  private[this] def extractBigDecimal(x: Any): Numeric = {
+    Numeric(
+      if (x == null) {
+        None
+      } else {
+        x match {
+          case d: java.math.BigDecimal => Some(d.doubleValue)
+          case _ => Some(scala.Double.NaN)
+        }
+      }
+    )
   }
 
   val collectForceString = (row: Row, idx: Int) => {
-    val el = row(idx)
-    if (el != null) el.toString() else "<NA>"
+    extractStringRepr(row(idx))
   }
 
   def collectForceStringArr(row: Row, idx: Int): Array[String] = {
     val arr = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
 
-    arr.map{e => {
-      if (e != null) e.toString() else "<NA>"
-    }}.toArray
+    arr.map(extractStringRepr).toArray
+  }
+
+  private[this] def extractStringRepr(x: Any): String = {
+    if (x == null) {
+      "<NA>"
+    } else {
+      x.toString
+    }
   }
 
   val collectString = (row: Row, idx: Int) => {
-    val el = row(idx)
-    if (el.isInstanceOf[String]) el.asInstanceOf[String] else "<NA>"
+    extractString(row(idx))
   }
 
   def collectStringArr(row: Row, idx: Int): Array[String] = {
     val arr = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
 
-    arr.map{e => {
-      if (e.isInstanceOf[String]) e.asInstanceOf[String] else "<NA>"
-    }}.toArray
+    arr.map(extractString).toArray
   }
 
-  def collectDecimal(row: Row, idx: Int): Double = {
-    val el = row(idx)
-    if (el.isInstanceOf[java.math.BigDecimal])
-      el.asInstanceOf[java.math.BigDecimal].doubleValue
-    else
-      scala.Double.NaN
-  }
-
-  def collectDecimalArr(row: Row, idx: Int): Array[Double] = {
-    val arr = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-
-    arr.map(el => {
-      if (el.isInstanceOf[java.math.BigDecimal])
-        el.asInstanceOf[java.math.BigDecimal].doubleValue
-      else
-        scala.Double.NaN
-    }).toArray
+  private[this] def extractString(x: Any): String = {
+    x match {
+      case s: String => s
+      case _ => "<NA>"
+    }
   }
 
   def collectVector(row: Row, idx: Int): Array[_] = {
@@ -163,6 +165,7 @@ object Collectors {
 
   def collectJSON(row: Row, idx: Int) = {
     val el = row(idx)
+
     el match {
       case _: String => new StructTypeAsJSON(el.asInstanceOf[String])
       case _ => collectDefault(row, idx)
@@ -170,25 +173,37 @@ object Collectors {
   }
 
   def collectTimestamp(row: Row, idx: Int): java.sql.Timestamp = {
-    Try(row.getAs[java.sql.Timestamp](idx)).getOrElse(null)
+    extractTimestamp(row(idx))
   }
 
   def collectTimestampArr(row: Row, idx: Int): Array[java.sql.Timestamp] = {
-    val el = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-    el.map(e =>
-      Try(e.asInstanceOf[java.sql.Timestamp]).getOrElse(null)
-    ).toArray
+    val arr = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
+
+    arr.map(extractTimestamp).toArray
+  }
+
+  private[this] def extractTimestamp(x: Any): java.sql.Timestamp = {
+    x match {
+      case t: java.sql.Timestamp => t
+      case _ => null
+    }
   }
 
   def collectDate(row: Row, idx: Int): java.sql.Date = {
-    Try(row.getAs[java.sql.Date](idx)).getOrElse(null)
+    extractDate(row(idx))
   }
 
   def collectDateArr(row: Row, idx: Int): Array[java.sql.Date] = {
-    val el = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
-    el.map(e =>
-      Try(e.asInstanceOf[java.sql.Date]).getOrElse(null)
-    ).toArray
+    val arr = row(idx).asInstanceOf[scala.collection.mutable.WrappedArray[_]]
+
+    arr.map(extractDate).toArray
+  }
+
+  private[this] def extractDate(x: Any): java.sql.Date = {
+    x match {
+      case d: java.sql.Date => d
+      case _ => null
+    }
   }
 
   def collectDefault(row: Row, idx: Int) = {
@@ -208,58 +223,41 @@ object Collectors {
 
   def mkColumnCtx(colType: String, numRows: Int) = {
 
-    val ReDecimalType = "(DecimalType.*)".r
-    val ReVectorType  = "(.*VectorUDT.*)".r
-
     def newColumnCtx[T <: Any : Manifest](collector: (Row, Int) => T) = {
       new ColumnCtx[T](collector, numRows)
     }
 
     colType match {
       case "BooleanType"          => newColumnCtx[Int](Collectors.collectBoolean)
-      case "IntegerType"          => newColumnCtx[Int](Collectors.collectInteger)
-      case "DoubleType"           => newColumnCtx[Numeric](Collectors.collectNumeric)
-      case "StringType"           => newColumnCtx[String](Collectors.collectString)
-      case "LongType"             => newColumnCtx[Double](Collectors.collectLong)
-
-      case "ByteType"             => newColumnCtx[Int](Collectors.collectByte)
-      case "FloatType"            => newColumnCtx[Double](Collectors.collectFloat)
-      case "ShortType"            => newColumnCtx[Int](Collectors.collectShort)
+      case "ByteType"             => newColumnCtx[Int](Collectors.collectIntegralType[Byte])
+      case "ShortType"            => newColumnCtx[Int](Collectors.collectIntegralType[Short])
+      case "IntegerType"          => newColumnCtx[Int](Collectors.collectIntegralType[Int])
+      case "LongType"             => newColumnCtx[Numeric](Collectors.collectNumericType[Long])
       case "Decimal"              => newColumnCtx[String](Collectors.collectForceString)
-
+      case ReDecimalType(_*)      => newColumnCtx[Numeric](Collectors.collectBigDecimal)
+      case "FloatType"            => newColumnCtx[Numeric](Collectors.collectNumericType[Float])
+      case "DoubleType"           => newColumnCtx[Numeric](Collectors.collectNumericType[Double])
+      case "StringType"           => newColumnCtx[String](Collectors.collectString)
       case "TimestampType"        => newColumnCtx[java.sql.Timestamp](Collectors.collectTimestamp)
       case "CalendarIntervalType" => newColumnCtx[String](Collectors.collectForceString)
       case "DateType"             => newColumnCtx[java.sql.Date](Collectors.collectDate)
-
-      case ReDecimalType(_)       => newColumnCtx[Double](Collectors.collectDecimal)
-      case ReVectorType(_)        => newColumnCtx[Any](Collectors.collectVector)
+      case ReVectorType(_*)       => newColumnCtx[Any](Collectors.collectVector)
       case StructTypeAsJSON.DType => newColumnCtx[Any](Collectors.collectJSON)
 
-      case "ArrayType(BooleanType,true)"           => newColumnCtx[Array[Int]](Collectors.collectBooleanArr)
-      case "ArrayType(IntegerType,true)"           => newColumnCtx[Array[Int]](Collectors.collectIntegerArr)
-      case "ArrayType(DoubleType,true)"            => newColumnCtx[Array[Numeric]](Collectors.collectNumericArr)
-      case "ArrayType(StringType,true)"            => newColumnCtx[Array[String]](Collectors.collectStringArr)
-      case "ArrayType(LongType,true)"              => newColumnCtx[Array[Double]](Collectors.collectLongArr)
-      case "ArrayType(ByteType,true)"              => newColumnCtx[Array[Int]](Collectors.collectByteArr)
-      case "ArrayType(FloatType,true)"             => newColumnCtx[Array[Double]](Collectors.collectFloatArr)
-      case "ArrayType(ShortType,true)"             => newColumnCtx[Array[Int]](Collectors.collectShortArr)
-      case "ArrayType(DecimalType,true)"           => newColumnCtx[Array[Double]](Collectors.collectDecimalArr)
-      case "ArrayType(TimestampType,true)"         => newColumnCtx[Array[java.sql.Timestamp]](Collectors.collectTimestampArr)
+      case ReBooleanArrayType(_*)   => newColumnCtx[Array[Int]](Collectors.collectBooleanArr)
+      case ReByteArrayType(_*)      => newColumnCtx[Array[Int]](Collectors.collectIntegralTypeArr[Byte])
+      case ReShortArrayType(_*)     => newColumnCtx[Array[Int]](Collectors.collectIntegralTypeArr[Short])
+      case ReIntegerArrayType(_*)   => newColumnCtx[Array[Int]](Collectors.collectIntegralTypeArr[Int])
+      case ReLongArrayType(_*)      => newColumnCtx[Array[Numeric]](Collectors.collectNumericTypeArr[Long])
+      case ReDecimalArrayType(_*)   => newColumnCtx[Array[Numeric]](Collectors.collectBigDecimalArr)
+      case ReFloatArrayType(_*)     => newColumnCtx[Array[Numeric]](Collectors.collectNumericTypeArr[Float])
+      case ReDoubleArrayType(_*)    => newColumnCtx[Array[Numeric]](Collectors.collectNumericTypeArr[Double])
+      case ReStringArrayType(_*)    => newColumnCtx[Array[String]](Collectors.collectStringArr)
+      case ReTimestampArrayType(_*) => newColumnCtx[Array[java.sql.Timestamp]](Collectors.collectTimestampArr)
+      case ReDateArrayType(_*)      => newColumnCtx[Array[java.sql.Date]](Collectors.collectDateArr)
       case "ArrayType(CalendarIntervalType,true)"  => newColumnCtx[Array[String]](Collectors.collectForceStringArr)
-      case "ArrayType(DateType,true)"              => newColumnCtx[Array[java.sql.Date]](Collectors.collectDateArr)
 
-      case "ArrayType(BooleanType,false)"          => newColumnCtx[Array[Int]](Collectors.collectBooleanArr)
-      case "ArrayType(IntegerType,false)"          => newColumnCtx[Array[Int]](Collectors.collectIntegerArr)
-      case "ArrayType(DoubleType,false)"           => newColumnCtx[Array[Numeric]](Collectors.collectNumericArr)
-      case "ArrayType(StringType,false)"           => newColumnCtx[Array[String]](Collectors.collectStringArr)
-      case "ArrayType(LongType,false)"             => newColumnCtx[Array[Double]](Collectors.collectLongArr)
-      case "ArrayType(ByteType,false)"             => newColumnCtx[Array[Int]](Collectors.collectByteArr)
-      case "ArrayType(FloatType,false)"            => newColumnCtx[Array[Double]](Collectors.collectFloatArr)
-      case "ArrayType(ShortType,false)"            => newColumnCtx[Array[Int]](Collectors.collectShortArr)
-      case "ArrayType(DecimalType,false)"          => newColumnCtx[Array[Double]](Collectors.collectDecimalArr)
-      case "ArrayType(TimestampType,false)"        => newColumnCtx[Array[java.sql.Timestamp]](Collectors.collectTimestampArr)
       case "ArrayType(CalendarIntervalType,false)" => newColumnCtx[Array[String]](Collectors.collectForceStringArr)
-      case "ArrayType(DateType,false)"             => newColumnCtx[Array[java.sql.Date]](Collectors.collectDateArr)
 
       case "NullType"             => newColumnCtx[String](Collectors.collectForceString)
 

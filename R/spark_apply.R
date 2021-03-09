@@ -1,5 +1,6 @@
 #' @include spark_apply_bundle.R
 #' @include spark_schema_from_rdd.R
+#' @include utils.R
 NULL
 
 spark_apply_worker_config <- function(
@@ -24,23 +25,6 @@ spark_apply_worker_config <- function(
       sc$config
     )
   )
-}
-
-spark_apply_colum_types <- function(sdf) {
-  type_map <- list(
-    IntegerType = "integer",
-    FloatType = "numeric",
-    DoubleType = "numeric",
-    LongType = "numeric",
-    StringType = "character",
-    BinaryType = "raw",
-    BooleanType = "logical",
-    TimestampType = "POSIXct",
-    DateType = "Date",
-    DateType = "date"
-  )
-
-  lapply(sdf_schema(sdf), function(e) type_map[[e$type]])
 }
 
 #' Apply an R Function in Spark
@@ -104,6 +88,8 @@ spark_apply_colum_types <- function(sdf) {
 #'   NOTE: when \code{fetch_result_as_sdf} is set to \code{FALSE}, object returned from the
 #'   transformation function also must be serializable by the \code{base::serialize}
 #'   function in R.
+#' @param arrow_max_records_per_batch Maximum size of each Arrow record batch,
+#'   ignored if Arrow serialization is not enabled.
 #' @param ... Optional arguments; currently unused.
 #'
 #' @section Configuration:
@@ -144,6 +130,7 @@ spark_apply <- function(x,
                         barrier = NULL,
                         fetch_result_as_sdf = TRUE,
                         partition_index_param = "",
+                        arrow_max_records_per_batch = NULL,
                         ...) {
   if (!is.character(partition_index_param)) {
     stop("Expected 'partition_index_param' to be a string.")
@@ -211,7 +198,11 @@ spark_apply <- function(x,
       invoke("sessionState") %>%
       invoke("conf") %>%
       invoke("sessionLocalTimeZone")
-    records_per_batch <- as.integer(spark_session_config(sc)[["spark.sql.execution.arrow.maxRecordsPerBatch"]] %||% 10000)
+    records_per_batch <- as.integer(
+      arrow_max_records_per_batch %||%
+      spark_session_config(sc)[["spark.sql.execution.arrow.maxRecordsPerBatch"]] %||%
+      10000
+    )
   }
 
   # build reduced size query plan in case schema needs to be inferred
@@ -259,7 +250,7 @@ spark_apply <- function(x,
 
   # inject column types and partition_index_param to context
   context <- list(
-    column_types = spark_apply_colum_types(x),
+    column_types = translate_spark_column_types(x),
     partition_index_param = partition_index_param,
     user_context = context
   )
@@ -490,8 +481,7 @@ spark_apply <- function(x,
       (
         function(x) {
           lapply(x$spark_apply_binary_result, function(res) unserialize(res[[1]]))
-        }
-      )
+        })
   } else {
     registered
   }

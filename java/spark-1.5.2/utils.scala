@@ -11,6 +11,9 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 import org.apache.spark.{SparkEnv, SparkException}
 import org.apache.spark.sql.catalyst.InternalRow
+import org.apache.spark.sql.catalyst.expressions.UnsafeRow
+import org.apache.spark.unsafe.Platform;
+import org.apache.spark.unsafe.types.UTF8String
 
 import scala.collection.JavaConverters._
 import scala.util.Try
@@ -27,25 +30,41 @@ object Utils {
 
   def collectColumnInteger(df: DataFrame, colName: String): Array[Int] = {
     df.select(colName).rdd.map(row => {
-       val element = row(0)
-       if (element.isInstanceOf[Int]) element.asInstanceOf[Int] else scala.Int.MinValue
+      val element = row(0)
+
+      element match {
+        case x: Int => x
+        case _ => scala.Int.MinValue
+      }
     }).collect()
   }
 
   def collectColumnDouble(df: DataFrame, colName: String): Array[Double] = {
     df.select(colName).rdd.map(row => {
-       val element = row(0)
-       if (element.isInstanceOf[Double]) element.asInstanceOf[Double] else scala.Double.NaN
+      val element = row(0)
+
+      element match {
+        case x: Double => x
+        case _ => scala.Double.NaN
+      }
     }).collect()
   }
 
   def collectColumnString(df: DataFrame, colName: String, separator: String): String = {
     val text = df.select(colName).rdd.map(row => {
       val element = row(0)
-      if (element.isInstanceOf[String]) element.asInstanceOf[String] else "<NA>"
+
+      element match {
+        case x: String => x
+        case _ => "<NA>"
+      }
     }).collect().mkString(separator)
 
-    if (text.length() > 0) text + separator else text
+    if (text.length() > 0) {
+      text + separator
+    } else {
+      text
+    }
   }
 
   def collectColumnDefault(df: DataFrame, colName: String): Array[Any] = {
@@ -245,7 +264,7 @@ object Utils {
     if (serialized_cols.isEmpty) {
       throw new IllegalArgumentException("Serialized columns byte array is empty.")
     }
-    val cols = serialized_cols.par.map(
+    val cols = serialized_cols.map(
       serialized_col => {
         val bis = new ByteArrayInputStream(serialized_col)
         val dis = new DataInputStream(bis)
@@ -254,25 +273,83 @@ object Utils {
         RUtils.unserializeColumn(dis)
       }
     ).toArray
+    val num_cols = cols.length
     for (c <- timestamp_col_idxes) {
-      cols(c) = cols(c).asInstanceOf[Array[_]].par.map(
+      cols(c) = cols(c).asInstanceOf[Array[_]].map(
         x => x.asInstanceOf[Double].longValue * 1000000
       ).toArray
     }
     for (c <- string_col_idxes) {
-      cols(c) = cols(c).asInstanceOf[Array[_]].par.map(
-        x => org.apache.spark.unsafe.types.UTF8String.fromString(x.asInstanceOf[String])
+      cols(c) = cols(c).asInstanceOf[Array[_]].map(
+        x => UTF8String.fromString(x.asInstanceOf[String])
       ).toArray
     }
     val rows = (0 until num_rows).par.map(r => {
-      new org.apache.spark.sql.catalyst.expressions.GenericInternalRow(
-        (0 until cols.length).map(c => cols(c).asInstanceOf[Array[_]](r)).toArray
+      val variableLengthBytes = (0 until num_cols).map(c =>
+        cols(c)(r) match {
+          case x: UTF8String => x.numBytes
+          case x: RawSXP => x.buf.length
+          case _ => 0
+        }
+      ).sum
+      var variableLengthOffset = UnsafeRow.calculateBitSetWidthInBytes(cols.length) + 8 * num_cols
+      val row = UnsafeRow.createFromByteArray(variableLengthOffset + variableLengthBytes, num_cols)
+      (0 until num_cols).map(
+        c => {
+          if (cols(c)(r) == null) {
+            row.setNullAt(c)
+          } else {
+            cols(c)(r) match {
+              case x: Boolean => row.setBoolean(c, x)
+              case x: Integer => row.setInt(c, x)
+              case x: Double => row.setDouble(c, x)
+              case x: Long => row.setLong(c, x)
+              case x: UTF8String => {
+                variableLengthOffset = writeVariableLengthField(
+                  variableLengthOffset,
+                  row,
+                  c,
+                  x.getBytes
+                )
+              }
+              case x: RawSXP => {
+                variableLengthOffset = writeVariableLengthField(
+                  variableLengthOffset,
+                  row,
+                  c,
+                  x.buf
+                )
+              }
+              case _ => throw new IllegalArgumentException("Unsupported column type")
+            }
+          }
+        }
       )
+
+      row
     }).toArray
 
     val x: RDD[InternalRow] = sc.parallelize(rows, partitions)
 
     x
+  }
+
+  private[this] def writeVariableLengthField(
+    variableLengthOffset: Int,
+    row: UnsafeRow,
+    ordinal: Int,
+    buf: Array[Byte]
+  ) : Int = {
+    row.setLong(ordinal, (variableLengthOffset.toLong << 32) | buf.length.toLong)
+    Platform.copyMemory(
+      buf,
+      Platform.BYTE_ARRAY_OFFSET,
+      row.getBaseObject,
+      row.getBaseOffset + variableLengthOffset,
+      buf.length
+    )
+
+    variableLengthOffset + buf.length
   }
 
   def createDataFrame(
@@ -288,66 +365,8 @@ object Utils {
     sc.parallelize(data, partitions)
   }
 
-  def createDataFrameFromText(
-    sc: SparkContext,
-    rows: Array[String],
-    columns: Array[String],
-    partitions: Int,
-    separator: String): RDD[Row] = {
-
-    var data = rows.map(o => {
-      val r = o.split(separator, -1)
-      var typed = (Array.range(0, r.length)).map(idx => {
-        val column = columns(idx)
-        val value = r(idx)
-
-        parseCsvField(column, value)
-      })
-
-      org.apache.spark.sql.Row.fromSeq(typed)
-    })
-
-    sc.parallelize(data, partitions)
-  }
-
   def classExists(name: String): Boolean = {
     scala.util.Try(Class.forName(name)).isSuccess
-  }
-
-  def parseCsvField(column: String, value: String) = {
-    column match {
-      case "integer"   => Try(value.toInt).getOrElse(null)
-      case "double"    => Try(value.toDouble).getOrElse(null)
-      case "logical"   => Try(value.toBoolean).getOrElse(null)
-      case "timestamp" => Try(new java.sql.Timestamp(value.toLong * 1000)).getOrElse(null)
-      case "date" => Try(java.sql.Date.valueOf(value)).getOrElse(null)
-      case _ => if (value == "NA") null else value
-    }
-  }
-
-  def createDataFrameFromCsv(
-    sc: SparkContext,
-    path: String,
-    columns: Array[String],
-    partitions: Int,
-    separator: String): RDD[Row] = {
-
-    val lines = scala.io.Source.fromFile(path).getLines.toIndexedSeq
-    val rddRows: RDD[String] = sc.parallelize(lines, partitions);
-
-    val data: RDD[Row] = rddRows.map(o => {
-      val r = o.split(separator, -1)
-      var typed = (Array.range(0, r.length)).map(idx => {
-        val column = columns(idx)
-        val value = r(idx)
-
-        parseCsvField(column, value)
-      })
-
-      org.apache.spark.sql.Row.fromSeq(typed)
-    })
-
-    data
   }
 
   /**
@@ -458,6 +477,7 @@ object Utils {
     val dtype = row.schema.fields(colIdx).dataType
 
     dtype match {
+      case _: BooleanType => row.getBoolean(colIdx)
       case _: ByteType => row.getByte(colIdx)
       case _: ShortType => row.getShort(colIdx)
       case _: IntegerType => row.getInt(colIdx)
@@ -499,54 +519,34 @@ object Utils {
   }
 
   def asDouble(x: Any): Double = {
-    if (x.isInstanceOf[Int]) {
-      x.asInstanceOf[Int].toDouble
-    } else if (x.isInstanceOf[Long]) {
-      x.asInstanceOf[Long].toDouble
-    } else if (x.isInstanceOf[Double]) {
-      x.asInstanceOf[Double]
-    } else if (x.isInstanceOf[Float]) {
-      x.asInstanceOf[Float].toDouble
-    } else if (x.isInstanceOf[java.math.BigDecimal]) {
-      x.asInstanceOf[java.math.BigDecimal].doubleValue
-    } else if (x.isInstanceOf[Short]) {
-      x.asInstanceOf[Short].doubleValue
-    } else if (x.isInstanceOf[Byte]) {
-      x.asInstanceOf[Byte].doubleValue
-    } else if (x.isInstanceOf[java.sql.Timestamp]) {
-      x.asInstanceOf[java.sql.Timestamp].getTime
-    } else if (x.isInstanceOf[java.sql.Date]) {
-      x.asInstanceOf[java.sql.Date].getTime
-    } else if (x.isInstanceOf[java.util.Date]) {
-      x.asInstanceOf[java.util.Date].getTime
-    } else {
-      Double.NaN
+    x match {
+      case v: Byte => v.doubleValue
+      case v: Short => v.doubleValue
+      case v: Int => v.toDouble
+      case v: Long => v.toDouble
+      case v: Double => v
+      case v: Float => v.toDouble
+      case v: java.math.BigDecimal => v.doubleValue
+      case v: java.sql.Timestamp => v.getTime.toDouble
+      case v: java.sql.Date => v.getTime.toDouble
+      case v: java.util.Date => v.getTime.toDouble
+      case _ => Double.NaN
     }
   }
 
   def asLong(x: Any): Long = {
-    if (x.isInstanceOf[Int]) {
-      x.asInstanceOf[Int].toLong
-    } else if (x.isInstanceOf[Long]) {
-      x.asInstanceOf[Long]
-    } else if (x.isInstanceOf[Double]) {
-      x.asInstanceOf[Double].toLong
-    } else if (x.isInstanceOf[Float]) {
-      x.asInstanceOf[Float].toLong
-    } else if (x.isInstanceOf[java.math.BigDecimal]) {
-      x.asInstanceOf[java.math.BigDecimal].longValue
-    } else if (x.isInstanceOf[Short]) {
-      x.asInstanceOf[Short].toLong
-    } else if (x.isInstanceOf[Byte]) {
-      x.asInstanceOf[Byte].toLong
-    } else if (x.isInstanceOf[java.sql.Timestamp]) {
-      x.asInstanceOf[java.sql.Timestamp].getTime
-    } else if (x.isInstanceOf[java.sql.Date]) {
-      x.asInstanceOf[java.sql.Date].getTime
-    } else if (x.isInstanceOf[java.util.Date]) {
-      x.asInstanceOf[java.util.Date].getTime
-    } else {
-      throw new IllegalArgumentException("unsupported input type")
+    x match {
+      case v: Byte => v.toLong
+      case v: Short => v.toLong
+      case v: Int => v.toLong
+      case v: Long => v
+      case v: Float => v.toLong
+      case v: Double => v.toLong
+      case v: java.math.BigDecimal => v.longValue
+      case v: java.sql.Timestamp => v.getTime
+      case v: java.sql.Date => v.getTime
+      case v: java.util.Date => v.getTime
+      case _ => throw new IllegalArgumentException("unsupported input type")
     }
   }
 }

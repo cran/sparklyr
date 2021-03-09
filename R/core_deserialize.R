@@ -76,13 +76,14 @@ readTypedObject <- function(con, type) {
     "t" = readTime(con),
     "a" = readArray(con),
     "l" = readList(con),
-    "e" = readEnv(con),
+    "e" = readMap(con),
     "s" = readStruct(con),
     "f" = readFastStringArray(con),
     "n" = NULL,
     "j" = getJobj(con, readString(con)),
     "J" = jsonlite::fromJSON(
-      readString(con), simplifyDataFrame = FALSE, simplifyMatrix = FALSE
+      readString(con),
+      simplifyDataFrame = FALSE, simplifyMatrix = FALSE
     ),
     stop(paste("Unsupported type for deserialization", type))
   )
@@ -190,7 +191,7 @@ readArray <- function(con) {
 
   if (len > 0) {
     l <- vector("list", len)
-    for (i in 1:len) {
+    for (i in seq_len(len)) {
       l[[i]] <- readTypedObject(con, type)
     }
     l
@@ -205,7 +206,7 @@ readList <- function(con) {
   len <- readInt(con)
   if (len > 0) {
     l <- vector("list", len)
-    for (i in 1:len) {
+    for (i in seq_len(len)) {
       elem <- readObject(con)
       if (is.null(elem)) {
         elem <- NA
@@ -218,17 +219,18 @@ readList <- function(con) {
   }
 }
 
-readEnv <- function(con) {
-  env <- new.env()
+readMap <- function(con) {
+  map <- list()
   len <- readInt(con)
   if (len > 0) {
-    for (i in 1:len) {
+    for (i in seq_len(len)) {
       key <- readString(con)
       value <- readObject(con)
-      env[[key]] <- value
+      map[[key]] <- value
     }
   }
-  env
+
+  map
 }
 
 # Convert a named list to struct so that

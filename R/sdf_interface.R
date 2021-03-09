@@ -1,4 +1,5 @@
 #' @include avro_utils.R
+#' @include dplyr_spark.R
 #' @include tables_spark.R
 #' @include utils.R
 NULL
@@ -41,7 +42,7 @@ NULL
 #' \dontrun{
 #' sc <- spark_connect(master = "spark://HOST:PORT")
 #' sdf_copy_to(sc, iris)
-#'}
+#' }
 #'
 #' @name sdf_copy_to
 #' @export
@@ -367,27 +368,38 @@ sdf_last_index <- function(x, id = "id") {
 #' Compute (Approximate) Quantiles with a Spark DataFrame
 #'
 #' Given a numeric column within a Spark DataFrame, compute
-#' approximate quantiles (to some relative error).
+#' approximate quantiles.
 #'
 #' @template roxlate-ml-x
 #' @param column The column(s) for which quantiles should be computed.
 #' Multiple columns are only supported in Spark 2.0+.
 #' @param probabilities A numeric vector of probabilities, for
 #'   which quantiles should be computed.
-#' @param relative.error The relative error -- lower values imply more
-#'   precision in the computed quantiles.
+#' @param relative.error The maximal possible difference between the actual
+#'   percentile of a result and its expected percentile (e.g., if
+#'   `relative.error` is 0.01 and `probabilities` is 0.95, then any value
+#'   between the 94th and 96th percentile will be considered an acceptable
+#'   approximation).
+#' @param weight.column If not NULL, then a generalized version of the Greenwald-
+#'   Khanna algorithm will be run to compute weighted percentiles, with each
+#'   sample from `column` having a relative weight specified by the corresponding
+#'   value in `weight.column`. The weights can be considered as relative
+#'   frequencies of sample data points.
 #'
 #' @export
 sdf_quantile <- function(x,
                          column,
                          probabilities = c(0.00, 0.25, 0.50, 0.75, 1.00),
-                         relative.error = 1E-5) {
+                         relative.error = 1E-5,
+                         weight.column = NULL) {
   sdf <- spark_dataframe(x)
 
-  if (length(column) > 1) {
-    if (package_version(sdf$connection$home_version) <
+  if (is.null(weight.column)) {
+    if (length(column) > 1) {
+      if (package_version(sdf$connection$home_version) <
         package_version("2.0.0")) {
-      stop("Spark 2.0+ is required when length(column) > 1")
+        stop("Spark 2.0+ is required when length(column) > 1")
+      }
     }
   }
 
@@ -399,8 +411,27 @@ sdf_quantile <- function(x,
   probabilities <- as.list(as.numeric(probabilities))
   relative.error <- cast_scalar_double(relative.error)
 
-  stat <- invoke(sdf, "stat")
-  quantiles <- invoke(stat, "approxQuantile", column, probabilities, relative.error)
+  quantiles <- (
+    if (is.null(weight.column)) {
+      sdf %>%
+        invoke(
+          "%>%",
+          list("stat"),
+          list("approxQuantile", column, probabilities, relative.error)
+        )
+    } else {
+      invoke_static(
+        spark_connection(x),
+        "sparklyr.WeightedQuantileSummaries",
+        "approxWeightedQuantile",
+        sdf,
+        column,
+        weight.column,
+        probabilities,
+        relative.error
+      )
+    }
+  )
 
   if (length(column) == 1) {
     quantiles <- unlist(quantiles)
@@ -433,8 +464,9 @@ sdf_quantile <- function(x,
 #' @param storage.level The storage level to be used. Please view the
 #'   \href{http://spark.apache.org/docs/latest/programming-guide.html#rdd-persistence}{Spark Documentation}
 #'   for information on what storage levels are accepted.
+#' @param name A name to assign this table. Passed to [sdf_register()].
 #' @export
-sdf_persist <- function(x, storage.level = "MEMORY_AND_DISK") {
+sdf_persist <- function(x, storage.level = "MEMORY_AND_DISK", name = NULL) {
   sdf <- spark_dataframe(x)
   sc <- spark_connection(sdf)
 
@@ -448,7 +480,7 @@ sdf_persist <- function(x, storage.level = "MEMORY_AND_DISK") {
 
   sdf %>%
     invoke("persist", sl) %>%
-    sdf_register()
+    sdf_register(name = name)
 }
 
 #' Checkpoint a Spark DataFrame
@@ -730,7 +762,8 @@ sdf_expand_grid <- function(
       }
       if (!"tbl_spark" %in% class(vars[[i]])) {
         vars[[i]] <- sdf_copy_to(
-          sc, data.frame(vars[i]), name = random_string("sdf_expand_grid_tmp")
+          sc, data.frame(vars[i]),
+          name = random_string("sdf_expand_grid_tmp")
         )
       }
     }
@@ -744,13 +777,12 @@ sdf_expand_grid <- function(
             } else {
               as.list(exprs)[1]
             }
-          }
-        ) %>%
-          lapply(rlang::as_string) %>%
-          unlist()
+          }) %>%
+        lapply(rlang::as_string) %>%
+        unlist()
     }
     for (x in broadcast_vars) {
-      idxes <- which (names(vars) %in% x)
+      idxes <- which(names(vars) %in% x)
       if (length(idxes) > 0) {
         for (idx in idxes) {
           vars[[idx]] <- sdf_broadcast(vars[[idx]])
@@ -800,8 +832,10 @@ sdf_expand_grid <- function(
 #' library(sparklyr)
 #' sc <- spark_connect(master = "spark://HOST:PORT")
 #' example_sdf <- sdf_len(sc, 100L, repartition = 10L)
-#' example_sdf %>% sdf_partition_sizes() %>% print()
-#'}
+#' example_sdf %>%
+#'   sdf_partition_sizes() %>%
+#'   print()
+#' }
 #'
 #' @export
 sdf_partition_sizes <- function(x) {
@@ -841,7 +875,7 @@ sdf_partition_sizes <- function(x) {
 #' sc <- spark_connect(master = "spark://HOST:PORT")
 #' example_sdf <- copy_to(sc, tibble::tibble(a = 1, b = 2))
 #' example_sdf["a"] %>% print()
-#'}
+#' }
 #'
 #' @export
 `[.tbl_spark` <- function(x, i) {
