@@ -1,7 +1,7 @@
 Type: Package
 Package: sparklyr
 Title: R Interface to Apache Spark
-Version: 1.6.0
+Version: 1.6.1
 Authors@R: 
     c(person(given = "Javier",
              family = "Luraschi",
@@ -170,8 +170,8 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'ml_validator_utils.R' 'mutation.R' 'na_actions.R'
         'new_model_multilayer_perceptron.R' 'precondition.R'
         'project_template.R' 'qubole_connection.R' 'reexports.R'
-        'sdf_dim.R' 'sdf_ml.R' 'sdf_saveload.R' 'sdf_sequence.R'
-        'sdf_stat.R' 'sdf_streaming.R' 'tidyr_utils.R'
+        'sdf_dim.R' 'sdf_distinct.R' 'sdf_ml.R' 'sdf_saveload.R'
+        'sdf_sequence.R' 'sdf_stat.R' 'sdf_streaming.R' 'tidyr_utils.R'
         'sdf_unnest_longer.R' 'sdf_wrapper.R' 'sdf_unnest_wider.R'
         'sdf_utils.R' 'spark_compile.R' 'spark_context_config.R'
         'spark_extensions.R' 'spark_gateway.R'
@@ -195,7 +195,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
         'zzz.R'
 NeedsCompilation: no
-Packaged: 2021-03-09 20:36:10 UTC; yitaoli
+Packaged: 2021-03-23 15:33:00 UTC; yitaoli
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (<https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -211,4 +211,4 @@ Author: Javier Luraschi [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2021-03-09 21:20:02 UTC
+Date/Publication: 2021-03-23 16:50:02 UTC
