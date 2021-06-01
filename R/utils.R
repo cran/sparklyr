@@ -296,6 +296,12 @@ sort_named_list <- function(lst, ...) {
 
 `%@%` <- function(fn, largs) fn(largs)
 
+# syntax sugar for executing a chain of method calls with each call operating on
+# the JVM object returned from the previous call
+`%>|%` <- function(x, invocations) {
+  do.call(invoke, append(list(x, "%>%"), invocations))
+}
+
 pcre_to_java <- function(regex) {
   regex %>%
     gsub("\\[:alnum:\\]", "A-Za-z0-9", .) %>%
@@ -396,20 +402,4 @@ simulate_vars <- function(sdf) {
       }
     ) %>%
     tibble::as_tibble()
-}
-
-# wrapper for download.file()
-download_file <- function(...) {
-  min_timeout_s <- 300
-
-  # Temporarily set download.file() timeout to 300 seconds if it was
-  # previously less than that, and restore the previous timeout setting
-  # on exit.
-  prev_timeout_s <- getOption("timeout")
-  if (prev_timeout_s < min_timeout_s) {
-    on.exit(options(timeout = prev_timeout_s))
-    options(timeout = min_timeout_s)
-  }
-
-  download.file(...)
 }

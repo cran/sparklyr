@@ -1,10 +1,14 @@
-# Sparklyr 1.7.0.9000
+# Sparklyr 1.6.3
 
 ### Data
 
-- Revised `tidyr::fill()` implementation to respect any 'ORDER BY' clause from
-  the input while ensuring the same 'ORDER BY' operation is never duplicated
-  twice in the generated Spark SQL query
+- Reduced the number of `sparklyr::invoke()` calls needed for `sdf_schema()` to
+  avoid performance issues when processing Spark dataframes with non-trivial
+  number of columns
+
+- Implement memoization for `spark_dataframe.tbl_spark()` and
+  `sdf_schema.tbl_spark()` to reduce performance overhead for some `dplyr` use
+  cases involving Spark dataframes with non-trivial number of columns
 
 # Sparklyr 1.6.2
 
