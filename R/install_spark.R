@@ -29,7 +29,7 @@ spark_install_version_expand <- function(version, installed_only) {
 
 #' Find a given Spark installation by version.
 #'
-#' @rdname spark_install
+#' @inheritParams spark_install
 #'
 #' @param installed_only Search only the locally installed versions?
 #' @param latest Check for latest version?
@@ -187,7 +187,7 @@ spark_install <- function(version = NULL,
       message(msg)
     }
 
-    status <- suppressWarnings(download.file(
+    status <- suppressWarnings(download_file(
       installInfo$packageRemotePath,
       destfile = installInfo$packageLocalPath,
       quiet = !verbose

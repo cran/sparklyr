@@ -483,23 +483,25 @@ livy_invoke_statement <- function(sc, statement) {
   result
 }
 
-livy_invoke_statement_command <- function(sc, static, jobj, method, ...) {
+livy_invoke_statement_command <- function(sc, static, jobj, method, return_jobj_ref, ...) {
+  prefix <- if (return_jobj_ref) "j_" else ""
+
   if (identical(method, "<init>")) {
-    paste0("// invoke_new(sc, '", jobj, "', ...)")
+    paste0("// ", prefix, "invoke_new(sc, '", jobj, "', ...)")
   } else if (is.character(jobj)) {
-    paste0("// invoke_static(sc, '", jobj, "', '", method, "', ...)")
+    paste0("// ", prefix, "invoke_static(sc, '", jobj, "', '", method, "', ...)")
   } else {
-    paste0("// invoke(sc, <jobj>, '", method, "', ...)")
+    paste0("// ", prefix, "invoke(sc, <jobj>, '", method, "', ...)")
   }
 }
 
-livy_invoke_statement_fetch <- function(sc, static, jobj, method, ...) {
+livy_invoke_statement_fetch <- function(sc, static, jobj, method, return_jobj_ref, ...) {
   statement <- livy_statement_compose(sc, static, jobj, method, ...)
 
   # Note: Spark 2.0 requires magic to be present in the statement with the definition.
   statement$code <- paste(
     paste(
-      livy_invoke_statement_command(sc, static, jobj, method, ...),
+      livy_invoke_statement_command(sc, static, jobj, method, return_jobj_ref, ...),
       statement$code,
       sep = "\n"
     ),
@@ -576,12 +578,12 @@ livy_connection_jars <- function(config, version, scala_version) {
     livy_jars <- livy_available_jars()
     livy_max_version <- max(numeric_version(livy_jars[livy_jars != "master"]))
 
-    previouis_versions <- Filter(
+    previous_versions <- Filter(
       function(maybe_version) maybe_version <= major_version,
       numeric_version(gsub("master", paste(livy_max_version, "1", sep = "."), livy_available_jars()))
     )
 
-    target_version <- previouis_versions[length(previouis_versions)]
+    target_version <- previous_versions[length(previous_versions)]
 
     target_jar_pattern <- (
       if (is.null(scala_version)) {
@@ -594,9 +596,11 @@ livy_connection_jars <- function(config, version, scala_version) {
     # requirement for Scala version compatibility
     if (length(target_jar) > 1) {
       target_jar <- stringr::str_sort(target_jar)[[1]]
+    } else if (length(target_jar) == 0) {
+      target_jar <- "sparklyr-master-2.12.jar"
     }
 
-    livy_branch <- spark_config_value(config, "sparklyr.livy.branch", "feature/sparklyr-1.6.3")
+    livy_branch <- spark_config_value(config, "sparklyr.livy.branch", "feature/sparklyr-1.7.0")
 
     livy_jars <- paste0(
       "https://github.com/sparklyr/sparklyr/blob/",
@@ -645,7 +649,36 @@ livy_connection <- function(master,
   config[["spark.jars.packages"]] <- paste(c(config[["spark.jars.packages"]], extensions$packages), collapse = ",")
   config[["spark.jars.repositories"]] <- paste(c(config[["spark.jars.repositories"]], extensions$repositories), collapse = ",")
 
-  session <- livy_create_session(master, config)
+  livy_create_session_retries <- spark_config_value(
+    config, "sparklyr.livy_create_session.retries", 3L
+  )
+  livy_create_session_retry_interval_s <- spark_config_value(
+    config, "sparklyr.livy_create_session.retry_interval_s", 5L
+  )
+
+  session <- NULL
+  attempt <- 0L
+  while (attempt <= livy_create_session_retries && is.null(session)) {
+    session <- tryCatch(
+      livy_create_session(master, config),
+      error = function(e) {
+        if (attempt == livy_create_session_retries) {
+          stop(e)
+        } else {
+          warning(
+            "Failed to create Livy session. Retrying in ",
+            spark_config_value(config, "sparklyr.gateway.routing", TRUE),
+            " second(s)"
+          )
+          Sys.sleep(livy_create_session_retry_interval_s)
+
+          NULL
+        }
+      }
+    )
+
+    attempt <- attempt + 1
+  }
 
   sc <- new_livy_connection(list(
     # spark_connection
@@ -666,7 +699,6 @@ livy_connection <- function(master,
   waitStartTimeout <- spark_config_value(config, c("sparklyr.connect.timeout", "livy.session.start.timeout"), 60)
   waitStartReties <- waitStartTimeout * 10
   while (session$state == "starting" &&
-    session$state != "dead" &&
     waitStartReties > 0) {
     session <- livy_get_session(sc)
 
@@ -748,17 +780,31 @@ print_jobj.livy_connection <- print_jobj.spark_shell_connection
 
 #' @export
 invoke.livy_jobj <- function(jobj, method, ...) {
-  livy_invoke_statement_fetch(spark_connection(jobj), FALSE, jobj, method, ...)
+  livy_invoke_statement_fetch(spark_connection(jobj), FALSE, jobj, method, FALSE, ...)
+}
+
+j_invoke.livy_jobj <- function(jobj, method, ...) {
+  livy_invoke_statement_fetch(spark_connection(jobj), FALSE, jobj, method, TRUE, ...)
 }
 
 #' @export
 invoke_static.livy_connection <- function(sc, class, method, ...) {
-  livy_invoke_statement_fetch(sc, TRUE, class, method, ...)
+  livy_invoke_statement_fetch(sc, TRUE, class, method, FALSE, ...)
+}
+
+#' @export
+j_invoke_static.livy_connection <- function(sc, class, method, ...) {
+  livy_invoke_statement_fetch(sc, TRUE, class, method, TRUE, ...)
 }
 
 #' @export
 invoke_new.livy_connection <- function(sc, class, ...) {
-  livy_invoke_statement_fetch(sc, TRUE, class, "<init>", ...)
+  livy_invoke_statement_fetch(sc, TRUE, class, "<init>", FALSE, ...)
+}
+
+#' @export
+j_invoke_new.livy_connection <- function(sc, class, ...) {
+  livy_invoke_statement_fetch(sc, TRUE, class, "<init>", TRUE, ...)
 }
 
 invoke_raw <- function(sc, code, ...) {

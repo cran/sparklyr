@@ -22,9 +22,10 @@ object WorkerHelper {
     customEnv: Map[_, _],
     connectionTimeout: Int,
     context: Array[Byte],
-    options: Map[_, _]
+    options: Map[_, _],
+    serializer: Array[Byte],
+    deserializer: Array[Byte]
   ): RDD[Row] = {
-
     var customEnvMap = scala.collection.mutable.Map[String, String]();
     customEnv.foreach(kv => customEnvMap.put(
       kv._1.asInstanceOf[String],
@@ -39,20 +40,24 @@ object WorkerHelper {
 
     val customEnvImmMap = (Map() ++ customEnvMap).toMap
     val optionsImmMap = (Map() ++ optionsMap).toMap
+    val sparkContext = rdd.context
 
     val computed: RDD[Row] = new WorkerRDD(
       rdd,
-      closure,
+      sparkContext.broadcast(closure),
       columns,
       config,
       port,
       groupBy,
-      closureRLang,
+      sparkContext.broadcast(closureRLang),
       bundlePath,
       customEnvImmMap,
       connectionTimeout,
-      context,
-      optionsImmMap)
+      sparkContext.broadcast(context),
+      optionsImmMap,
+      sparkContext.broadcast(serializer),
+      sparkContext.broadcast(deserializer)
+    )
 
     computed
   }
@@ -72,7 +77,9 @@ object WorkerHelper {
     context: Array[Byte],
     options: Map[_, _],
     sparkSession: SparkSession,
-    timeZoneId: String
+    timeZoneId: String,
+    serializer: Array[Byte],
+    deserializer: Array[Byte]
   ): Dataset[Row] = {
 
     var customEnvMap = scala.collection.mutable.Map[String, String]();
@@ -93,23 +100,32 @@ object WorkerHelper {
     val encoder = RowEncoder(schema)
     var sourceSchema = sdf.schema
 
+    val sparkContext = sdf.sparkSession.sparkContext
+    val closureBV = sparkContext.broadcast(closure)
+    val closureRLangBV = sparkContext.broadcast(closureRLang)
+    val contextBV = sparkContext.broadcast(context)
+    val serializerBV = sparkContext.broadcast(serializer)
+    val deserializerBV = sparkContext.broadcast(deserializer)
+
     sdf.mapPartitions(rows => {
       val workerApply: WorkerApply = new WorkerApply(
-        closure,
+        closureBV,
         columns,
         config,
         port,
         groupBy,
-        closureRLang,
+        closureRLangBV,
         bundlePath,
         customEnvImmMap,
         connectionTimeout,
-        context,
+        contextBV,
         optionsImmMap,
         timeZoneId,
         sourceSchema,
         () => Map(),
-        () => { TaskContext.getPartitionId() }
+        () => { TaskContext.getPartitionId() },
+        serializerBV,
+        deserializerBV
       )
 
       workerApply.apply(rows)

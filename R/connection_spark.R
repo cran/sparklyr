@@ -35,7 +35,7 @@ spark_default_app_jar <- function(version, scala_version = NULL) {
 #' @param sc A \code{spark_connection}.
 #' @param master Spark cluster url to connect to. Use \code{"local"} to
 #'   connect to a local instance of Spark installed via
-#'   \code{\link{spark_install}}.
+#'   \code{\link[=spark_install]{spark_install}}.
 #' @param spark_home The path to a Spark installation. Defaults to the path
 #'   provided by the \code{SPARK_HOME} environment variable. If
 #'   \code{SPARK_HOME} is defined, it will always be used unless the
@@ -119,7 +119,6 @@ no_databricks_guid <- function() {
 #' connection_is_open(sc)
 #'
 #' spark_disconnect(sc)
-#'
 #' @details
 #'
 #' By default, when using \code{method = "livy"}, jars are downloaded from GitHub. But

@@ -11,6 +11,7 @@ spark_read_libsvm(
   repartition = 0,
   memory = TRUE,
   overwrite = TRUE,
+  options = list(),
   ...
 )
 }
@@ -31,6 +32,8 @@ is, should the table be cached?)}
 \item{overwrite}{Boolean; overwrite the table with the given name if it
 already exists?}
 
+\item{options}{A list of strings with additional options.}
+
 \item{...}{Optional arguments; currently unused.}
 }
 \description{
@@ -41,8 +44,10 @@ Other Spark serialization routines:
 \code{\link{collect_from_rds}()},
 \code{\link{spark_load_table}()},
 \code{\link{spark_read_avro}()},
+\code{\link{spark_read_binary}()},
 \code{\link{spark_read_csv}()},
 \code{\link{spark_read_delta}()},
+\code{\link{spark_read_image}()},
 \code{\link{spark_read_jdbc}()},
 \code{\link{spark_read_json}()},
 \code{\link{spark_read_orc}()},

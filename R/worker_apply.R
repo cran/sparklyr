@@ -53,6 +53,7 @@ spark_worker_init_packages <- function(sc, context) {
 }
 
 spark_worker_execute_closure <- function(
+                                         sc,
                                          closure,
                                          df,
                                          funcContext,
@@ -71,7 +72,6 @@ spark_worker_execute_closure <- function(
     worker_log("found barrier execution context")
     barrier_arg <- list(barrier = barrier_map)
   }
-
   closure_params <- length(formals(closure))
   has_partition_index_param <- (
     !is.null(funcContext$partition_index_param) &&
@@ -97,7 +97,8 @@ spark_worker_execute_closure <- function(
   options(stringsAsFactors = FALSE)
 
   if (identical(fetch_result_as_sdf, FALSE)) {
-    result <- lapply(result, function(x) serialize(x, NULL))
+    serialize_impl <- spark_worker_get_serializer(sc)
+    result <- lapply(result, function(x) serialize_impl(x, NULL))
     class(result) <- c("spark_apply_binary_result", class(result))
     result <- tibble::tibble(spark_apply_binary_result = result)
   }
@@ -236,8 +237,9 @@ spark_worker_apply_arrow <- function(sc, config) {
   context <- spark_worker_context(sc)
   spark_worker_init_packages(sc, context)
 
-  closure <- unserialize(worker_invoke(context, "getClosure"))
-  funcContext <- unserialize(worker_invoke(context, "getContext"))
+  deserialize_impl <- spark_worker_get_deserializer(sc)
+  closure <- deserialize_impl(worker_invoke(context, "getClosure"))
+  funcContext <- deserialize_impl(worker_invoke(context, "getContext"))
   grouped_by <- worker_invoke(context, "getGroupBy")
   grouped <- !is.null(grouped_by) && length(grouped_by) > 0
   columnNames <- worker_invoke(context, "getColumns")
@@ -284,6 +286,7 @@ spark_worker_apply_arrow <- function(sc, config) {
       colnames(df) <- columnNames[seq_along(colnames(df))]
 
       result <- spark_worker_execute_closure(
+        sc,
         closure,
         df,
         funcContext,
@@ -338,6 +341,19 @@ spark_worker_apply_arrow <- function(sc, config) {
   worker_log("finished apply")
 }
 
+spark_worker_get_serializer <- function(sc) {
+  serializer <- unserialize(worker_invoke(spark_worker_context(sc), "getSerializer"))
+  if (is.list(serializer)) {
+    function(x, ...) serializer$serializer(x)
+  } else {
+    serializer
+  }
+}
+
+spark_worker_get_deserializer <- function(sc) {
+  unserialize(worker_invoke(spark_worker_context(sc), "getDeserializer"))
+}
+
 spark_worker_apply <- function(sc, config) {
   context <- spark_worker_context(sc)
   spark_worker_init_packages(sc, context)
@@ -352,11 +368,13 @@ spark_worker_apply <- function(sc, config) {
   groups <- worker_invoke(context, if (grouped) "getSourceArrayGroupedSeq" else "getSourceArraySeq")
   worker_log("retrieved ", length(groups), " rows")
 
+  deserialize_impl <- spark_worker_get_deserializer(sc)
+
   closureRaw <- worker_invoke(context, "getClosure")
-  closure <- unserialize(closureRaw)
+  closure <- deserialize_impl(closureRaw)
 
   funcContextRaw <- worker_invoke(context, "getContext")
-  funcContext <- unserialize(funcContextRaw)
+  funcContext <- deserialize_impl(funcContextRaw)
 
   closureRLangRaw <- worker_invoke(context, "getClosureRLang")
   if (length(closureRLangRaw) > 0) {
@@ -388,7 +406,22 @@ spark_worker_apply <- function(sc, config) {
       if (config$single_binary_column) {
         tibble::tibble(encoded = lapply(data, function(x) x[[1]]))
       } else {
-        do.call(rbind.data.frame, c(data, list(stringsAsFactors = FALSE)))
+        bind_rows <- core_get_package_function("dplyr", "bind_rows")
+        as_tibble <- core_get_package_function("tibble", "as_tibble")
+        if (!is.null(bind_rows) && !is.null(as_tibble)) {
+          do.call(
+            bind_rows,
+            lapply(
+              data, function(x) { as_tibble(x, .name_repair = "universal") }
+            )
+          )
+        } else {
+          warning("dplyr::bind_rows or tibble::as_tibble is unavailable, ",
+                  "falling back to rbind implementation in base R. ",
+                  "Inputs with list column(s) will not work.")
+
+          do.call(rbind.data.frame, c(data, list(stringsAsFactors = FALSE)))
+        }
       })
 
     if (!config$single_binary_column) {
@@ -419,6 +452,7 @@ spark_worker_apply <- function(sc, config) {
     colnames(df) <- columnNames[seq_along(colnames(df))]
 
     result <- spark_worker_execute_closure(
+      sc,
       closure,
       df,
       funcContext,

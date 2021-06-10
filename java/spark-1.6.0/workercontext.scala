@@ -19,7 +19,10 @@ class WorkerContext(
   schema: org.apache.spark.sql.types.StructType,
   options: Map[String, String],
   barrier: Map[String, Any],
-  partitionIndex: Int) {
+  partitionIndex: Int,
+  serializer: Array[Byte],
+  deserializer: Array[Byte]
+) {
 
   private var result: Array[Row] = Array[Row]()
   private var sourceArray: Option[Array[Row]] = None
@@ -74,6 +77,14 @@ class WorkerContext(
 
   def getResultArray(): Array[Row] = {
     result
+  }
+
+  def getSerializer(): Array[Byte] = {
+    serializer
+  }
+
+  def getDeserializer(): Array[Byte] = {
+    deserializer
   }
 
   def finish(): Unit = {

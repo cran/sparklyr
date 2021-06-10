@@ -90,6 +90,14 @@ spark_apply_worker_config <- function(
 #'   function in R.
 #' @param arrow_max_records_per_batch Maximum size of each Arrow record batch,
 #'   ignored if Arrow serialization is not enabled.
+#' @param auto_deps [Experimental] Whether to infer all required R packages by
+#'   examining the closure \code{f()} and only distribute required R and their
+#'   transitive dependencies to Spark worker nodes (default: FALSE).
+#'   NOTE: this option will only take effect if \code{packages} is set to
+#'   \code{TRUE} or is a character vector of R package names. If \code{packages}
+#'   is a character vector of R package names, then both the set of packages
+#'   specified by \code{packages} and the set of inferred packages will be
+#'   distributed to Spark workers.
 #' @param ... Optional arguments; currently unused.
 #'
 #' @section Configuration:
@@ -122,7 +130,7 @@ spark_apply_worker_config <- function(
 spark_apply <- function(x,
                         f,
                         columns = NULL,
-                        memory = !is.null(name),
+                        memory = TRUE,
                         group_by = NULL,
                         packages = NULL,
                         context = NULL,
@@ -131,6 +139,7 @@ spark_apply <- function(x,
                         fetch_result_as_sdf = TRUE,
                         partition_index_param = "",
                         arrow_max_records_per_batch = NULL,
+                        auto_deps = FALSE,
                         ...) {
   if (!is.character(partition_index_param)) {
     stop("Expected 'partition_index_param' to be a string.")
@@ -200,8 +209,8 @@ spark_apply <- function(x,
       invoke("sessionLocalTimeZone")
     records_per_batch <- as.integer(
       arrow_max_records_per_batch %||%
-      spark_session_config(sc)[["spark.sql.execution.arrow.maxRecordsPerBatch"]] %||%
-      10000
+        spark_session_config(sc)[["spark.sql.execution.arrow.maxRecordsPerBatch"]] %||%
+        10000
     )
   }
 
@@ -255,13 +264,30 @@ spark_apply <- function(x,
     user_context = context
   )
 
+  rlang_serialize <- spark_apply_rlang_serialize()
+  create_rlang_closure <- (rlang && !is.null(rlang_serialize))
+
   # create closure for the given function
-  closure <- if (is.function(f)) suppressWarnings(serialize(f, NULL, version = serialize_version)) else f
-  context_serialize <- serialize(context, NULL)
+  serializer <- spark_apply_serializer()
+  serialize_impl <- (
+    if (is.list(serializer)) {
+      function(x, ...) serializer$serializer(x)
+    } else {
+      serializer
+    })
+  deserializer <- spark_apply_deserializer()
+  closure <- (
+    if (create_rlang_closure) {
+      serialize_impl(NULL, version = serialize_version)
+    } else if (is.function(f)) {
+      suppressWarnings(serialize_impl(f, version = serialize_version))
+    } else {
+      f
+    })
+  context_serialize <- serialize_impl(context, version = serialize_version)
 
   # create rlang closure
-  rlang_serialize <- spark_apply_rlang_serialize()
-  closure_rlang <- if (rlang && !is.null(rlang_serialize)) rlang_serialize(f) else raw()
+  closure_rlang <- if (create_rlang_closure) rlang_serialize(f) else raw()
 
   # add debug connection message
   if (isTRUE(args$debug)) {
@@ -299,6 +325,16 @@ spark_apply <- function(x,
 
   worker_port <- spark_config_value(sc$config, "sparklyr.gateway.port", "8880")
 
+  # packages should be either a boolean or a character vector
+  packages <- unlist(packages)
+  if (auto_deps && !spark_apply_packages_is_bundle(packages)) {
+    required_pkgs <- infer_required_r_packages(f)
+    if (is.character(packages)) {
+      packages <- union(packages, required_pkgs)
+    } else {
+      packages <- required_pkgs
+    }
+  }
   bundle_path <- get_spark_apply_bundle_path(sc, packages)
 
   spark_apply_options <- lapply(
@@ -331,7 +367,9 @@ spark_apply <- function(x,
         as.integer(60),
         as.environment(proc_env),
         context_serialize,
-        as.environment(spark_apply_options)
+        as.environment(spark_apply_options),
+        serialize(serializer, NULL, version = serialize_version),
+        serialize(deserializer, NULL, version = serialize_version)
       )
     } else {
       rdd <- invoke_static(
@@ -356,7 +394,9 @@ spark_apply <- function(x,
         as.environment(proc_env),
         as.integer(60),
         context_serialize,
-        as.environment(spark_apply_options)
+        as.environment(spark_apply_options),
+        serialize(serializer, NULL, version = serialize_version),
+        serialize(deserializer, NULL, version = serialize_version)
       )
     }
 
@@ -405,7 +445,9 @@ spark_apply <- function(x,
         context_serialize,
         as.environment(spark_apply_options),
         spark_session(sc),
-        time_zone
+        time_zone,
+        serialize(serializer, NULL, version = serialize_version),
+        serialize(deserializer, NULL, version = serialize_version)
       )
 
       columns_query <- columns_op %>% sdf_collect()
@@ -452,7 +494,9 @@ spark_apply <- function(x,
       context_serialize,
       as.environment(spark_apply_options),
       spark_session(sc),
-      time_zone
+      time_zone,
+      serialize(serializer, NULL, version = serialize_version),
+      serialize(deserializer, NULL, version = serialize_version)
     )
 
     if (spark_version(sc) >= "2.4.0" && !is.na(json_cols) && length(json_cols) > 0) {
@@ -480,7 +524,7 @@ spark_apply <- function(x,
       sdf_collect(arrow = arrow) %>%
       (
         function(x) {
-          lapply(x$spark_apply_binary_result, function(res) unserialize(res[[1]]))
+          lapply(x$spark_apply_binary_result, function(res) deserializer(res[[1]]))
         })
   } else {
     registered
@@ -493,6 +537,41 @@ spark_apply_rlang_serialize <- function() {
     core_get_package_function("rlanglabs", "serialise_bytes")
   } else {
     rlang_serialize
+  }
+}
+
+spark_apply_serializer <- function() {
+  serializer <- getOption("sparklyr.spark_apply.serializer")
+  impl <- (
+    if (identical(serializer, "qs")) {
+      qserialize <- core_get_package_function("qs", "qserialize")
+      if (is.null(qserialize)) {
+        stop(
+          "Unable to locate qs::qserialize(). Please ensure 'qs' is installed."
+        )
+      }
+      function(x, ...) qserialize(x)
+    } else if (is.null(serializer)) {
+      function(x, version = NULL) serialize(x, NULL, version = version)
+    } else {
+      list(serializer = serializer)
+    })
+
+  impl
+}
+
+spark_apply_deserializer <- function() {
+  if (identical(getOption("sparklyr.spark_apply.serializer"), "qs")) {
+    impl <- core_get_package_function("qs", "qdeserialize")
+    if (is.null(impl)) {
+      stop(
+        "Unable to locate qs::qdeserialize(). Please ensure 'qs' is installed."
+      )
+    }
+
+    impl
+  } else {
+    getOption("sparklyr.spark_apply.deserializer") %||% unserialize
   }
 }
 

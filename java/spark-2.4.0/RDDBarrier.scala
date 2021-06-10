@@ -4,6 +4,7 @@ import java.net._
 
 import org.apache.spark._
 import org.apache.spark.BarrierTaskContext
+import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
 
@@ -11,19 +12,21 @@ import scala.collection.JavaConversions._
 
 object RDDBarrier {
   def transformBarrier(
-      rdd: RDD[Row],
-      closure: Array[Byte],
-      columns: Array[String],
-      config: String,
-      port: Int,
-      groupBy: Array[String],
-      closureRLang: Array[Byte],
-      bundlePath: String,
-      connectionTimeout: Int,
-      customEnv: Map[Object, Object],
-      context: Array[Byte],
-      options: Map[Object, Object]
-      ): RDD[Row] = {
+    rdd: RDD[Row],
+    closure: Array[Byte],
+    columns: Array[String],
+    config: String,
+    port: Int,
+    groupBy: Array[String],
+    closureRLang: Array[Byte],
+    bundlePath: String,
+    connectionTimeout: Int,
+    customEnv: Map[Object, Object],
+    context: Array[Byte],
+    options: Map[Object, Object],
+    serializer: Array[Byte],
+    deserializer: Array[Byte]
+  ): RDD[Row] = {
 
     var customEnvMap = scala.collection.mutable.Map[String, String]();
     customEnv.foreach(kv => customEnvMap.put(
@@ -39,55 +42,64 @@ object RDDBarrier {
 
     val customEnvImmMap = (Map() ++ customEnvMap).toMap
     val optionsImmMap = (Map() ++ optionsMap).toMap
+    val sparkContext = rdd.context
 
-    val workerApply = barrierApply(closure,
+    val workerApply = barrierApply(
+     sparkContext.broadcast(closure),
       columns,
       config,
       port,
       groupBy,
-      closureRLang,
+      sparkContext.broadcast(closureRLang),
       bundlePath,
       customEnvImmMap,
       connectionTimeout,
-      context,
-      optionsImmMap)
+      sparkContext.broadcast(context),
+      optionsImmMap,
+      sparkContext.broadcast(serializer),
+      sparkContext.broadcast(deserializer)
+    )
 
     rdd.barrier.mapPartitions(workerApply.apply)
   }
 
   def barrierApply(
-      closure: Array[Byte],
+      closure: Broadcast[Array[Byte]],
       columns: Array[String],
       config: String,
       port: Int,
       groupBy: Array[String],
-      closureRLang: Array[Byte],
+      closureRLang: Broadcast[Array[Byte]],
       bundlePath: String,
-      customEnvImmMap: Map[String, String],
+      customEnv: Map[String, String],
       connectionTimeout: Int,
-      context: Array[Byte],
-      optionsImmMap: Map[String, String]): sparklyr.WorkerApply = {
+      context: Broadcast[Array[Byte]],
+      options: Map[String, String],
+      serializer: Broadcast[Array[Byte]],
+      deserializer: Broadcast[Array[Byte]]
+  ): sparklyr.WorkerApply = {
     val workerApply: WorkerApply = new WorkerApply(
-      closure: Array[Byte],
-      columns: Array[String],
-      config: String,
-      port: Int,
-      groupBy: Array[String],
-      closureRLang: Array[Byte],
-      bundlePath: String,
-      customEnvImmMap: Map[String, String],
-      connectionTimeout: Int,
-      context: Array[Byte],
-      optionsImmMap: Map[String, String],
-      "",
-      org.apache.spark.sql.types.StructType(Nil),
-      () => Map(
+      closure = closure,
+      columns = columns,
+      config = config,
+      port = port,
+      groupBy = groupBy,
+      closureRLang = closureRLang,
+      bundlePath = bundlePath,
+      customEnv = customEnv,
+      connectionTimeout = connectionTimeout,
+      context = context,
+      options = options,
+      timeZoneId = "",
+      schema = org.apache.spark.sql.types.StructType(Nil),
+      barrierMapProvider = () => Map(
         "address" -> BarrierTaskContext.get().getTaskInfos().map(e => e.address),
         "partition" -> BarrierTaskContext.get().partitionId()),
-      () => { BarrierTaskContext.get().partitionId() }
+      partitionIndexProvider = () => { BarrierTaskContext.get().partitionId() },
+      serializer = deserializer,
+      deserializer = deserializer
     )
 
     workerApply
-    }
-
+  }
 }

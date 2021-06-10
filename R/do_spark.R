@@ -71,6 +71,11 @@ registerDoSpark <- function(spark_conn, parallelism = NULL, ...) {
     }
   }
 
+  serializer <- spark_apply_serializer()
+  if (is.list(serializer)) {
+    serializer <- serializer$serializer
+  }
+  deserializer <- spark_apply_deserializer()
   # internal function called by foreach
   .doSpark <- function(obj, expr, envir, data) {
     # internal function to compile an expression if possible
@@ -81,15 +86,6 @@ registerDoSpark <- function(spark_conn, parallelism = NULL, ...) {
         compiler::compile(expr, ...)
       }
     }
-
-    # internal functions to serialize and unserialize an arbitrary R object to/from string
-    #
-    # NOTE: here we are (reasonably) assuming foreach items are not astronomical in size and
-    # therefore the ~33% space overhead from base64 encode is still acceptable.
-    # If this assumption were not true, then base64 would need to be replaced with another
-    # more efficient binary-to-text encoding such as yEnc (which has only 1-2% space overhead).
-    .encode_item <- function(item) serialize(item, NULL)
-    .decode_item <- function(item) unserialize(item)
 
     expr_globals <- globals::globalsOf(expr, envir = envir, recursive = TRUE, mustExist = FALSE)
 
@@ -121,7 +117,7 @@ registerDoSpark <- function(spark_conn, parallelism = NULL, ...) {
             lapply(
               items$encoded,
               function(item) {
-                eval(expr, envir = as.list(.decode_item(item)), enclos = enclos)
+                eval(expr, envir = as.list(deserializer(item)), enclos = enclos)
               }
             )
           },
@@ -131,7 +127,7 @@ registerDoSpark <- function(spark_conn, parallelism = NULL, ...) {
         )
       }
 
-      spark_apply(spark_items, worker_fn, ...)
+      spark_apply(spark_items, worker_fn, ..., memory = TRUE)
     }
 
     if (!inherits(obj, "foreach")) {
@@ -147,12 +143,12 @@ registerDoSpark <- function(spark_conn, parallelism = NULL, ...) {
     it <- iterators::iter(obj)
     accumulator <- foreach::makeAccum(it)
     items <- tibble::tibble(
-      encoded = it %>% as.list() %>% lapply(.encode_item)
+      encoded = it %>% as.list() %>% lapply(serializer)
     )
     spark_items <- sdf_copy_to(
       spark_conn,
       items,
-      name = random_string("spark_apply"),
+      name = random_string("sparklyr_tmp_"),
       repartition = do_spark_parallelism
     )
     expr <- .compile(expr)
