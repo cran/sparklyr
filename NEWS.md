@@ -1,3 +1,9 @@
+# Sparklyr 1.7.1
+
+### Connections
+
+- Fixed a minor compatibility issue with connecting to Spark 3.1.x
+
 # Sparklyr 1.7.0
 
 ### Data

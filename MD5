@@ -1,7 +1,7 @@
-9898b9a6354f35d80118cce8b7b28d28 *DESCRIPTION
+16a23a058c8b1af4862876b8c908b793 *DESCRIPTION
 3c340760b90af6b5cd5c7a9cc32bb228 *LICENSE
 fe76e2e46aaf24852b3b43ea858248df *NAMESPACE
-5de32284a9ca64328f1d1a89aa6cc22b *NEWS.md
+985666ec16b98bafc75e0279924fc468 *NEWS.md
 4237a390973896292fe8bd484746632f *R/arrow_data.R
 4c89778ac75ec298e3b867997c0bedd9 *R/avro_utils.R
 e0a0186877f2d60110dd152d264cb9ce *R/browse_url.R
@@ -186,7 +186,7 @@ dcca84e0338d95caaecce01a295e51ac *R/spark_compile.R
 38b5a39d966cf7b3e0c70d3dfe2010f6 *R/spark_context_config.R
 a7bb4d14ee3df765ef4fd875ba67eb73 *R/spark_data_build_types.R
 3c37d836b34d432060dfe3c29d44fa42 *R/spark_dataframe.R
-537593508ac3d3175275f10b3bb623fc *R/spark_extensions.R
+ee56ba1b9393984d9faf66df24daddfa *R/spark_extensions.R
 cf0d95dda0fdf4460982878342deac15 *R/spark_gateway.R
 adf42f01fbe9c64ef68dc8bb24bc6665 *R/spark_gen_embedded_sources.R
 ece940ff55966c31eb7797745dad02bb *R/spark_globals.R
@@ -244,7 +244,7 @@ c5dae698cadcef3a862466cce730f5bc *R/worker_main.R
 e30c715cbcc74ceae3e0a545628ae56d *R/yarn_ui.R
 bb8e156f2e081af089d380827320d494 *R/zzz.R
 29f31e1d785b7131529e7dfef8a9ada5 *README.md
-c448a12d926c3e2e1c05fe2c0a9b8450 *build/partial.rdb
+aec626d959caa1e634c4aa39a4448d49 *build/partial.rdb
 e1eaa3e3e4060086313dd61f2b7ef391 *inst/conf/config-template.yml
 dfd93eddb6eff102a87731c09573ec6e *inst/extdata/config.json
 f17c6890ce3e5d805aad7ee46da00fd7 *inst/extdata/versions-next.json
