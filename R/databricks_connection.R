@@ -40,6 +40,9 @@ databricks_connection <- function(config, extensions) {
     }
   )
 
+  # Hand in driver's libPaths to worker if user hasn't already set libpaths for notebook-scoped libraries
+  config$spark.r.libpaths <- config$spark.r.libpaths %||% paste(.libPaths(), collapse = ",")
+
   new_databricks_connection(
     gateway_connection(
       paste("sparklyr://localhost:", gatewayPort, "/", gatewayPort, sep = ""),
@@ -74,11 +77,6 @@ new_databricks_connection <- function(scon, guid) {
   session <- invoke_static(sc, r_driver_local, "getDriver", guid) %>%
     invoke("sqlContext") %>%
     invoke("sparkSession")
-  # Apply user-specified fs.azure.* config values
-  fs.azure.prefix <- "fs.azure."
-  fs.azure.configs <- connection_config(sc, fs.azure.prefix)
-  conf <- invoke(session, "conf")
-  apply_config(conf, fs.azure.configs, "set", fs.azure.prefix)
   # This is called hive_context but for spark > 2.0, it should actually be a spark session
   sc$state$hive_context <- session
   sc
