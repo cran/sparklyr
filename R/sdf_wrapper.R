@@ -1,4 +1,6 @@
-
+get_sdf_storage_level <- function(sdf_jobj) {
+  invoke(sdf_jobj, "storageLevel")
+}
 
 #' @export
 #' @importFrom dbplyr sql_render
