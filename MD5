@@ -1,7 +1,7 @@
-1a428382c57f9184c630dd1ab674fb11 *DESCRIPTION
+2526b9e6e0dee3e3022bbc6035b1c47e *DESCRIPTION
 3c340760b90af6b5cd5c7a9cc32bb228 *LICENSE
 3a507ec755293888b6f98b7dd7b46f19 *NAMESPACE
-9bdbc533a1c15f4919f115d4d625253a *NEWS.md
+184cca76c655731047e90197977e5c8f *NEWS.md
 4237a390973896292fe8bd484746632f *R/arrow_data.R
 4c89778ac75ec298e3b867997c0bedd9 *R/avro_utils.R
 e0a0186877f2d60110dd152d264cb9ce *R/browse_url.R
@@ -103,7 +103,7 @@ ca255b7cef39a0d71abf6204801957dc *R/ml_feature_quantile_discretizer.R
 566a924ed1ff2f74cb03a9b08fa15ff2 *R/ml_feature_sql_transformer_utils.R
 09ec49dd72a60d552fcf445a33d5fc4c *R/ml_feature_standard_scaler.R
 358ce70b6590ca87a797ee050f2d70d5 *R/ml_feature_stop_words_remover.R
-9ce6a21edfdc437fa6dcf16d6f2a7115 *R/ml_feature_string_indexer.R
+03c802966e51deb6660e30d717a85df2 *R/ml_feature_string_indexer.R
 ddda6607c871f9f5da2381afbdd0e3fc *R/ml_feature_string_indexer_model.R
 1cb1a9324d226d95c6c20db81156f684 *R/ml_feature_tokenizer.R
 3470bff4f69747faae7deba2a52fd1aa *R/ml_feature_vector_assembler.R
@@ -226,7 +226,7 @@ b418db362c2c92c9bfe5742de72bb6e5 *R/tidiers_pca.R
 0588853d3d32ac0da41b95ec72e5c7d1 *R/tidyr_nest.R
 e3858e9b7da1d6df4dffb87e73ed9872 *R/tidyr_pivot_longer.R
 41580587d4467aa3a8e99a3c5166d11a *R/tidyr_pivot_utils.R
-2543ebbc7043eb9e7d3fdafe2ebffadb *R/tidyr_pivot_wider.R
+09f3c1885eb7f846a4efd09fdfac1ce2 *R/tidyr_pivot_wider.R
 2035bc7d5f712445cd2fec7e6d302382 *R/tidyr_separate.R
 328e2f65bd164094cd624f1ce2e46468 *R/tidyr_unite.R
 72fb8e8984b6c1eb76870894436f34b7 *R/tidyr_unnest.R
@@ -243,7 +243,7 @@ c5dae698cadcef3a862466cce730f5bc *R/worker_main.R
 e30c715cbcc74ceae3e0a545628ae56d *R/yarn_ui.R
 bb8e156f2e081af089d380827320d494 *R/zzz.R
 86c103dd369f3104f5dff553a1695df4 *README.md
-29b6403b8b088d9ee160bbef3ab5fae2 *build/partial.rdb
+35ec3f084b1f159b7e506e73cfe03fae *build/partial.rdb
 e1eaa3e3e4060086313dd61f2b7ef391 *inst/conf/config-template.yml
 dfd93eddb6eff102a87731c09573ec6e *inst/extdata/config.json
 f17c6890ce3e5d805aad7ee46da00fd7 *inst/extdata/versions-next.json

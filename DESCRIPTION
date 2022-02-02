@@ -1,7 +1,7 @@
 Type: Package
 Package: sparklyr
 Title: R Interface to Apache Spark
-Version: 1.7.4
+Version: 1.7.5
 Authors@R: 
     c(person(given = "Javier",
              family = "Luraschi",
@@ -38,8 +38,8 @@ Authors@R:
              email = "yue.zhang@databricks.com"),
       person(given = "Yitao",
              family = "Li",
-             role = c("aut"),
-             email = "yitao@rstudio.com",
+             role = "aut",
+             email = "yitaoli1990@gmail.com",
              comment = c(ORCID = "0000-0002-1261-905X")),
       person(given = "Jozef",
              family = "Hajnala",
@@ -77,7 +77,7 @@ Imports: assertthat, base64enc, blob, config (>= 0.2), DBI (>= 0.6-1),
         0.1.0), forge, generics, globals, glue, httr (>= 1.2.1),
         jsonlite (>= 1.4), lifecycle, methods, openssl (>= 0.8), purrr,
         r2d3, rappdirs, rlang (>= 0.1.4), rprojroot, rstudioapi (>=
-        0.10), stringr, tibble, tidyr (>= 0.3.0), tidyselect, uuid,
+        0.10), stringr, tibble, tidyr (>= 1.2.0), tidyselect, uuid,
         vctrs, withr, xml2
 Suggests: arrow (>= 0.14.0), broom, diffobj, foreach, ggplot2,
         iterators, janeaustenr, Lahman, mlbench, nnet, nycflights13,
@@ -199,7 +199,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
         'zzz.R'
 NeedsCompilation: no
-Packaged: 2022-01-07 21:48:44 UTC; yitaoli
+Packaged: 2022-02-02 14:05:13 UTC; edgar
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (<https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -216,4 +216,4 @@ Author: Javier Luraschi [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2022-01-08 11:20:02 UTC
+Date/Publication: 2022-02-02 14:30:02 UTC
