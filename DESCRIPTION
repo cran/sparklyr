@@ -1,7 +1,7 @@
 Type: Package
 Package: sparklyr
 Title: R Interface to Apache Spark
-Version: 1.7.5
+Version: 1.7.6
 Authors@R: 
     c(person(given = "Javier",
              family = "Luraschi",
@@ -73,15 +73,14 @@ URL: https://spark.rstudio.com/
 BugReports: https://github.com/sparklyr/sparklyr/issues
 Depends: R (>= 3.2)
 Imports: assertthat, base64enc, blob, config (>= 0.2), DBI (>= 0.6-1),
-        dbplyr (>= 1.1.0), digest, dplyr (>= 0.7.2), ellipsis (>=
+        dbplyr (>= 2.1.1), digest, dplyr (>= 0.7.2), ellipsis (>=
         0.1.0), forge, generics, globals, glue, httr (>= 1.2.1),
-        jsonlite (>= 1.4), lifecycle, methods, openssl (>= 0.8), purrr,
-        r2d3, rappdirs, rlang (>= 0.1.4), rprojroot, rstudioapi (>=
-        0.10), stringr, tibble, tidyr (>= 1.2.0), tidyselect, uuid,
-        vctrs, withr, xml2
+        jsonlite (>= 1.4), methods, openssl (>= 0.8), purrr, r2d3,
+        rappdirs, rlang (>= 0.1.4), rprojroot, rstudioapi (>= 0.10),
+        tibble, tidyr (>= 1.2.0), tidyselect, uuid, vctrs, withr, xml2
 Suggests: arrow (>= 0.14.0), broom, diffobj, foreach, ggplot2,
         iterators, janeaustenr, Lahman, mlbench, nnet, nycflights13,
-        R6, RCurl, reshape2, shiny (>= 1.0.1), testthat
+        R6, RCurl, reshape2, shiny (>= 1.0.1), parsnip, testthat
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 SystemRequirements: Spark: 1.6.x, 2.x, or 3.x
@@ -99,10 +98,10 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'spark_dataframe.R' 'dplyr_spark.R' 'sdf_interface.R'
         'data_interface.R' 'databricks_connection.R'
         'dbi_spark_connection.R' 'dbi_spark_result.R'
-        'dbi_spark_table.R' 'dbi_spark_transactions.R' 'dbplyr_utils.R'
-        'do_spark.R' 'dplyr_do.R' 'dplyr_hof.R' 'dplyr_join.R'
-        'partial_eval.R' 'dplyr_spark_connection.R'
-        'dplyr_spark_data.R' 'prng_utils.R'
+        'dbi_spark_table.R' 'dbi_spark_transactions.R'
+        'dbplyr-compat.R' 'dbplyr_utils.R' 'do_spark.R' 'dplyr_do.R'
+        'dplyr_hof.R' 'dplyr_join.R' 'partial_eval.R'
+        'dplyr_spark_connection.R' 'dplyr_spark_data.R' 'prng_utils.R'
         'ml_feature_sql_transformer_utils.R' 'dplyr_spark_table.R'
         'stratified_sample.R' 'sdf_sql.R' 'dplyr_sql.R' 'imports.R'
         'install_spark.R' 'install_spark_versions.R'
@@ -199,7 +198,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
         'zzz.R'
 NeedsCompilation: no
-Packaged: 2022-02-02 14:05:13 UTC; edgar
+Packaged: 2022-05-26 14:28:00 UTC; edgar
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (<https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -216,4 +215,4 @@ Author: Javier Luraschi [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2022-02-02 14:30:02 UTC
+Date/Publication: 2022-05-26 15:20:02 UTC

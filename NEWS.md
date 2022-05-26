@@ -1,4 +1,14 @@
-# sparklyr (development version)
+# Sparklyr 1.7.6
+
+### Misc
+
+- Ensures compatibility with Spark version 3.2 (#3261)
+
+- Compatibility with new `dbplyr` version (@mgirlich)
+
+- Removes `stringr` dependency 
+
+- Fixes `augment()` when the model was fitted via `parsnip` (#3233)
 
 # Sparklyr 1.7.5
 
