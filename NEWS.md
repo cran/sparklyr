@@ -1,3 +1,16 @@
+# Sparklyr 1.7.9
+
+### Bug Fixes
+
+- Better resolves intermediate column names when using `dplyr` verbs for
+  data transformation (#3286)
+  
+- Fixes `pivot_wider()` issues with simpler cases (#3289)
+
+- Updates Spark download locations (#3298)
+
+- Better resolution of intermediate column names (#3286)
+
 # Sparklyr 1.7.8
 
 ### New features
