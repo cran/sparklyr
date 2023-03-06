@@ -1,7 +1,7 @@
-3b535922fb9c08787d8fac005c96923d *DESCRIPTION
+dd8b0d234e70cff40e2d2daeff65e821 *DESCRIPTION
 a87bd48939e93bb57bf56d5468c25548 *LICENSE
 a9967a88a1d1f9f009ca4f986d754c26 *NAMESPACE
-bce3c2a5cb15f35c805f875dd88d8850 *NEWS.md
+4dc7a87f59db6f4bc947e982306c76f1 *NEWS.md
 4237a390973896292fe8bd484746632f *R/arrow_data.R
 4c89778ac75ec298e3b867997c0bedd9 *R/avro_utils.R
 e0a0186877f2d60110dd152d264cb9ce *R/browse_url.R
@@ -37,7 +37,7 @@ bae412fd78a49d1a95b737c68f95b49f *R/dbi_spark_table.R
 f1717d52a97504dbe89d7dd8b258e411 *R/dplyr_spark.R
 8147bfc6e2740c11aff841af5367c7f6 *R/dplyr_spark_data.R
 dc7e96720c7ba8bd2fb52543906b42f4 *R/dplyr_spark_table.R
-8ea80d595ab377b957cb487ad08bec8f *R/dplyr_sql.R
+88fabc3722e2e47a07cb6e30d0a05524 *R/dplyr_sql.R
 206d30ad19abe8b88d0942007db04fe6 *R/dplyr_sql_translation.R
 ccbb6ac2a0b29bebc7200f1bc3ed652f *R/dplyr_verbs.R
 9d9dc60842aa2df1ac6540d37c45681f *R/imports.R
@@ -222,7 +222,7 @@ b3f9a3dfaac5bfa1a0166e2f0e099e47 *R/tidiers_ml_tree_models.R
 b418db362c2c92c9bfe5742de72bb6e5 *R/tidiers_pca.R
 bdfa6389e6d0842e37e5a6e5ddd9a815 *R/tidiers_utils.R
 8200b1181536c6699d2169052139e843 *R/tidyr_fill.R
-0588853d3d32ac0da41b95ec72e5c7d1 *R/tidyr_nest.R
+1e26f50f1d8bd11bbf7b5b0ba10cb273 *R/tidyr_nest.R
 2a8b30bc569a48ce4c86ad96104b1cbe *R/tidyr_pivot_longer.R
 41580587d4467aa3a8e99a3c5166d11a *R/tidyr_pivot_utils.R
 4b5fc7dd21ec65653d215fae1d8e00a6 *R/tidyr_pivot_wider.R
@@ -231,7 +231,7 @@ bdfa6389e6d0842e37e5a6e5ddd9a815 *R/tidiers_utils.R
 72fb8e8984b6c1eb76870894436f34b7 *R/tidyr_unnest.R
 b94065b3ca33713f0237702acf725581 *R/tidyr_utils.R
 440ce113bf587c101bc51576369db6dd *R/utils.R
-567b0e92aad4f663852133f42b34756e *R/worker_apply.R
+2a132f2d858dfa753bb8966676bfedd0 *R/worker_apply.R
 b53551b32ba5b6907583bb9715c6454b *R/worker_connect.R
 b906a434a6e108dbd7e324a590c5796f *R/worker_connection.R
 3d4d4444669eb598f18de48d05c91f03 *R/worker_invoke.R
@@ -242,11 +242,11 @@ c5dae698cadcef3a862466cce730f5bc *R/worker_main.R
 e30c715cbcc74ceae3e0a545628ae56d *R/yarn_ui.R
 aa8496f471938b7649e87297f504b0fd *R/zzz.R
 41a10083b5bdc37092d1dad508d6d83b *README.md
-0c6ad5b3446721162c89589e8077ab1c *build/partial.rdb
+ea124a494ad7922985532ad3b308e4d5 *build/partial.rdb
 e1eaa3e3e4060086313dd61f2b7ef391 *inst/conf/config-template.yml
 dfd93eddb6eff102a87731c09573ec6e *inst/extdata/config.json
 f17c6890ce3e5d805aad7ee46da00fd7 *inst/extdata/versions-next.json
-5f5b595300936abb925a481715c6e146 *inst/extdata/versions.json
+6d546e3969840387f424de3af29d4294 *inst/extdata/versions.json
 e6eeb94f7d7eacd07235088ff269efc5 *inst/icons/edit-sql.png
 5dba58c9a17b0191f7de15e6e97478b2 *inst/icons/help.png
 3beaf9650ac46a87632f932dd33137ca *inst/icons/livy-ui.png
@@ -274,7 +274,7 @@ a8061ec38d6474144fe5628c685eec0c *inst/rstudio/shinycon/app.R
 581180d7fefe7184a2a00bdf8b46d7fc *inst/sparkml/param_mapping.json
 c56ce14d0d4593a6df9fa8471950c43a *inst/streams/stream.css
 c90ac0f4fd864f3ca217984fcac7d3bc *inst/streams/stream.js
-53a2fd88096c54951f4615a70db22d21 *java/embedded_sources.R
+5afed72048a800c775c350dd1d6628b9 *java/embedded_sources.R
 0943f51f386b4bc20e5d16d174fce4ec *java/spark-1.5.2/backend.scala
 fb783a81e625261478f44890bc59314b *java/spark-1.5.2/backendconf.scala
 19714d348d8334c2269436b04c50e93e *java/spark-1.5.2/backendconfconstants.scala
