@@ -1,7 +1,7 @@
 Type: Package
 Package: sparklyr
 Title: R Interface to Apache Spark
-Version: 1.8.0
+Version: 1.8.1
 Authors@R: 
     c(person(given = "Javier",
              family = "Luraschi",
@@ -195,7 +195,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
         'zzz.R'
 NeedsCompilation: no
-Packaged: 2023-03-06 23:54:53 UTC; edgar
+Packaged: 2023-03-21 21:40:05 UTC; edgar
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (<https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -212,4 +212,4 @@ Author: Javier Luraschi [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2023-03-07 00:40:02 UTC
+Date/Publication: 2023-03-22 13:40:02 UTC
