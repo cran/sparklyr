@@ -1,7 +1,7 @@
 Type: Package
 Package: sparklyr
 Title: R Interface to Apache Spark
-Version: 1.8.1
+Version: 1.8.2
 Authors@R: 
     c(person(given = "Javier",
              family = "Luraschi",
@@ -72,15 +72,16 @@ License: Apache License 2.0 | file LICENSE
 URL: https://spark.rstudio.com/
 BugReports: https://github.com/sparklyr/sparklyr/issues
 Depends: R (>= 3.2)
-Imports: assertthat, base64enc, config (>= 0.2), DBI (>= 1.0.0), dbplyr
-        (>= 2.2.1), digest, dplyr (>= 1.0.9), ellipsis (>= 0.1.0),
-        forge, generics, globals, glue, httr (>= 1.2.1), jsonlite (>=
-        1.4), methods, openssl (>= 0.8), purrr, r2d3, rappdirs, rlang
-        (>= 0.1.4), rprojroot, rstudioapi (>= 0.10), tibble, tidyr (>=
-        1.2.0), tidyselect, uuid, vctrs, withr, xml2
+Imports: base64enc, config (>= 0.2), DBI (>= 1.0.0), dbplyr (>= 2.2.1),
+        digest, dplyr (>= 1.0.9), ellipsis (>= 0.1.0), generics,
+        globals, glue, httr (>= 1.2.1), jsonlite (>= 1.4), methods,
+        openssl (>= 0.8), purrr, rappdirs, rlang (>= 0.1.4), rstudioapi
+        (>= 0.10), tibble, tidyr (>= 1.2.0), tidyselect, uuid, vctrs,
+        withr, xml2
 Suggests: arrow (>= 0.17.0), broom, diffobj, foreach, ggplot2,
         iterators, janeaustenr, Lahman, mlbench, nnet, nycflights13,
-        R6, RCurl, reshape2, shiny (>= 1.0.1), parsnip, testthat
+        R6, r2d3, RCurl, reshape2, shiny (>= 1.0.1), parsnip, testthat,
+        rprojroot
 Encoding: UTF-8
 RoxygenNote: 7.2.3
 SystemRequirements: Spark: 1.6.x, 2.x, or 3.x
@@ -180,10 +181,11 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'spark_submit.R' 'spark_update_embedded_sources.R'
         'spark_utils.R' 'spark_verify_embedded_sources.R'
         'stream_data.R' 'stream_job.R' 'stream_operations.R'
-        'stream_shiny.R' 'stream_view.R' 'test_connection.R'
-        'tidiers_ml_aft_survival_regression.R' 'tidiers_ml_als.R'
-        'tidiers_ml_isotonic_regression.R' 'tidiers_ml_lda.R'
-        'tidiers_ml_linear_models.R' 'tidiers_ml_logistic_regression.R'
+        'stream_shiny.R' 'stream_view.R' 'synapse_connection.R'
+        'test_connection.R' 'tidiers_ml_aft_survival_regression.R'
+        'tidiers_ml_als.R' 'tidiers_ml_isotonic_regression.R'
+        'tidiers_ml_lda.R' 'tidiers_ml_linear_models.R'
+        'tidiers_ml_logistic_regression.R'
         'tidiers_ml_multilayer_perceptron.R' 'tidiers_ml_naive_bayes.R'
         'tidiers_ml_svc_models.R' 'tidiers_ml_tree_models.R'
         'tidiers_ml_unsupervised_models.R' 'tidiers_pca.R'
@@ -195,7 +197,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
         'zzz.R'
 NeedsCompilation: no
-Packaged: 2023-03-21 21:40:05 UTC; edgar
+Packaged: 2023-07-01 01:37:08 UTC; edgar
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (<https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -212,4 +214,4 @@ Author: Javier Luraschi [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2023-03-22 13:40:02 UTC
+Date/Publication: 2023-07-01 04:20:02 UTC

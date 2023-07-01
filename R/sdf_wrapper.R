@@ -10,7 +10,7 @@ spark_dataframe.tbl_spark <- function(x, ...) {
     x,
     function(tbl_spark) {
       sc <- spark_connection(tbl_spark)
-      sql <- as.character(sql_render(sql_build(tbl_spark, con = sc), con = sc))
+      sql <- as.character(dbplyr::remote_query(tbl_spark))
       hive <- hive_context(sc)
 
       invoke(hive, "sql", sql)
@@ -519,7 +519,7 @@ sdf_separate_column <- function(x,
     indices <- x %>%
       head(1) %>%
       dplyr::pull(!!rlang::sym(column)) %>%
-      rlang::flatten() %>%
+      purrr::list_flatten() %>%
       length() %>%
       seq_len(.)
 
