@@ -1,7 +1,7 @@
 Type: Package
 Package: sparklyr
 Title: R Interface to Apache Spark
-Version: 1.8.2
+Version: 1.8.3
 Authors@R: 
     c(person(given = "Javier",
              family = "Luraschi",
@@ -89,25 +89,25 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'browse_url.R' 'spark_connection.R' 'avro_utils.R'
         'config_settings.R' 'config_spark.R' 'connection_instances.R'
         'connection_progress.R' 'connection_shinyapp.R'
-        'spark_version.R' 'connection_spark.R' 'connection_viewer.R'
-        'core_arrow.R' 'core_config.R' 'core_connection.R'
-        'core_deserialize.R' 'core_gateway.R' 'core_invoke.R'
-        'core_jobj.R' 'core_serialize.R' 'core_utils.R'
-        'core_worker_config.R' 'utils.R' 'sql_utils.R' 'data_copy.R'
-        'data_csv.R' 'spark_schema_from_rdd.R' 'spark_apply_bundle.R'
+        'spark_version.R' 'connection_spark.R' 'core_arrow.R'
+        'core_config.R' 'core_connection.R' 'core_deserialize.R'
+        'core_gateway.R' 'core_invoke.R' 'core_jobj.R'
+        'core_serialize.R' 'core_utils.R' 'core_worker_config.R'
+        'utils.R' 'sql_utils.R' 'data_copy.R' 'data_csv.R'
+        'spark_schema_from_rdd.R' 'spark_apply_bundle.R'
         'spark_apply.R' 'tables_spark.R' 'tbl_spark.R' 'spark_sql.R'
         'spark_dataframe.R' 'dplyr_spark.R' 'sdf_interface.R'
         'data_interface.R' 'databricks_connection.R'
         'dbi_spark_connection.R' 'dbi_spark_result.R'
-        'dbi_spark_table.R' 'dbi_spark_transactions.R' 'do_spark.R'
-        'dplyr_do.R' 'dplyr_hof.R' 'dplyr_join.R' 'dplyr_spark_data.R'
-        'prng_utils.R' 'dplyr_spark_table.R' 'stratified_sample.R'
-        'sdf_sql.R' 'dplyr_sql.R' 'dplyr_sql_translation.R'
-        'dplyr_verbs.R' 'imports.R' 'install_spark.R'
-        'install_spark_versions.R' 'install_spark_windows.R'
-        'install_tools.R' 'java.R' 'jobs_api.R' 'kubernetes_config.R'
-        'shell_connection.R' 'livy_connection.R' 'livy_install.R'
-        'livy_invoke.R' 'livy_service.R' 'ml_clustering.R'
+        'dbi_spark_table.R' 'do_spark.R' 'dplyr_do.R' 'dplyr_hof.R'
+        'dplyr_join.R' 'dplyr_spark_data.R' 'dplyr_spark_table.R'
+        'stratified_sample.R' 'sdf_sql.R' 'dplyr_sql.R'
+        'dplyr_sql_translation.R' 'dplyr_verbs.R' 'imports.R'
+        'install_spark.R' 'install_spark_versions.R'
+        'install_spark_windows.R' 'install_tools.R' 'java.R'
+        'jobs_api.R' 'kubernetes_config.R' 'shell_connection.R'
+        'livy_connection.R' 'livy_install.R' 'livy_invoke.R'
+        'livy_service.R' 'ml_clustering.R'
         'ml_classification_decision_tree_classifier.R'
         'ml_classification_gbt_classifier.R'
         'ml_classification_linear_svc.R'
@@ -177,7 +177,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'sdf_wrapper.R' 'sdf_unnest_wider.R' 'sdf_utils.R'
         'spark_compile.R' 'spark_context_config.R' 'spark_extensions.R'
         'spark_gateway.R' 'spark_gen_embedded_sources.R'
-        'spark_globals.R' 'spark_hive.R' 'spark_home.R'
+        'spark_globals.R' 'spark_hive.R' 'spark_home.R' 'spark_ide.R'
         'spark_submit.R' 'spark_update_embedded_sources.R'
         'spark_utils.R' 'spark_verify_embedded_sources.R'
         'stream_data.R' 'stream_job.R' 'stream_operations.R'
@@ -197,7 +197,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
         'zzz.R'
 NeedsCompilation: no
-Packaged: 2023-07-01 01:37:08 UTC; edgar
+Packaged: 2023-09-01 16:58:01 UTC; edgar
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (<https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -214,4 +214,4 @@ Author: Javier Luraschi [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2023-07-01 04:20:02 UTC
+Date/Publication: 2023-09-02 05:10:02 UTC
