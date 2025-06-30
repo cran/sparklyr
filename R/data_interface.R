@@ -1475,8 +1475,8 @@ spark_read <- function(sc,
 #' @export
 spark_write_rds <- function(x, dest_uri) {
   sc <- spark_connection(x)
-  if (spark_version(sc) < "2.0.0") {
-    stop("`spark_write_rds()` is only supported in Spark 2.0 or above")
+  if (spark_version(sc) < "3.0.0") {
+    stop("`spark_write_rds()` is only supported in Spark 3.0 or above")
   }
 
   num_partitions <- sdf_num_partitions(x)
@@ -1505,7 +1505,8 @@ spark_write_rds <- function(x, dest_uri) {
     "sparklyr.RDSCollector",
     "collect",
     spark_dataframe(x),
-    as.list(dest_uri)
+    as.list(dest_uri),
+    spark_session(spark_connection(x))
   )
 
   dplyr::tibble(

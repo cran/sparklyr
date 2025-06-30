@@ -46,11 +46,11 @@ object RDSCollector {
       }
     )
 
-    writeHeaders(transformedDf.sqlContext.sparkContext, outputFiles, dtypes)
+    writeHeaders(spark.sparkContext, outputFiles, dtypes)
 
     val cols = transformedDf.columns
 
-    val hadoopConf = transformedDf.sqlContext.sparkContext.hadoopConfiguration
+    val hadoopConf = spark.sparkContext.hadoopConfiguration
     val serializedHadoopConf = new SerializableWritable(hadoopConf)
 
     (0 until cols.length).map(
