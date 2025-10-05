@@ -1,3 +1,13 @@
+# Sparklyr 1.9.2
+
+- Avoids the cross-wire when pulling an object from a lazy table instead of pulling
+a field (#3494)
+
+- Converts spark_write_delta() to method 
+
+- In simulate_vars_spark(), it avoids calling a function named 'unknown' in
+case a package has added such a function name in its environment (#3497)
+
 # Sparklyr 1.9.1
 
 - Removes use of `%||%` in worker's R scripts to avoid reference error (#3487)

@@ -1,7 +1,7 @@
-372b6e0dbbb839941717d510746cc748 *DESCRIPTION
+5618ad920f9ee951b7eda8243be22e43 *DESCRIPTION
 a87bd48939e93bb57bf56d5468c25548 *LICENSE
-c386fd341a36264d05f5c9bb637fc8b5 *NAMESPACE
-fd7dbef7f0203d4159089ede6140d9f3 *NEWS.md
+cec7a6ed7a5179979ddec354f7ed7823 *NAMESPACE
+89d1a3a23ba46ec005bc8cd95a8b8dd3 *NEWS.md
 d3ebd1f532868fc951b1f5612c41032e *R/arrow_data.R
 9e6dc7349b4a5e552b0551cf4725ce48 *R/avro_utils.R
 09979bb85688105cd86213399ab82abe *R/browse_url.R
@@ -23,7 +23,7 @@ fca85da0391b3b252a7c326742c3bcfa *R/core_jobj.R
 d8adfb784ed36853717a330f00435c9f *R/core_worker_config.R
 9f1b754558cfcb4fff7e4ab9282f395e *R/data_copy.R
 a9abb6d5f1f113f7841a43f3962bf647 *R/data_csv.R
-86db58f757509b9367de132504331151 *R/data_interface.R
+d2a10245894533e4dc1048a8fa77eb97 *R/data_interface.R
 1ee3f802258e4f80b4f3cd848ea6518e *R/databricks_connection.R
 9d3000587bbcb61545407ef1c2f9d6f3 *R/dbi_spark_connection.R
 7d9e7b1f9bffb6f84234d0839b31585c *R/dbi_spark_result.R
@@ -33,7 +33,7 @@ c15d9d3482c0b038dda1fbb1103efe18 *R/do_spark.R
 42390daf3c9880e9c9485b24e92cd0a7 *R/dplyr_hof.R
 6f2afa9c9d36e7991fa4d301a8cb9002 *R/dplyr_join.R
 d89dc50f74199905296d963b9eca1c2a *R/dplyr_spark.R
-8147bfc6e2740c11aff841af5367c7f6 *R/dplyr_spark_data.R
+3966beb3fa3def8efc96d926241541c7 *R/dplyr_spark_data.R
 4997b325074924302762ce13cbd5ba88 *R/dplyr_spark_table.R
 999219596574c5869a20c738c8ab4750 *R/dplyr_sql.R
 94f0104f4dd4b99d15781ae115ba7668 *R/dplyr_sql_translation.R
@@ -229,7 +229,7 @@ bd425b49aad23ac400a2d9d394051ad5 *R/tidyr_pivot_longer.R
 f71897b2b0845ba9dfbd44be25ced62a *R/tidyr_unite.R
 72fb8e8984b6c1eb76870894436f34b7 *R/tidyr_unnest.R
 d2731edbd98c25c5f7f441607b082865 *R/tidyr_utils.R
-a683ceac34272f650258cd1fe62bf0a9 *R/utils.R
+0f58307ea84238741f6f782cf2375b72 *R/utils.R
 35f477294cd5c9a027c6b23cfd614cf8 *R/worker_apply.R
 b53551b32ba5b6907583bb9715c6454b *R/worker_connect.R
 0e2d394ca47e41187d0f67aa124df0c8 *R/worker_connection.R
@@ -244,8 +244,8 @@ e30c715cbcc74ceae3e0a545628ae56d *R/yarn_ui.R
 b52aabe9a2757fc86742763db9dafc9b *build/partial.rdb
 e1eaa3e3e4060086313dd61f2b7ef391 *inst/conf/config-template.yml
 dfd93eddb6eff102a87731c09573ec6e *inst/extdata/config.json
-58e0494c51d30eb3494f7c9198986bb9 *inst/extdata/versions-next.json
-3d8388cb4ac885031689c731ad5ba84b *inst/extdata/versions.json
+3bda17e4e0081385e015df00852587a9 *inst/extdata/versions-next.json
+00161402c499f75bae085cd57b84e800 *inst/extdata/versions.json
 e6eeb94f7d7eacd07235088ff269efc5 *inst/icons/edit-sql.png
 5dba58c9a17b0191f7de15e6e97478b2 *inst/icons/help.png
 3beaf9650ac46a87632f932dd33137ca *inst/icons/livy-ui.png
