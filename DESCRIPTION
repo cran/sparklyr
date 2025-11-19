@@ -1,7 +1,7 @@
 Type: Package
 Package: sparklyr
 Title: R Interface to Apache Spark
-Version: 1.9.2
+Version: 1.9.3
 Authors@R: 
     c(person(given = "Javier",
              family = "Luraschi",
@@ -82,7 +82,7 @@ Suggests: arrow (>= 0.17.0), broom, diffobj, foreach, ggplot2,
         R6, r2d3, RCurl, reshape2, shiny (>= 1.0.1), parsnip, testthat,
         rprojroot
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 SystemRequirements: Spark: 2.x, or 3.x, or 4.x
 Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'browse_url.R' 'spark_connection.R' 'avro_utils.R'
@@ -196,7 +196,7 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
         'zzz.R'
 NeedsCompilation: no
-Packaged: 2025-10-03 19:47:18 UTC; edgar
+Packaged: 2025-11-19 15:09:13 UTC; edgar
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (ORCID: <https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -214,4 +214,4 @@ Author: Javier Luraschi [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2025-10-05 08:30:02 UTC
+Date/Publication: 2025-11-19 16:00:02 UTC

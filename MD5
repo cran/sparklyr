@@ -1,7 +1,7 @@
-5618ad920f9ee951b7eda8243be22e43 *DESCRIPTION
+294525cc1a309c0346de81a7700e7df0 *DESCRIPTION
 a87bd48939e93bb57bf56d5468c25548 *LICENSE
 cec7a6ed7a5179979ddec354f7ed7823 *NAMESPACE
-89d1a3a23ba46ec005bc8cd95a8b8dd3 *NEWS.md
+a7ccf3e1d5da580a1f27220eb535187d *NEWS.md
 d3ebd1f532868fc951b1f5612c41032e *R/arrow_data.R
 9e6dc7349b4a5e552b0551cf4725ce48 *R/avro_utils.R
 09979bb85688105cd86213399ab82abe *R/browse_url.R
@@ -39,7 +39,7 @@ d89dc50f74199905296d963b9eca1c2a *R/dplyr_spark.R
 94f0104f4dd4b99d15781ae115ba7668 *R/dplyr_sql_translation.R
 ccbb6ac2a0b29bebc7200f1bc3ed652f *R/dplyr_verbs.R
 274abba7b28e0e9585fbad09ff5cb1e7 *R/imports.R
-9c1a650bb5aa5fb8b29a7b36b77ecc65 *R/install_spark.R
+8c7986dd863895475fb48b359bbc2ffb *R/install_spark.R
 f9b5b8a936ebd8ef8d8819886b9bc5e7 *R/install_spark_versions.R
 eeebc1b557f4085abcf475d761b2e503 *R/install_spark_windows.R
 577064ae94ed3da7ee0a63c6be8ccffe *R/install_tools.R
@@ -131,7 +131,7 @@ b2cc7d2d97d4b6ad68ce035ba8424af6 *R/ml_model_isotonic_regression.R
 7ece44d88727c22e8befab1253af5665 *R/ml_model_random_forest.R
 1d64bca8fece24a5a055e8124b3cd1c0 *R/ml_model_utils.R
 26ef05255965ecdfe0e6b057d7a30078 *R/ml_param_utils.R
-3e9b3c6bc964045d768a0fa3b755e98c *R/ml_persistence.R
+361c9fbaa9626a0ca0d6ee28d6db0088 *R/ml_persistence.R
 7928c8aec43f18ddbed263f68d692e44 *R/ml_pipeline.R
 9d7eaadef95ebd4a6a9fb48f54675b74 *R/ml_pipeline_utils.R
 aa2256db537bd26054b04a2b73de308e *R/ml_print_utils.R
@@ -241,11 +241,11 @@ a9e8a873d3aa81e7bae657aaa0d1cb27 *R/worker_log.R
 e30c715cbcc74ceae3e0a545628ae56d *R/yarn_ui.R
 0a90ec52f5b1d30c249da363d91b8410 *R/zzz.R
 041b30443d1b81015c0873fbe5d5a152 *README.md
-b52aabe9a2757fc86742763db9dafc9b *build/partial.rdb
+76e123f5dcc8dee07678412adc0a2a84 *build/partial.rdb
 e1eaa3e3e4060086313dd61f2b7ef391 *inst/conf/config-template.yml
 dfd93eddb6eff102a87731c09573ec6e *inst/extdata/config.json
-3bda17e4e0081385e015df00852587a9 *inst/extdata/versions-next.json
-00161402c499f75bae085cd57b84e800 *inst/extdata/versions.json
+ecd67bd3a1b2f488adbdb5256c8e4c1b *inst/extdata/versions-next.json
+9ae411957afca7693141df4c4f396d94 *inst/extdata/versions.json
 e6eeb94f7d7eacd07235088ff269efc5 *inst/icons/edit-sql.png
 5dba58c9a17b0191f7de15e6e97478b2 *inst/icons/help.png
 3beaf9650ac46a87632f932dd33137ca *inst/icons/livy-ui.png
