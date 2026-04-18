@@ -1,7 +1,7 @@
 Type: Package
 Package: sparklyr
 Title: R Interface to Apache Spark
-Version: 1.9.3
+Version: 1.9.4
 Authors@R: 
     c(person(given = "Javier",
              family = "Luraschi",
@@ -191,12 +191,12 @@ Collate: 'spark_data_build_types.R' 'arrow_data.R' 'spark_invoke.R'
         'tidiers_utils.R' 'tidyr_fill.R' 'tidyr_nest.R'
         'tidyr_pivot_utils.R' 'tidyr_pivot_longer.R'
         'tidyr_pivot_wider.R' 'tidyr_separate.R' 'tidyr_unite.R'
-        'tidyr_unnest.R' 'worker_apply.R' 'worker_connect.R'
-        'worker_connection.R' 'worker_invoke.R' 'worker_log.R'
-        'worker_main.R' 'yarn_cluster.R' 'yarn_config.R' 'yarn_ui.R'
-        'zzz.R'
+        'tidyr_unnest.R' 'tune-grid-spark.R' 'worker_apply.R'
+        'worker_connect.R' 'worker_connection.R' 'worker_invoke.R'
+        'worker_log.R' 'worker_main.R' 'yarn_cluster.R' 'yarn_config.R'
+        'yarn_ui.R' 'zzz.R'
 NeedsCompilation: no
-Packaged: 2025-11-19 15:09:13 UTC; edgar
+Packaged: 2026-04-18 00:04:51 UTC; edgar
 Author: Javier Luraschi [aut],
   Kevin Kuo [aut] (ORCID: <https://orcid.org/0000-0001-7803-7901>),
   Kevin Ushey [aut],
@@ -214,4 +214,4 @@ Author: Javier Luraschi [aut],
   RStudio [cph],
   The Apache Software Foundation [aut, cph]
 Repository: CRAN
-Date/Publication: 2025-11-19 16:00:02 UTC
+Date/Publication: 2026-04-18 05:50:02 UTC

@@ -1,7 +1,7 @@
-294525cc1a309c0346de81a7700e7df0 *DESCRIPTION
+2dd3d4b664c4f4c3950e131dcafb2888 *DESCRIPTION
 a87bd48939e93bb57bf56d5468c25548 *LICENSE
-cec7a6ed7a5179979ddec354f7ed7823 *NAMESPACE
-a7ccf3e1d5da580a1f27220eb535187d *NEWS.md
+f3819417382de17d598f806fa1a2630f *NAMESPACE
+94c9263fd858f781bb63f773ae18fd28 *NEWS.md
 d3ebd1f532868fc951b1f5612c41032e *R/arrow_data.R
 9e6dc7349b4a5e552b0551cf4725ce48 *R/avro_utils.R
 09979bb85688105cd86213399ab82abe *R/browse_url.R
@@ -34,7 +34,7 @@ c15d9d3482c0b038dda1fbb1103efe18 *R/do_spark.R
 6f2afa9c9d36e7991fa4d301a8cb9002 *R/dplyr_join.R
 d89dc50f74199905296d963b9eca1c2a *R/dplyr_spark.R
 3966beb3fa3def8efc96d926241541c7 *R/dplyr_spark_data.R
-4997b325074924302762ce13cbd5ba88 *R/dplyr_spark_table.R
+b7262f366683e43bcb9e7419f6a71199 *R/dplyr_spark_table.R
 999219596574c5869a20c738c8ab4750 *R/dplyr_sql.R
 94f0104f4dd4b99d15781ae115ba7668 *R/dplyr_sql_translation.R
 ccbb6ac2a0b29bebc7200f1bc3ed652f *R/dplyr_verbs.R
@@ -99,7 +99,7 @@ cddfe3ec22077c5f6b92fbdcce09656f *R/ml_feature_one_hot_encoder_estimator.R
 57de4f3cabf372dc3e58873f32170689 *R/ml_feature_robust_scaler.R
 58d763d3967b1390afad530a9064ed9a *R/ml_feature_sql_transformer.R
 09ec49dd72a60d552fcf445a33d5fc4c *R/ml_feature_standard_scaler.R
-415e4bb783a1cc44b8023489b232705d *R/ml_feature_stop_words_remover.R
+d0180bcbcf18b9f2e7fbd371cae38bb0 *R/ml_feature_stop_words_remover.R
 03c802966e51deb6660e30d717a85df2 *R/ml_feature_string_indexer.R
 8fbf4c9ecaea2b407b8ca212ab50a644 *R/ml_feature_string_indexer_model.R
 1cb1a9324d226d95c6c20db81156f684 *R/ml_feature_tokenizer.R
@@ -152,7 +152,7 @@ c5ae67f19d4e8d0369afda90a33c8b97 *R/ml_tuning.R
 3a1a7017a958d63f5adbc035732fbc5f *R/ml_tuning_train_validation_split.R
 c287d6c5bbc9ad279f9c86609a58ec74 *R/ml_utils.R
 1d6bfbec9dae39e082ae68619ca31ea0 *R/ml_validator_utils.R
-509b77b0810c77fb8ab4eac2c18af77a *R/mutation.R
+28cca44b221dcec9787bbac1d372f58a *R/mutation.R
 088f877799a5282865313077bfb30721 *R/na_actions.R
 9057053e5414658c27809df6603ec42a *R/new_model_multilayer_perceptron.R
 a16bf8f7953d085c717981d608e35de2 *R/params_validator.R
@@ -229,6 +229,7 @@ bd425b49aad23ac400a2d9d394051ad5 *R/tidyr_pivot_longer.R
 f71897b2b0845ba9dfbd44be25ced62a *R/tidyr_unite.R
 72fb8e8984b6c1eb76870894436f34b7 *R/tidyr_unnest.R
 d2731edbd98c25c5f7f441607b082865 *R/tidyr_utils.R
+10bfa24ffbe0c142a102e7c19927a7a3 *R/tune-grid-spark.R
 0f58307ea84238741f6f782cf2375b72 *R/utils.R
 35f477294cd5c9a027c6b23cfd614cf8 *R/worker_apply.R
 b53551b32ba5b6907583bb9715c6454b *R/worker_connect.R
@@ -244,8 +245,8 @@ e30c715cbcc74ceae3e0a545628ae56d *R/yarn_ui.R
 76e123f5dcc8dee07678412adc0a2a84 *build/partial.rdb
 e1eaa3e3e4060086313dd61f2b7ef391 *inst/conf/config-template.yml
 dfd93eddb6eff102a87731c09573ec6e *inst/extdata/config.json
-ecd67bd3a1b2f488adbdb5256c8e4c1b *inst/extdata/versions-next.json
-9ae411957afca7693141df4c4f396d94 *inst/extdata/versions.json
+be2b154871cd1269b9fd91651feec846 *inst/extdata/versions-next.json
+6227b17058b03f206988806cd3360e62 *inst/extdata/versions.json
 e6eeb94f7d7eacd07235088ff269efc5 *inst/icons/edit-sql.png
 5dba58c9a17b0191f7de15e6e97478b2 *inst/icons/help.png
 3beaf9650ac46a87632f932dd33137ca *inst/icons/livy-ui.png
@@ -456,7 +457,7 @@ cb101f71cb731c5d01b7cc3ed24586db *man/ml_als_tidiers.Rd
 440f67834e99bd00595cf1f47a2b2c4b *man/ml_clustering_evaluator.Rd
 7374a1cbff15d928ca7aba464c883592 *man/ml_corr.Rd
 d9b5ae8dbdeb51c3e7a59aecb9a1fe0b *man/ml_decision_tree.Rd
-877526d0493623b3414be369c0d7e850 *man/ml_default_stop_words.Rd
+e6cdca0d868c251a0938cec4763a2dfe *man/ml_default_stop_words.Rd
 f47ee51ca5fb3b7c86049671105d0005 *man/ml_evaluate.Rd
 ad9967b22004e9bff643488cf3b80955 *man/ml_evaluator.Rd
 94a964601da9a04bde06d06b3097ff24 *man/ml_feature_importances.Rd
@@ -572,6 +573,7 @@ c27b731ab7cae3ad9e749570b3ea2068 *man/sdf_with_sequential_id.Rd
 9e7cff87a6481dde731177a5ea01dc9c *man/sdf_with_unique_id.Rd
 69d438ac957c344901e8182bc14ef25b *man/select.Rd
 9529f27c5a5b5ee3e5e191f6f252fd79 *man/separate.Rd
+a82503bbed6106cfee1d80e5f8dc9b59 *man/slice_.tbl_spark.Rd
 adfcda1a93607123f915a3e13be07817 *man/spark-api.Rd
 50fd878ef7831e3e7a9526e302e6ee72 *man/spark-connections.Rd
 407e4f15d32b48f53abba3f90e0be8fc *man/spark_adaptive_query_execution.Rd
@@ -675,6 +677,7 @@ e809f7e22b5b979cba02b8321e693985 *man/sub-.tbl_spark.Rd
 31417f57df46601553190db22650c5d1 *man/tbl_change_db.Rd
 c2edb9a79aa6c0e9070fbc862ad62fed *man/tbl_uncache.Rd
 cf28b1734a273a905ed0aba54674c937 *man/transform_sdf.Rd
+3d03840cfc363d2acf273dccb37df054 *man/tune_grid_spark.Rd
 62455869bb4561b1264412eb760eb2c6 *man/unite.Rd
 eaebf14741b7339912a8fcb7bc99392a *man/unnest.Rd
 d6af5ec83ad0264dca224aee65cae170 *man/worker_spark_apply_unbundle.Rd

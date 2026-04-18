@@ -1,3 +1,11 @@
+# Sparklyr 1.9.4
+
+- Adds `tune_grid_spark()` method in order for `pysparklyr` to provide the
+functionality
+
+- Fixes `sdf_bind_rows()` `id` argument incorrectly overwriting named arguments
+when mixed named/unnamed inputs were provided (e.g. `sdf_bind_rows(x = df1, df2, id = "source")`)
+
 # Sparklyr 1.9.3
 
 - Ensures current pre-release of Spark 4.1 works with `sparklyr`
