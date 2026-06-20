@@ -14,8 +14,10 @@ spark_db_analyze <- function(con, table, ...) {
   # It does this because SHOW TABLES does not correctly return isTemporary
   # TODO: Find a better way to determine if the table is Temporary when using
   # Delta on Spark 3.3 and above
-  if("org.apache.spark.sql.delta.catalog.DeltaCatalog" %in%
-     con$config$spark.sql.catalog.spark_catalog) {
+  if (
+    "org.apache.spark.sql.delta.catalog.DeltaCatalog" %in%
+      con$config$spark.sql.catalog.spark_catalog
+  ) {
     return(NULL)
   }
 
@@ -23,7 +25,10 @@ spark_db_analyze <- function(con, table, ...) {
   table_name <- substr(table_q, 2, nchar(table_q) - 1)
   info <- dbGetQuery(con, build_sql("SHOW TABLES LIKE ", table_name, con = con))
   if (nrow(info) > 0 && identical(info$isTemporary, FALSE)) {
-    dbExecute(con, build_sql("ANALYZE TABLE ", table, " COMPUTE STATISTICS", con = con))
+    dbExecute(
+      con,
+      build_sql("ANALYZE TABLE ", table, " COMPUTE STATISTICS", con = con)
+    )
   }
 }
 
@@ -80,7 +85,8 @@ spark_sql_query_fields <- function(con, query, ...) {
     columns_sql_lst <- columns %>%
       lapply(function(x) sprintf("0L AS %s", quote_sql_name(x)))
     columns_sql <- sprintf(
-      "SELECT %s", do.call(paste, append(columns_sql_lst, list(sep = ", ")))
+      "SELECT %s",
+      do.call(paste, append(columns_sql_lst, list(sep = ", ")))
     )
 
     columns_sql %>% sql()
@@ -92,10 +98,20 @@ spark_sql_query_fields <- function(con, query, ...) {
 spark_sql_query_save <- function(con, sql, name, temporary = TRUE, ...) {
   if (packageVersion("dbplyr") <= "2.3.4") {
     name <- dbplyr::as.sql(name)
+  } else if (inherits(name, "dbplyr_table_path")) {
+    # dbplyr (>= 2.6.0) passes the view name as a `dbplyr_table_path`: a
+    # character vector that is already quoted for the backend (e.g.
+    # `` `dbplyr_tmp_xxx` ``). Mark it as literal SQL so `build_sql()` does not
+    # re-escape it as a string literal (which yields an invalid `'`name`'`).
+    name <- sql(as.character(name))
   }
   build_sql(
-    "CREATE OR REPLACE ", if (temporary) sql("TEMPORARY "), "VIEW \n",
-    name, " AS ", sql,
+    "CREATE OR REPLACE ",
+    if (temporary) sql("TEMPORARY "),
+    "VIEW \n",
+    name,
+    " AS ",
+    sql,
     con = con
   )
 }
@@ -107,7 +123,9 @@ spark_sql_set_op <- function(con, x, y, method) {
     # Spark 1.6 does not allow parentheses
     build_sql(
       x,
-      "\n", sql(method), "\n",
+      "\n",
+      sql(method),
+      "\n",
       y
     )
   } else {
