@@ -17,21 +17,6 @@ sdf_crosstab <- function(x, col1, col2) {
     sdf_register()
 }
 
-#' Generate random samples from some distribution
-#'
-#' Generator methods for creating single-column Spark dataframes comprised of
-#' i.i.d. samples from some distribution.
-#'
-#' @param sc A Spark connection.
-#' @param n Sample Size (default: 1000).
-#' @param num_partitions Number of partitions in the resulting Spark dataframe
-#'   (default: default parallelism of the Spark cluster).
-#' @param seed Random seed (default: a random long integer).
-#' @param output_col Name of the output column containing sample values (default: "x").
-#'
-#' @name spark_statistical_routines
-NULL
-
 gen_samples_sdf <- function(
   sc,
   method,
@@ -75,7 +60,12 @@ gen_samples_sdf <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a Betal distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @param sc A Spark connection.
+#' @param n Sample Size (default: 1000).
+#' @param num_partitions Number of partitions in the resulting Spark dataframe
+#'   (default: default parallelism of the Spark cluster).
+#' @param seed Random seed (default: a random long integer).
+#' @param output_col Name of the output column containing sample values (default: "x").
 #' @param shape1 Non-negative parameter (alpha) of the Beta distribution.
 #' @param shape2 Non-negative parameter (beta) of the Beta distribution.
 #'
@@ -107,7 +97,7 @@ sdf_rbeta <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a binomial distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param size Number of trials (zero or more).
 #' @param prob Probability of success on each trial.
 #'
@@ -140,7 +130,7 @@ sdf_rbinom <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a Cauchy distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param location Location parameter of the distribution.
 #' @param scale Scale parameter of the distribution.
 #'
@@ -172,7 +162,7 @@ sdf_rcauchy <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a chi-squared distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param df Degrees of freedom (non-negative, but can be non-integer).
 #'
 #' @family Spark statistical routines
@@ -202,7 +192,7 @@ sdf_rchisq <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from an exponential distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param rate Rate of the exponential distribution (default: 1). The exponential
 #'   distribution with rate lambda has mean 1 / lambda and density f(x) = lambda e ^ - lambda x.
 #'
@@ -232,7 +222,7 @@ sdf_rexp <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a Gamma distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param shape Shape parameter (greater than 0) for the Gamma distribution.
 #' @param rate Rate parameter (greater than 0) for the Gamma distribution (scale is 1/rate).
 #'
@@ -263,7 +253,7 @@ sdf_rgamma <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a geometric distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param prob Probability of success in each trial.
 #'
 #' @family Spark statistical routines
@@ -294,7 +284,7 @@ sdf_rgeom <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a hypergeometric distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param nn Sample Size.
 #' @param m The number of successes among the population.
 #' @param n The number of failures among the population.
@@ -334,7 +324,7 @@ sdf_rhyper <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a log normal distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param meanlog The mean of the normally distributed natural logarithm of this distribution.
 #' @param sdlog The Standard deviation of the normally distributed natural logarithm of this distribution.
 #'
@@ -365,7 +355,7 @@ sdf_rlnorm <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from the standard normal distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param mean The mean value of the normal distribution.
 #' @param sd The standard deviation of the normal distribution.
 #'
@@ -404,7 +394,7 @@ sdf_rnorm <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a Poisson distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param lambda Mean, or lambda, of the Poisson distribution.
 #'
 #' @family Spark statistical routines
@@ -433,7 +423,7 @@ sdf_rpois <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a t-distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param df Degrees of freedom (> 0, maybe non-integer).
 #'
 #' @family Spark statistical routines
@@ -463,7 +453,7 @@ sdf_rt <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from a Weibull distribution.
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param shape The shape of the Weibull distribution.
 #' @param scale The scale of the Weibull distribution (default: 1).
 #'
@@ -495,7 +485,7 @@ sdf_rweibull <- function(
 #' Generator method for creating a single-column Spark dataframes comprised of
 #' i.i.d. samples from the uniform distribution U(0, 1).
 #'
-#' @inheritParams spark_statistical_routines
+#' @inheritParams sdf_rbeta
 #' @param min The lower limit of the distribution.
 #' @param max The upper limit of the distribution.
 #'
@@ -527,4 +517,123 @@ sdf_runif <- function(
     output_col = output_col,
     cls = cls
   )
+}
+
+#' Partition a Spark Dataframe
+#'
+#' Partition a Spark DataFrame into multiple groups. This routine is useful
+#' for splitting a DataFrame into, for example, training and test datasets.
+#'
+#' The sampling weights define the probability that a particular observation
+#' will be assigned to a particular partition, not the resulting size of the
+#' partition. This implies that partitioning a DataFrame with, for example,
+#'
+#' \code{sdf_random_split(x, training = 0.5, test = 0.5)}
+#'
+#' is not guaranteed to produce \code{training} and \code{test} partitions
+#' of equal size.
+#'
+#'
+#' @param x An object coercable to a Spark DataFrame.
+#' @param ... Named parameters, mapping table names to weights. The weights
+#'   will be normalized such that they sum to 1.
+#' @param weights An alternate mechanism for supplying weights -- when
+#'   specified, this takes precedence over the \code{...} arguments.
+#' @param seed Random seed to use for randomly partitioning the dataset. Set
+#'   this if you want your partitioning to be reproducible on repeated runs.
+#'
+#' @return An \R \code{list} of \code{tbl_spark}s.
+#'
+#' @family Spark data frames
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # randomly partition data into a 'training' and 'test'
+#' # dataset, with 60% of the observations assigned to the
+#' # 'training' dataset, and 40% assigned to the 'test' dataset
+#' data(diamonds, package = "ggplot2")
+#' diamonds_tbl <- copy_to(sc, diamonds, "diamonds")
+#' partitions <- diamonds_tbl %>%
+#'   sdf_random_split(training = 0.6, test = 0.4)
+#' print(partitions)
+#'
+#' # alternate way of specifying weights
+#' weights <- c(training = 0.6, test = 0.4)
+#' diamonds_tbl %>% sdf_random_split(weights = weights)
+#' }
+sdf_random_split <- function(
+  x,
+  ...,
+  weights = NULL,
+  seed = sample(.Machine$integer.max, 1)
+) {
+  sdf <- spark_dataframe(x)
+  weights <- weights %||% list(...)
+  nm <- names(weights)
+  if (is.null(nm) || any(!nzchar(nm))) {
+    stop("all weights must be named")
+  }
+  partitions <- sdf_split(sdf, as.numeric(weights), seed = seed)
+  registered <- sdf_register(partitions)
+  names(registered) <- nm
+  registered
+}
+
+#' @rdname sdf_random_split
+#' @export
+sdf_partition <- function(
+  x,
+  ...,
+  weights = NULL,
+  seed = sample(.Machine$integer.max, 1)
+) {
+  .Deprecated("sdf_random_split")
+  sdf_random_split(x = x, ..., weights = weights, seed = seed)
+}
+
+#' Project features onto principal components
+#'
+#' @param object A Spark PCA model object
+#' @param newdata An object coercible to a Spark DataFrame
+#' @param features A vector of names of columns to be projected
+#' @param feature_prefix The prefix used in naming the output features
+#' @param ... Optional arguments; currently unused.
+#'
+#' @export
+sdf_project <- function(
+  object,
+  newdata,
+  features = dimnames(object$pc)[[1]],
+  feature_prefix = NULL,
+  ...
+) {
+  dots <- list(...)
+  if (!rlang::is_null(dots$feature.prefix)) {
+    assign("feature_prefix", dots$feature.prefix)
+  }
+
+  feature_prefix <- cast_nullable_string(feature_prefix)
+
+  # when newdata is not supplied, attempt to use original dataset
+  if (missing(newdata) || is.null(newdata)) {
+    newdata <- object$dataset
+  }
+
+  output_names <- if (rlang::is_null(feature_prefix)) {
+    dimnames(object$pc)[[2]]
+  } else {
+    paste0(feature_prefix, seq_len(object$k))
+  }
+
+  assembled <- random_string("assembled")
+  out <- random_string("out")
+
+  object$model %>%
+    ml_set_param("input_col", assembled) %>%
+    ml_set_param("output_col", out) %>%
+    ml_transform(ft_vector_assembler(newdata, features, assembled)) %>%
+    sdf_separate_column(column = out, into = output_names) %>%
+    select(!!!rlang::syms(c(colnames(newdata), output_names)))
 }
